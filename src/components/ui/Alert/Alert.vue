@@ -16,8 +16,8 @@
             </div>
         </div>
         <div v-if="closable" class="cursor-pointer" @click="handleClose">
-            <slot name="customClose" class="h-4"/>
-            <CloseButton v-if="!slots.customClose" :default-style="false"/>
+            <slot name="customCloseIcon" class="h-4"/>
+            <CloseButton v-if="!slots.customCloseIcon" :default-style="false"/>
         </div>
     </div>
 </template>
@@ -124,9 +124,9 @@ const display = ref('show')
 
 const {clear} = useTimeout(emits('onClose'), props.duration, props.duration > 0)
 
-const handleClose = (e) => {
+const handleClose = () => {
     display.value = "hiding"
-    emits('onClose', e)
+    emits('onClose')
     clear()
     if (!props.triggerByToast) {
         setTimeout(() => {
