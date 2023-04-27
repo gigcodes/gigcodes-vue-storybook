@@ -1,15 +1,14 @@
 <template>
     <div v-motion v-show="display !== 'hide'" ref="target" :class="alertClass" v-bind="attrs">
         <div :class="`flex ${title ? '' : 'items-center'}`">
-            <StatusIcon v-if="showIcon"
+            <StatusIcon v-if="showIcon && !slots.customIcon"
                         :icon-color="typeMap.iconColor"
                         :type="type"
-            >
-                <slot name="customIcon"/>
-            </StatusIcon>
-            <div :class="{showIcon : 'ltr:ml-2 rtl:mr-2'}">
+            ></StatusIcon>
+            <slot v-if="showIcon" name="customIcon"/>
+            <div :class="showIcon ? 'ltr:ml-2 rtl:mr-2': ''">
                 <div v-if="title"
-                     :class="`font-semibold mb-1 ${typeMap.titleColor}`"
+                     :class="`font-semibold mb-1 -mt-0.5 ${typeMap.titleColor}`"
                 >
                     {{ title }}
                 </div>
@@ -17,7 +16,7 @@
             </div>
         </div>
         <div v-if="closable" class="cursor-pointer" @click="handleClose">
-            <slot name="customClose"/>
+            <slot name="customClose" class="h-4"/>
             <CloseButton v-if="!slots.customClose" :default-style="false"/>
         </div>
     </div>

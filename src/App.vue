@@ -1,11 +1,14 @@
 <script setup>
+import { AcademicCapIcon } from '@heroicons/vue/24/solid';
 import HelloWorld from './components/HelloWorld.vue'
 import Alert from "./components/ui/Alert/Alert.vue";
 </script>
 
 <template>
-    <HelloWorld msg="Vite + Vue"/>
-    <Alert type="success" closable>Additional description and information about copywriting.</Alert>
+    <html dir="ltr">
+        <HelloWorld msg="Vite + Vue"/>
+    <Alert show-icon closable type="success">Additional description and information about copywriting </Alert>
+    </html>
 </template>
 
 <style scoped>

@@ -1,6 +1,6 @@
 <template>
     <span :class="closeButtonClass" v-bind="attrs" role="button">
-        <XMarkIcon style="height: 1em;width: 1em" />
+        <XMarkIcon class="h-4" />
     </span>
 </template>
 

@@ -1,7 +1,6 @@
 <template>
-  <span :class="['text-2xl', iconColor ?? icon.color]">
-      <component v-if="icon?.icon" :is="icon.icon"/>
-      <slot/>
+  <span :class="`text-2xl ${iconColor ?? icon.color}`">
+      <component :is="icon.icon" class="h-4"/>
   </span>
 </template>
 
