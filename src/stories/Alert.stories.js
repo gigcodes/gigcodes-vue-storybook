@@ -45,7 +45,7 @@ const Template = (args, { argTypes }) => ({
     setup() {
         return args
     },
-    template: `<Alert v-bind="args"><template v-slot>${args.default}</slot></Alert>`,
+    template: `<Alert v-bind="args">${args.default}</Alert>`,
 })
 
 export const Default = Template.bind({})
