@@ -8,11 +8,14 @@ import "./assets/styles/app.css";
 
 <template>
   <html dir="ltr">
-    <HelloWorld msg="Vite + Vue" />
+    <HelloWorld msg="Vite + Vue" class="iuasda" />
     <Alert show-icon closable type="success"
       >Additional description and information about copywriting
     </Alert>
-    <Button>Default</Button>
+    <Button variant="solid" loading> Click Me! </Button>
+    <Button size="lg" variant="twoTone" shape="none" block
+      ><template #icon><AcademicCapIcon class="h-4" /></template> Default</Button
+    >
   </html>
 </template>
 
