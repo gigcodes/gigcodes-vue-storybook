@@ -5,6 +5,7 @@ import Alert from './components/ui/Alert/Alert.vue'
 import Button from './components/ui/Buttons'
 import './assets/styles/app.css'
 import Skeleton from './components/ui/Skeleton'
+import Tag from './components/ui/Tag'
 </script>
 
 <template>
@@ -14,9 +15,13 @@ import Skeleton from './components/ui/Skeleton'
     <Button size="lg" variant="twoTone" shape="none" block>
         <template #icon><AcademicCapIcon class="h-4" /></template> Default</Button
     >
-    <div class="flex flex-col gap-4" style="max-width: 300">
+    <div class="flex flex-col gap-4">
         <Skeleton height="150" />
     </div>
+    <Tag>Basic Tag</Tag>
+    <Tag prefix-class="bg-emerald-500">
+        <template #prefix><AcademicCapIcon class="text-base h-4 text-blue-500 mr-1 rtl:ml-1" /> </template> Tag 2
+    </Tag>
 </template>
 
 <style scoped>
