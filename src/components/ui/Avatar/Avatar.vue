@@ -1,6 +1,4 @@
-<template>
-
-</template>
+<template></template>
 
 <script setup>
 const props = defineProps({
@@ -9,27 +7,26 @@ const props = defineProps({
         validator(value) {
             return ['rounded', 'square', 'circle'].includes(value)
         },
-        default: 'rounded'
+        default: 'rounded',
     },
     size: {
         type: String,
         validator(value) {
             return ['sm', 'md', 'lg'].includes(value)
         },
-        default: 'md'
+        default: 'md',
     },
     src: {
         required: true,
-        type: String
+        type: String,
     },
     srcSet: {
         required: false,
-        type: String
+        type: String,
     },
     alt: {
         required: false,
-        type: String
+        type: String,
     },
-
 })
 </script>
