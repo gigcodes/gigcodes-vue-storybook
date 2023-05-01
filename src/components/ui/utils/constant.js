@@ -71,3 +71,14 @@ export const DROPDOWN_ITEM_TYPE = {
 }
 
 export const DAY_DURATION = 86400000
+
+export const DEFAULT_CONFIG = {
+    themeColor: 'indigo',
+    direction: 'ltr',
+    mode: 'light',
+    locale: 'en',
+    primaryColorLevel: 600,
+    cardBordered: false,
+    controlSize: SIZES.MD,
+    navMode: 'light',
+}
