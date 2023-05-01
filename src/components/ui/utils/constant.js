@@ -89,3 +89,8 @@ export const SHAPES = {
     ROUND: 'round',
     SQUARE: 'square',
 }
+
+export const TRANSITION_TYPE = {
+    SCALE: 'scale',
+    FADE: 'fade',
+}
