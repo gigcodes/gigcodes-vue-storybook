@@ -3,9 +3,7 @@ export default function chainedFunction(...funcs) {
         .filter((f) => f !== null && typeof f !== 'undefined')
         .reduce((acc, f) => {
             if (typeof f !== 'function') {
-                throw new Error(
-                    'Argument only accept functions, undefined, or null.'
-                )
+                throw new Error('Argument only accept functions, undefined, or null.')
             }
 
             if (acc === undefined) {

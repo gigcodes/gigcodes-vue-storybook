@@ -25,16 +25,16 @@
 import { computed } from 'vue'
 import { DIRECTIONS } from '../utils/constant'
 
-const props = defineProps([
-    'strokeWidth',
-    'percent',
-    'strokeLinecap',
-    'gapDegree',
-    'gapPosition',
-    'strokeColor',
-    'width',
-    'trailColor',
-])
+const props = defineProps({
+    gapDegree: Number,
+    gapPosition: String,
+    strokeColor: String,
+    trailColor: String,
+    percent: [Number, String],
+    strokeLinecap: String,
+    strokeWidth: Number,
+    width: [Number, String],
+})
 
 const getPathStyles = computed(() => {
     const radius = 50 - props.strokeWidth / 2

@@ -1,6 +1,6 @@
 <template>
-    <div :class="progressClass" ref="ref">
-        <Line v-if="variant === SHAPES.LINE" :strokeColor="strokeColor" :percent="percent" v-bind="restAttrs">
+    <div ref="ref" :class="progressClass">
+        <Line v-if="variant === SHAPES.LINE" :stroke-color="strokeColor" :percent="percent" v-bind="restAttrs">
             <template v-if="showInfo" #info>
                 <span :class="infoClass">
                     <slot name="customInfo" />
@@ -10,14 +10,14 @@
         </Line>
         <Circle
             v-if="variant === SHAPES.CIRCLE"
-            :strokeColor="strokeColor"
-            :trailColor="progressTrailColor"
+            :stroke-color="strokeColor"
+            :trail-color="progressTrailColor"
             :width="width"
-            :gapDegree="gapDegree"
-            :gapPosition="gapPosition"
+            :gap-degree="gapDegree"
+            :gap-position="gapPosition"
             :percent="percent"
-            :strokeLinecap="strokeLinecap"
-            :strokeWidth="strokeWidth"
+            :stroke-linecap="strokeLinecap"
+            :stroke-width="strokeWidth"
             v-bind="restAttrs"
         >
             <template v-if="showInfo" #info>

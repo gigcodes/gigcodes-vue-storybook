@@ -10,7 +10,11 @@
 import classNames from 'classnames'
 import { SIZES } from '../utils/constant'
 
-const props = defineProps(['percent', 'strokeColor', 'size'])
+const props = defineProps({
+    strokeColor: String,
+    size: String,
+    percent: [Number, String],
+})
 const progressBackgroundClass = classNames(
     'progress-bg',
     props.size === SIZES.SM ? 'h-1.5' : 'h-2',
