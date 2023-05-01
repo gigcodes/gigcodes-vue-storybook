@@ -2,6 +2,7 @@
     <component
         :is="asElement"
         v-bind="rest"
+        ref="ref"
         :class="
             classNames(
                 'skeleton',
@@ -12,7 +13,8 @@
             )
         "
         :style="{
-            width,
+            height: `${height}px`,
+            width: `${width}px`,
         }"
     ></component>
 </template>
@@ -22,9 +24,10 @@ export default {
 }
 </script>
 <script setup>
-import { computed, useAttrs } from 'vue'
+import { ref as reference, useAttrs } from 'vue'
 import classNames from 'classnames'
 
+const ref = reference(null)
 defineProps({
     asElement: {
         type: String,
@@ -44,8 +47,6 @@ defineProps({
         default: true,
     },
 })
-
 const { class: className, ...rest } = useAttrs()
-
-const activeStyles = computed(() => {})
+defineExpose({ ref })
 </script>
