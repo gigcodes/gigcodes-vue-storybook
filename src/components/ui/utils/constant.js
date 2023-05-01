@@ -82,3 +82,10 @@ export const DEFAULT_CONFIG = {
     controlSize: SIZES.MD,
     navMode: 'light',
 }
+
+export const SHAPES = {
+    CIRCLE: 'circle',
+    LINE: 'line',
+    ROUND: 'round',
+    SQUARE: 'square',
+}
