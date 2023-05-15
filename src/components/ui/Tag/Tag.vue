@@ -1,8 +1,8 @@
 <template>
-    <div v-bind="rest" :class="classNames('tag', className)">
-        <slot name="prefix" :class="classNames('tag-affix tag-prefix', prefixClass)" />
+    <div v-bind="rest" :class="classNames('gc-tag', className)">
+        <slot name="prefix" :class="classNames('gc-tag-affix gc-tag-prefix', prefixClass)" />
         <slot />
-        <slot name="suffix" :class="classNames('tag-affix tag-suffix', suffixClass)" />
+        <slot name="suffix" :class="classNames('gc-tag-affix gc-tag-suffix', suffixClass)" />
     </div>
 </template>
 
