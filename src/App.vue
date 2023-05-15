@@ -11,8 +11,8 @@ import Tag from './components/ui/Tag'
 <template>
     <HelloWorld msg="Vite + Vue" class="iuasda" />
     <Alert show-icon closable type="success">Additional description and information about copywriting </Alert>
-    <Button variant="solid" loading> Click Me! </Button>
-    <Button size="lg" variant="twoTone" shape="none" block>
+    <Button variant="solid" shape="none" color="blue-600" active> Click Me! </Button>
+    <Button size="lg" variant="twoTone" shape="none" block color="blue-600">
         <template #icon><AcademicCapIcon class="h-4" /></template> Default</Button
     >
     <div class="flex flex-col gap-4">

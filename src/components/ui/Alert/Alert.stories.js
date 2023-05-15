@@ -1,4 +1,4 @@
-import Alert from '../components/ui/Alert'
+import Alert from '.'
 
 export default {
     title: 'UI/Alert',
@@ -40,7 +40,7 @@ export default {
     },
 }
 
-const Template = (args, { argTypes }) => ({
+const Template = (args) => ({
     components: { Alert },
     setup() {
         return args
