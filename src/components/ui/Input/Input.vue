@@ -1,15 +1,15 @@
 <template>
     <textarea v-if="textArea" :style="style" v-bind="restAttrs"></textarea>
     <slot v-if="prefix" name="prefix"
-    ><div ref="prefixNode" className="input-suffix-start">
-        {{ prefix }}
-    </div></slot
+        ><div ref="prefixNode" className="input-suffix-start">
+            {{ prefix }}
+        </div></slot
     >
     <component ref="reference" :style="inputStyle" v-bind="restAttrs" />
     <slot v-if="suffix" name="suffix"
-    ><div ref="suffixNode" className="input-suffix-end">
-        {{ suffix }}
-    </div></slot
+        ><div ref="suffixNode" className="input-suffix-end">
+            {{ suffix }}
+        </div></slot
     >
 </template>
 <script>

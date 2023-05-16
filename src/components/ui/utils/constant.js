@@ -88,6 +88,7 @@ export const SHAPES = {
     LINE: 'line',
     ROUND: 'round',
     SQUARE: 'square',
+    ROUNDED: 'rounded',
 }
 
 export const TRANSITION_TYPE = {
