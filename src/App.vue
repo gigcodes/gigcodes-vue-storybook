@@ -7,6 +7,7 @@ import './assets/styles/app.css'
 import Skeleton from './components/ui/Skeleton'
 import Tag from './components/ui/Tag'
 import Tooltip from './components/ui/Tooltip/Tooltip.vue'
+import Badge from './components/ui/Badge/Badge.vue'
 </script>
 
 <template>
@@ -25,4 +26,6 @@ import Tooltip from './components/ui/Tooltip/Tooltip.vue'
     <Tag prefix-class="bg-emerald-500">
         <template #prefix><AcademicCapIcon class="text-base h-4 text-blue-500 mr-1 rtl:ml-1" /> </template> Tag 2
     </Tag>
+    <Badge class="mr-4 font-semibold" content="99" inner-class="bg-red-50 text-red-500" />
+    <Badge class="mr-4 border border-gray-400" content="New" inner-class="bg-white text-gray-500" />
 </template>
