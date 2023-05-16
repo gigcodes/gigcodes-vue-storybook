@@ -3,7 +3,11 @@
         <XMarkIcon class="h-4" />
     </span>
 </template>
-
+<script>
+export default {
+    inheritAttrs: false,
+}
+</script>
 <script setup>
 import { XMarkIcon } from '@heroicons/vue/24/solid'
 import classNames from 'classnames'

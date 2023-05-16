@@ -1,3 +1,8 @@
+<script>
+export default {
+    inheritAttrs: false,
+}
+</script>
 <script setup>
 import { computed, inject, ref, useAttrs, watch } from 'vue'
 import { DEFAULT_CONFIG } from '../utils/constant.js'

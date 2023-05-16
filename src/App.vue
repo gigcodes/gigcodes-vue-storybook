@@ -19,7 +19,7 @@ const checked = ref(['Selection B'])
 const switchedChecked = ref(false)
 const input = ref()
 const debug = () => {
-    alert('hy')
+    alert('asd')
 }
 </script>
 
@@ -58,9 +58,9 @@ const debug = () => {
             chained
             :omitted-avatar-props="{ shape: 'circle' }"
             omitted-avatar-tooltip
-            @omitted-avatar-click="debug"
+            @omitted-avatar-click="debug()"
         >
-            <Avatar size="sm">vv</Avatar>
+            <Avatar ref="input" size="sm" shape="circle">vv</Avatar>
             <Avatar src="https://elstar.themenate.net/img/avatars/thumb-1.jpg" />
             <Avatar shape="circle bg-emerald-500">
                 <template #icon><AcademicCapIcon class="h-4" /></template>

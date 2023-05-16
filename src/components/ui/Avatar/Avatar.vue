@@ -1,9 +1,7 @@
 <template>
-    <span v-bind="restAttrs" ref="ref" :class="classes" :style="avatarStyles">
+    <span v-bind="restAttrs" :class="classes" :style="avatarStyles">
         <img v-if="src" :class="imgClass" :src="src" :srcSet="srcSet" :alt="alt" loading="lazy" />
-        <template v-if="slots.icon">
-            <span :class="iconClass"><slot name="icon"></slot></span>
-        </template>
+        <span v-if="slots.icon" :class="iconClass"><slot name="icon"></slot></span>
         <span v-else ref="avatarChildren" :class="avatarChildrenClass" :style="avatarChildrenStyles"><slot /> </span>
     </span>
 </template>
@@ -49,11 +47,10 @@ const props = defineProps({
         type: String,
     },
 })
-const ref = reference(null)
 const scale = reference(1)
 const avatarChildren = reference(null)
 const avatarNode = reference(null)
-const { class: className, ...restAttrs } = useAttrs()
+const { class: className, style, ...restAttrs } = useAttrs()
 const slots = useSlots()
 const innerScale = () => {
     if (!avatarChildren.value || !avatarNode.value) {
@@ -102,7 +99,5 @@ const avatarChildrenStyles = {
     ...(typeof props.size === 'number' ? { height: props.size } : {}),
 }
 const avatarChildrenClass = `avatar-string ${typeof props.size === 'number' ? '' : `avatar-inner-${props.size}`}`
-const avatarStyles = { ...sizeStyle, ...restAttrs.style }
-
-defineExpose({ ref })
+const avatarStyles = { ...sizeStyle, ...style }
 </script>

@@ -1,3 +1,8 @@
+<script>
+export default {
+    inheritAttrs: false,
+}
+</script>
 <script setup>
 import { provide, useAttrs } from 'vue'
 import classNames from 'classnames'

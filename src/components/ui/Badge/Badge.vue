@@ -1,3 +1,8 @@
+<script>
+export default {
+    inheritAttrs: false,
+}
+</script>
 <script setup>
 import { computed, ref as refs, useAttrs, useSlots } from 'vue'
 import classNames from 'classnames'
