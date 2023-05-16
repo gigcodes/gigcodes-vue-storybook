@@ -8,6 +8,11 @@ import Skeleton from './components/ui/Skeleton'
 import Tag from './components/ui/Tag'
 import Tooltip from './components/ui/Tooltip/Tooltip.vue'
 import Badge from './components/ui/Badge/Badge.vue'
+import { ref } from 'vue'
+import CheckBox from './components/ui/CheckBox/CheckBox.vue'
+import CheckBoxGroup from './components/ui/CheckBox/CheckBoxGroup.vue'
+
+const checked = ref(['Selection B'])
 </script>
 
 <template>
@@ -28,4 +33,11 @@ import Badge from './components/ui/Badge/Badge.vue'
     </Tag>
     <Badge class="mr-4 font-semibold" content="99" inner-class="bg-red-50 text-red-500" />
     <Badge class="mr-4 border border-gray-400" content="New" inner-class="bg-white text-gray-500" />
+    <CheckBoxGroup v-model="checked" vertical color="yellow-500">
+        <CheckBox value="Selection A" disabled>Selection A </CheckBox>
+        <CheckBox value="Selection B">Selection B </CheckBox>
+        <CheckBox value="Selection C">Selection C </CheckBox>
+    </CheckBoxGroup>
+
+    {{ checked }}
 </template>
