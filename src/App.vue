@@ -11,8 +11,10 @@ import Badge from './components/ui/Badge/Badge.vue'
 import { ref } from 'vue'
 import CheckBox from './components/ui/CheckBox/CheckBox.vue'
 import CheckBoxGroup from './components/ui/CheckBox/CheckBoxGroup.vue'
+import Switcher from './components/ui/Switcher/Switcher.vue'
 
 const checked = ref(['Selection B'])
+const switchedChecked = ref(false)
 </script>
 
 <template>
@@ -40,4 +42,8 @@ const checked = ref(['Selection B'])
     </CheckBoxGroup>
 
     {{ checked }}
+
+    <Switcher v-model="switchedChecked" color="green-500">
+        <template #checked>a</template><template #unchecked>b</template>
+    </Switcher>
 </template>

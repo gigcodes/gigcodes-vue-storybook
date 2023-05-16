@@ -1,4 +1,5 @@
 const flattenColorPalette = require('tailwindcss/lib/util/flattenColorPalette').default
+const safeListFile = 'safelist.txt'
 
 module.exports = {
     mode: 'jit',
@@ -74,6 +75,34 @@ module.exports = {
 
             addUtilities(utilities, variants('borderColor'))
         },
+        // If your application does not require multiple theme selection,
+        // you can replace {color} to your theme color value
+        // this can drastically reduce the size of the output css file
+        // e.g 'text-{colors}' --> 'text-emerald'
+        require('tailwind-safelist-generator')({
+            path: safeListFile,
+            patterns: [
+                'text-{colors}',
+                'bg-{colors}',
+                'dark:bg-{colors}',
+                'dark:hover:bg-{colors}',
+                'dark:active:bg-{colors}',
+                'hover:text-{colors}',
+                'hover:bg-{colors}',
+                'active:bg-{colors}',
+                'ring-{colors}',
+                'hover:ring-{colors}',
+                'focus:ring-{colors}',
+                'focus-within:ring-{colors}',
+                'border-{colors}',
+                'focus:border-{colors}',
+                'focus-within:border-{colors}',
+                'dark:text-{colors}',
+                'dark:hover:text-{colors}',
+                'h-{height}',
+                'w-{width}',
+            ],
+        }),
         require('@tailwindcss/typography'),
     ],
 }

@@ -84,7 +84,7 @@ onBeforeMount(() => {
 </script>
 
 <template>
-    <label :class="classNames(labelDefaultClass, { disabled: props.disabled }, className)">
+    <label :class="classNames(labelDefaultClass, { disabled: props.disabled }, className)" v-bind="restAttrs">
         <input
             ref="checkboxRef"
             :class="classNames(checkboxDefaultClass, { disabled: props.disabled })"
@@ -92,7 +92,7 @@ onBeforeMount(() => {
             :disabled="disabled"
             :readonly="readOnly"
             :name="name"
-            v-bind="{ ...restAttrs, ...controlProps }"
+            v-bind="controlProps"
             @change="onCheckboxChange"
         />
         <span :class="{ 'ltr:ml-2 rtl:mr-2': true, 'opacity-50': disabled }">

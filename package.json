@@ -20,6 +20,8 @@
     "floating-vue": "^2.0.0-beta.20",
     "lodash": "^4.17.21",
     "motion": "^10.15.5",
+    "postcss-import": "^15.1.0",
+    "postcss-preset-env": "^8.3.2",
     "tailwind-safelist-generator": "^1.0.0",
     "vue": "^3.2.47"
   },
