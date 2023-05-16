@@ -6,6 +6,7 @@ import Button from './components/ui/Buttons'
 import './assets/styles/app.css'
 import Skeleton from './components/ui/Skeleton'
 import Tag from './components/ui/Tag'
+import Tooltip from './components/ui/Tooltip/Tooltip.vue'
 </script>
 
 <template>
@@ -18,25 +19,10 @@ import Tag from './components/ui/Tag'
     <div class="flex flex-col gap-4">
         <Skeleton height="150" />
     </div>
-    <Tag>Basic Tag</Tag>
+    <Tooltip message="Hello" is-open>
+        <Tag>Basic Tag</Tag>
+    </Tooltip>
     <Tag prefix-class="bg-emerald-500">
         <template #prefix><AcademicCapIcon class="text-base h-4 text-blue-500 mr-1 rtl:ml-1" /> </template> Tag 2
     </Tag>
 </template>
-
-<style scoped>
-.logo {
-    height: 6em;
-    padding: 1.5em;
-    will-change: filter;
-    transition: filter 300ms;
-}
-
-.logo:hover {
-    filter: drop-shadow(0 0 2em #646cffaa);
-}
-
-.logo.vue:hover {
-    filter: drop-shadow(0 0 2em #42b883aa);
-}
-</style>
