@@ -1,4 +1,4 @@
 import Avatar from './Avatar.vue'
-import AvatarGroup from './AvatarGroup'
+import AvatarGroup from './AvatarGroup.vue'
 
-export default { Avatar, AvatarGroup }
+export { Avatar, AvatarGroup }

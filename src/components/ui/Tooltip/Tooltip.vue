@@ -34,7 +34,7 @@ defineProps({
 })
 </script>
 <template>
-    <Tooltip :placement="placement" :shown="isOpen">
+    <Tooltip class="tooltip-wrapper" :placement="placement" :shown="isOpen">
         <template #popper> <div v-html="message" /></template>
         <slot />
     </Tooltip>
