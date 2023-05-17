@@ -14,8 +14,10 @@ import CheckBoxGroup from './components/ui/CheckBox/CheckBoxGroup.vue'
 import Switcher from './components/ui/Switcher/Switcher.vue'
 import AvatarGroup from './components/ui/Avatar/AvatarGroup.vue'
 import Avatar from './components/ui/Avatar/Avatar.vue'
+import { Radio, RadioGroup } from './components/ui/Radio'
 
 const checked = ref(['Selection B'])
+const radio = ref('1')
 const switchedChecked = ref(false)
 const input = ref()
 const debug = () => {
@@ -53,7 +55,7 @@ const debug = () => {
         <template #checked>a</template><template #unchecked>b</template>
     </Switcher>
 
-    <div class="flex mt-52">
+    <div class="flex">
         <AvatarGroup
             chained
             :omitted-avatar-props="{ shape: 'circle' }"
@@ -70,4 +72,14 @@ const debug = () => {
             </Avatar>
         </AvatarGroup>
     </div>
+    <RadioGroup v-model="radio">
+        <Radio class="mr-4" value="1"> Radio </Radio>
+        <Radio value="2"> Checked Radio </Radio>
+    </RadioGroup>
+    <!-- <Radio v-model="radio" class="mr-4" name="simpleRadioExample" value="1"> Radio </Radio>
+    <Radio v-model="radio" name="simpleRadioExample" value="2"> Checked Radio </Radio> -->
+    <!-- <Radio value="Apple">Apple</Radio>
+        <Radio value="Banana">Banana</Radio>
+        <Radio value="Cherry">Cherry</Radio> -->
+    {{ radio }}
 </template>
