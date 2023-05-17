@@ -5,7 +5,7 @@ export default {
 </script>
 <script setup>
 import classNames from 'classnames'
-import { provide, useAttrs } from 'vue'
+import { provide, toRefs, useAttrs } from 'vue'
 
 const props = defineProps({
     modelValue: [String, Number],
@@ -26,15 +26,13 @@ const { class: className, ...restAttrs } = useAttrs()
 const radioGroupClass = classNames('radio-group', props.vertical && 'vertical', className)
 
 const onRadioGroupChange = (value) => {
-    console.log(value)
     emits('update:modelValue', value)
 }
 
 provide('onGroupChange', onRadioGroupChange)
 provide('color', props.color)
-provide('name', props.name)
 provide('radioGutter', props.radioGutter)
-provide('value', props.modelValue)
+provide('value', toRefs(props).modelValue)
 provide('disabled', props.disabled)
 provide('vertical', props.vertical)
 </script>

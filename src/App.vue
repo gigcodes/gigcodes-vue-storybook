@@ -76,10 +76,5 @@ const debug = () => {
         <Radio class="mr-4" value="1"> Radio </Radio>
         <Radio value="2"> Checked Radio </Radio>
     </RadioGroup>
-    <!-- <Radio v-model="radio" class="mr-4" name="simpleRadioExample" value="1"> Radio </Radio>
-    <Radio v-model="radio" name="simpleRadioExample" value="2"> Checked Radio </Radio> -->
-    <!-- <Radio value="Apple">Apple</Radio>
-        <Radio value="Banana">Banana</Radio>
-        <Radio value="Cherry">Cherry</Radio> -->
     {{ radio }}
 </template>

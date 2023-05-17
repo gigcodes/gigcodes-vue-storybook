@@ -25,7 +25,6 @@ const { themeColor, primaryColorLevel } = inject('config', DEFAULT_CONFIG)
 const { class: className, ...restAttrs } = useAttrs()
 
 const groupValue = inject('value', undefined)
-const name = inject('name', props.name)
 const color = inject('color', props.color)
 const radioGutter = inject('radioGutter', undefined)
 const onGroupChange = inject('onGroupChange', undefined)
@@ -36,7 +35,8 @@ const radioColor = color || `${themeColor}-${primaryColorLevel}`
 
 const controlProps = computed(() => {
     return {
-        checked: typeof groupValue !== 'undefined' ? groupValue === props.value : props.modelValue === props.value,
+        checked:
+            typeof groupValue !== 'undefined' ? groupValue.value === props.value : props.modelValue === props.value,
     }
 })
 
@@ -47,19 +47,15 @@ const onRadioChange = () => {
     emits('update:modelValue', props.value)
     onGroupChange?.(props.value)
 }
-
-const radioDefaultClass = `radio text-${radioColor}`
-const radioColorClass = disabledContext && 'disabled'
-const labelDisabledClass = disabledContext && 'disabled'
 </script>
 <template>
     <label
         :class="
             classNames(
                 'radio-label',
-                labelDisabledClass,
+                { disabled: disabledContext },
                 className,
-                `${'inline-flex'}`,
+                `inline-flex`,
                 `${radioGutter ? 'm' + (verticalContext ? 'b-' : 'r-') + radioGutter : ''}`
             )
         "
@@ -67,14 +63,14 @@ const labelDisabledClass = disabledContext && 'disabled'
     >
         <input
             ref="radioRef"
-            :class="classNames(radioDefaultClass, radioColorClass)"
+            :class="classNames(`radio text-${radioColor}`, { disabled: disabledContext })"
             type="radio"
             :disabled="disabledContext"
             :readonly="readOnly"
             :name="name"
             v-bind="controlProps"
             :value="value"
-            @change="onRadioChange"
+            @click="onRadioChange"
         />
         <span :class="classNames({ 'ltr:ml-2 rtl:mr-2': true, 'opacity-50': disabledContext })">
             <slot />
