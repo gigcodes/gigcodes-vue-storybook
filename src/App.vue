@@ -15,13 +15,14 @@ import Switcher from './components/ui/Switcher/Switcher.vue'
 import AvatarGroup from './components/ui/Avatar/AvatarGroup.vue'
 import Avatar from './components/ui/Avatar/Avatar.vue'
 import { Radio, RadioGroup } from './components/ui/Radio'
+import Card from './components/ui/Card'
 
 const checked = ref(['Selection B'])
 const radio = ref('1')
 const switchedChecked = ref(false)
 const input = ref()
 const debug = () => {
-    alert('asd')
+    alert("I'm clicked")
 }
 </script>
 
@@ -77,4 +78,40 @@ const debug = () => {
         <Radio value="2"> Checked Radio </Radio>
     </RadioGroup>
     {{ radio }}
+    <div className="max-w-xs">
+        <Card
+            clickable
+            class="hover:shadow-lg transition duration-150 ease-in-out dark:border dark:border-gray-600 dark:border-solid"
+            header-class="p-0"
+            :footer-border="false"
+            :header-border="false"
+            @on-card-click="debug"
+        >
+            <template #header>
+                <div class="rounded-tl-lg rounded-tr-lg overflow-hidden">
+                    <img src="https://elstar.themenate.net/img/others/img-1.jpg" alt="image" />
+                </div>
+            </template>
+            <span class="text-emerald-600 font-semibold"> Life Style </span>
+            <h4 class="font-bold my-3">Use the modern rules</h4>
+            <p>
+                Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the
+                industry's.
+            </p>
+            <template #footer>
+                <div class="flex items-center">
+                    <Avatar
+                        :size="30"
+                        class="mr-2"
+                        shape="circle"
+                        src="https://elstar.themenate.net/img/avatars/thumb-1.jpg"
+                    />
+                    <span>
+                        <h6 class="text-sm">Kristen Fisher</h6>
+                        <span class="text-xs">Sep 23, 2021</span>
+                    </span>
+                </div>
+            </template>
+        </Card>
+    </div>
 </template>
