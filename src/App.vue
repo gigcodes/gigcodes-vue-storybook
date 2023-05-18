@@ -16,6 +16,7 @@ import AvatarGroup from './components/ui/Avatar/AvatarGroup.vue'
 import Avatar from './components/ui/Avatar/Avatar.vue'
 import { Radio, RadioGroup } from './components/ui/Radio'
 import Card from './components/ui/Card'
+import { TimeLine, TimeLineItem } from './components/ui/TimeLine'
 
 const checked = ref(['Selection B'])
 const radio = ref('1')
@@ -78,7 +79,7 @@ const debug = () => {
         <Radio value="2"> Checked Radio </Radio>
     </RadioGroup>
     {{ radio }}
-    <div className="max-w-xs">
+    <div class="max-w-xs">
         <Card
             clickable
             class="hover:shadow-lg transition duration-150 ease-in-out dark:border dark:border-gray-600 dark:border-solid"
@@ -113,5 +114,67 @@ const debug = () => {
                 </div>
             </template>
         </Card>
+    </div>
+    <div class="max-w-[700px]">
+        <TimeLine>
+            <TimeLineItem>
+                <template #media>
+                    <Avatar :size="25" shape="circle" class="bg-amber-500"> C </Avatar>
+                </template>
+                <p class="my-1 flex items-center">
+                    <span class="font-semibold text-gray-900 dark:text-gray-100"> Carolyn Perkins </span>
+                    <span class="mx-2">has change the status to </span>
+                    <Badge class="bg-emerald-500" />
+                    <span class="ml-1 rtl:mr-1 font-semibold text-gray-900 dark:text-gray-100"> Completed </span>
+                    <span class="ml-3 rtl:mr-3">6h ago</span>
+                </p>
+            </TimeLineItem>
+            <TimeLineItem>
+                <template #media>
+                    <Avatar
+                        src="https://elstar.themenate.net//img/avatars/thumb-3.jpg"
+                        :size="25"
+                        shape="circle"
+                        class="bg-amber-500"
+                    />
+                </template>
+                <p class="my-1 flex items-center">
+                    <span class="font-semibold text-gray-900 dark:text-gray-100"> Ron Vargas </span>
+                    <span class="mx-2">comment on your </span>
+                    <span class="font-semibold text-gray-900 dark:text-gray-100"> Post </span>
+                    <span class="ml-3 rtl:mr-3">2d ago</span>
+                </p>
+                <Card class="mt-4">
+                    <p>
+                        Fine, Java MIGHT be a good example of what a programming language should be like. But Java
+                        applications are good examples of what applications SHOULDN'T be like.
+                    </p>
+                </Card>
+            </TimeLineItem>
+            <TimeLineItem>
+                <template #media>
+                    <Avatar :size="25" shape="circle" class="text-gray-700 bg-gray-200 dark:text-gray-100">
+                        <template #icon><AcademicCapIcon class="h-4" /></template>
+                    </Avatar>
+                </template>
+                <p class="flex items-center">
+                    <span class="font-semibold text-gray-900 dark:text-gray-100"> Joyce Freeman </span>
+                    <span class="mx-2">added tags </span>
+                    <Tag prefix-class="bg-emerald-500">
+                        <template #prefix>
+                            <AcademicCapIcon class="text-base h-4 text-blue-500 mr-1 rtl:ml-1" />
+                        </template>
+                        Tag 2
+                    </Tag>
+                    <Tag prefix-class="bg-emerald-500">
+                        <template #prefix>
+                            <AcademicCapIcon class="text-base h-4 text-blue-500 mr-1 rtl:ml-1" />
+                        </template>
+                        Tag 2
+                    </Tag>
+                    <span class="ml-3 rtl:mr-3">2d ago</span>
+                </p>
+            </TimeLineItem>
+        </TimeLine>
     </div>
 </template>
