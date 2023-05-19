@@ -95,3 +95,8 @@ export const TRANSITION_TYPE = {
     SCALE: 'scale',
     FADE: 'fade',
 }
+
+export const SELECTION_TYPE = {
+    SINGLE: 'single',
+    MULTIPLE: 'multiple',
+}

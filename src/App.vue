@@ -16,6 +16,7 @@ import Avatar from './components/ui/Avatar/Avatar.vue'
 import { Radio, RadioGroup } from './components/ui/Radio'
 import Card from './components/ui/Card'
 import { TimeLine, TimeLineItem } from './components/ui/TimeLine'
+import { Segment, SegmentItem } from './components/ui/Segment'
 
 const checked = ref(['Selection B'])
 const radio = ref('1')
@@ -24,6 +25,7 @@ const input = ref()
 const debug = () => {
     alert("I'm clicked")
 }
+const selectedValue = ref(['left'])
 </script>
 
 <template>
@@ -175,5 +177,41 @@ const debug = () => {
                 </p>
             </TimeLineItem>
         </TimeLine>
+    </div>
+    <div class="p-20">
+        <Segment v-model="selectedValue">
+            <SegmentItem value="left">
+                <template #default="{ active, disabled, segmentClick, value }">
+                    <div
+                        :class="
+                            classNames(
+                                'flex',
+                                'ring-1',
+                                'justify-between',
+                                'border',
+                                'rounded-md ',
+                                'border-gray-300',
+                                'py-5 px-4',
+                                'cursor-pointer',
+                                'select-none',
+                                'w-100',
+                                'md:w-[260px]',
+                                active ? 'ring-cyan-500 border-cyan-500' : 'ring-transparent',
+                                disabled ? 'opacity-50 cursor-not-allowed' : 'hover:ring-cyan-500 hover:border-cyan-500'
+                            )
+                        "
+                        @click="segmentClick"
+                    >
+                        <div>
+                            <h6>{{ value }}</h6>
+                        </div>
+                        <AcademicCapIcon v-if="active" class="text-base h-4 text-blue-500 mr-1 rtl:ml-1" />
+                    </div>
+                </template>
+            </SegmentItem>
+            <SegmentItem value="center">center</SegmentItem>
+            <SegmentItem value="right">right</SegmentItem>
+        </Segment>
+        {{ selectedValue }}
     </div>
 </template>
