@@ -1,4 +1,4 @@
-import { ref, computed, watchEffect, onUnmounted } from 'vue'
+import { computed, onUnmounted, ref, watchEffect } from 'vue'
 
 function useTimeout(fn, ms = 0, open = true) {
     const timeout = ref()

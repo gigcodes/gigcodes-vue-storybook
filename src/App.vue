@@ -1,7 +1,6 @@
 <script setup>
 import { AcademicCapIcon } from '@heroicons/vue/24/solid'
 import HelloWorld from './components/HelloWorld.vue'
-import Alert from './components/ui/Alert/Alert.vue'
 import Button from './components/ui/Buttons'
 import './assets/styles/app.css'
 import Skeleton from './components/ui/Skeleton'

@@ -1,15 +1,31 @@
 {
-  "name": "gigcodes-vue-storybook",
+  "name": "gc-ui",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.1.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "vue-tsc && vite build",
     "preview": "vite preview",
     "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build"
+    "build-storybook": "storybook build",
+    "build:styles": "postcss src/assets/styles/app.css -o dist/gc-ui.css"
   },
+  "main": "dist/gc-ui.umd.js",
+  "module": "dist/gc-ui.es.js",
+  "exports": {
+    ".": {
+      "import": "./dist/gc-ui.es.js",
+      "require": "./dist/gc-ui.umd.js"
+    },
+    "./dist/gc-ui.css": {
+      "import": "./dist/gc-ui.css",
+      "require": "./dist/gc-ui.css"
+    }
+  },
+  "files": [
+    "dist"
+  ],
   "dependencies": {
     "@heroicons/vue": "^2.0.17",
     "@storybook/addon-actions": "^7.0.12",
@@ -23,9 +39,15 @@
     "lodash": "^4.17.21",
     "motion": "^10.15.5",
     "postcss-import": "^15.1.0",
+    "postcss-nesting": "^11.2.2",
     "postcss-preset-env": "^8.3.2",
+    "rollup-plugin-typescript2": "^0.34.1",
+    "speakingurl": "^14.0.1",
     "tailwind-safelist-generator": "^1.0.0",
-    "vue": "^3.2.47"
+    "vite-plugin-dts": "^2.3.0",
+    "vue": "^3.2.47",
+    "vue-tsc": "^1.6.5",
+    "postcss": "^8.4.23"
   },
   "devDependencies": {
     "@prettier/plugin-php": "^0.19.4",
@@ -45,7 +67,6 @@
     "eslint-plugin-prettier": "^4.2.1",
     "eslint-plugin-storybook": "^0.6.12",
     "eslint-plugin-vue": "^9.11.0",
-    "postcss": "^8.4.23",
     "prettier": "^2.8.8",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
