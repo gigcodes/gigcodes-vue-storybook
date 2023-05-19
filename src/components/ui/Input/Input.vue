@@ -112,8 +112,6 @@ const getAffixSize = () => {
 
     if (prefixNodeWidth) prefixGutter.value = prefixNodeWidth
 
-    console.log(prefixGutter.value)
-
     if (suffixNodeWidth) suffixGutter.value = suffixNodeWidth
 }
 

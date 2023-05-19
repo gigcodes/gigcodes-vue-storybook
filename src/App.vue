@@ -10,10 +10,14 @@ import CheckBoxGroup from './components/ui/CheckBox/CheckBoxGroup.vue'
 import Switcher from './components/ui/Switcher/Switcher.vue'
 import AvatarGroup from './components/ui/Avatar/AvatarGroup.vue'
 import Avatar from './components/ui/Avatar/Avatar.vue'
-import { Radio, RadioGroup } from './components/ui/Radio'
+import { RadioGroup } from './components/ui/Radio'
 import Card from './components/ui/Card'
 import { TimeLine, TimeLineItem } from './components/ui/TimeLine'
 import InputComp from '@/components/ui/Input'
+import InputGroup from '@/components/ui/InputGroup/InputGroup.vue'
+import InputAddon from '@/components/ui/InputGroup/InputAddon.vue'
+import FormContainer from '@/components/ui/Form/FormContainer.vue'
+import FormItem from '@/components/ui/Form/FormItem.vue'
 
 const data = ref()
 const checked = ref(['Selection B'])
@@ -175,9 +179,27 @@ const debug = () => {
             </TimeLineItem>
         </TimeLine>
     </div>
-    <InputComp v-model="data" placeholder="Basic usage" size="sm">
-        <template #prefix> <AcademicCapIcon class="h-4" /> </template>
-    </InputComp>
+    <InputGroup class="mb-4" size="sm">
+        <InputAddon>@</InputAddon>
+        <InputComp v-model="data" placeholder="Basic usage">
+            <template #prefix> <AcademicCapIcon class="h-4" /> </template>
+        </InputComp>
+        <Button>Search</Button>
+    </InputGroup>
+
+    <FormContainer>
+        <FormItem label="Name">
+            <template #extra>
+                <Tooltip message="Hello" class="p-2" is-open> ? </Tooltip>
+            </template>
+            <InputComp v-model="data" placeholder="Basic usage">
+                <template #prefix> <AcademicCapIcon class="h-4" /> </template>
+            </InputComp>
+        </FormItem>
+        <FormItem>
+            <Button type="submit">Submit</Button>
+        </FormItem>
+    </FormContainer>
 
     {{ data }}
 </template>
