@@ -1,16 +1,21 @@
 <template>
-    <textarea v-if="textArea" :style="style" v-bind="restAttrs"></textarea>
-    <slot v-if="prefix" name="prefix"
-        ><div ref="prefixNode" className="input-suffix-start">
-            {{ prefix }}
-        </div></slot
-    >
-    <component ref="reference" :style="inputStyle" v-bind="restAttrs" />
-    <slot v-if="suffix" name="suffix"
-        ><div ref="suffixNode" className="input-suffix-end">
-            {{ suffix }}
-        </div></slot
-    >
+    <textarea v-if="textArea" v-bind="inputProps" v-model="value" :style="style" @input="updateValue"></textarea>
+    <span v-else-if="(slots?.prefix || slots?.suffix) && !textArea" :class="inputWrapperClass">
+        <div v-if="slots?.prefix" ref="prefixNode" class="input-suffix-start">
+            <slot name="prefix" />
+        </div>
+        <input v-bind="inputProps" v-model="value" :style="{ ...affixGutterStyle(), ...style }" @input="updateValue" />
+        <div v-if="slots?.suffix" ref="suffixNode" class="input-suffix-end">
+            <slot name="suffix" />
+        </div>
+    </span>
+    <input
+        v-else
+        v-bind="inputProps"
+        v-model="value"
+        :style="{ ...affixGutterStyle(), ...style }"
+        @input="updateValue"
+    />
 </template>
 <script>
 export default {
@@ -19,11 +24,12 @@ export default {
 </script>
 <script setup>
 import { CONTROL_SIZES, DEFAULT_CONFIG, SIZES } from '../utils/constant'
-import { computed, inject, onMounted, ref as reference, useAttrs } from 'vue'
+import { computed, inject, onMounted, ref as reference, useAttrs, useSlots } from 'vue'
 import { get, isEmpty, isNil } from 'lodash'
 import classNames from 'classnames'
 
 const { class: className, style, ...restAttrs } = useAttrs()
+
 const props = defineProps({
     asElement: {
         type: String,
@@ -39,14 +45,20 @@ const props = defineProps({
             return [SIZES.LG, SIZES.SM, SIZES.MD].includes(value)
         },
     },
-    invalid: [Boolean],
-    suffix: [String, Node],
-    prefix: [String, Node],
-    unstyle: {
-        type: Boolean,
-        default: false,
-    },
+    invalid: Boolean,
+    modelValue: [String, Number],
+    unstyle: Boolean,
+    form: Object,
+    field: Object,
 })
+
+const emits = defineEmits(['update:modelValue'])
+
+const updateValue = (e) => {
+    emits('update:modelValue', e.target.value)
+}
+
+const value = reference(props.modelValue)
 
 const prefixGutter = reference(0)
 const suffixGutter = reference(0)
@@ -54,33 +66,25 @@ const { themeColor, controlSize, primaryColorLevel, direction } = inject('config
 const formControlSize = inject('form')?.size
 const inputGroupSize = inject('inputGroup')?.size
 
+const textArea = props.type === 'textarea'
+
 const inputSize = props.size || inputGroupSize || formControlSize || controlSize
-
-const fixControlledValue = (val) => {
-    if (typeof val === 'undefined' || val === null) {
-        return ''
-    }
-    return val
-}
-
-if (props.value) {
-    restAttrs.value = fixControlledValue(props.value)
-    delete restAttrs.defaultValue
-}
 
 const isInvalid = computed(() => {
     let validate = false
-    if (!isEmpty(form)) {
-        const { touched, errors } = form
-        const touchedField = get(touched, field.name)
-        const errorField = get(errors, field.name)
+    if (!isEmpty(props.form)) {
+        const { touched, errors } = props.form
+        const touchedField = get(touched, props.field.name)
+        const errorField = get(errors, props.field.name)
         validate = touchedField && errorField
     }
-    if (typeof invalid === 'boolean') {
-        validate = invalid
+    if (typeof props.invalid === 'boolean') {
+        validate = props.invalid
     }
     return validate
 })
+
+const slots = useSlots()
 
 const inputDefaultClass = 'input'
 const inputSizeClass = `input-${inputSize} h-${CONTROL_SIZES[inputSize]}`
@@ -88,17 +92,17 @@ const inputFocusClass = `focus:ring-${themeColor}-${primaryColorLevel} focus-wit
 const inputWrapperClass = `input-wrapper ${props.prefix || props.suffix ? className : ''}`
 const inputClass = classNames(
     inputDefaultClass,
-    !props.textArea && inputSizeClass,
-    !props.isInvalid && inputFocusClass,
-    !props.prefix && !props.suffix ? className : '',
+    !textArea && inputSizeClass,
+    !isInvalid.value && inputFocusClass,
+    !slots.prefix && !slots.suffix ? className : '',
     props.disabled && 'input-disabled',
-    props.isInvalid && 'input-invalid',
-    props.textArea && 'input-textarea'
+    isInvalid.value && 'input-invalid',
+    textArea && 'input-textarea'
 )
 const prefixNode = reference(null)
 const suffixNode = reference(null)
 
-const getAffixSize = computed(() => {
+const getAffixSize = () => {
     if (!prefixNode.value && !suffixNode.value) return
 
     const prefixNodeWidth = prefixNode?.value?.offsetWidth
@@ -109,7 +113,8 @@ const getAffixSize = computed(() => {
     if (prefixNodeWidth) prefixGutter.value = prefixNodeWidth
 
     if (suffixNodeWidth) suffixGutter.value = suffixNodeWidth
-})
+}
+
 onMounted(() => getAffixSize())
 
 const remToPxConvertion = (pixel) => 0.0625 * pixel
@@ -117,24 +122,24 @@ const remToPxConvertion = (pixel) => 0.0625 * pixel
 const affixGutterStyle = () => {
     const leftGutter = `${remToPxConvertion(prefixGutter.value) + 1}rem`
     const rightGutter = `${remToPxConvertion(suffixGutter.value) + 1}rem`
-    let gutterStyle = {}
+    const gutterStyle = {}
 
     if (direction === 'ltr') {
-        if (props.prefix) {
+        if (slots.prefix) {
             gutterStyle.paddingLeft = leftGutter
         }
 
-        if (props.suffix) {
+        if (slots.suffix) {
             gutterStyle.paddingRight = rightGutter
         }
     }
 
     if (direction === 'rtl') {
-        if (props.prefix) {
+        if (slots.prefix) {
             gutterStyle.paddingRight = leftGutter
         }
 
-        if (props.suffix) {
+        if (slots.suffix) {
             gutterStyle.paddingLeft = rightGutter
         }
     }
@@ -142,7 +147,16 @@ const affixGutterStyle = () => {
     return gutterStyle
 }
 
-const inputStyle = { ...affixGutterStyle(), ...style }
+const ref = reference()
 
-defineExpose({ ref })
+const inputProps = {
+    className: !props.unstyle ? inputClass : '',
+    disabled: props.disabled,
+    type: props.type,
+    ref,
+    ...props.field,
+    ...restAttrs,
+}
+
+defineExpose({ prefixNode, suffixNode })
 </script>

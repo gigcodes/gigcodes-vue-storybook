@@ -12,6 +12,8 @@ const props = defineProps({
     searchQuery: String,
 })
 
+const emits = defineEmits(['reset', 'selected'])
+
 const presets = ref([])
 const showCreateModal = ref(false)
 const showRenameModal = ref(false)
@@ -33,12 +35,64 @@ const presetPreferencesPayload = computed(() => {
 const savingPresetSlug = computed(() => slugify(savingPresetName.value, '-'))
 
 const getPresets = () => {
-    presets.value = ''
+    presets.value = null //@todo this has to be updated from the state or needed to be linked with backed
+}
+
+const setPreset = (handle) => {
+    getPresets()
+    viewPreset(handle)
+}
+
+const refreshPresets = () => {
+    getPresets()
+    viewAll()
+}
+
+const viewAll = () => {
+    emits('reset')
+}
+
+const viewPreset = (handle) => {
+    emits('selected', handle, presets.value[handle])
+}
+
+const createPreset = () => {
+    savingPresetName.value = null
+    showCreateModal.value = true
+}
+
+const renamePreset = () => {
+    savingPresetName.value = props.activePresetPayload.display
+    showRenameModal.value = true
+}
+
+const savePreset = (handle) => {
+    let presetHandle = handle || props.activePreset.display
+
+    if (!presetHandle) {
+        showCreateModal.value = true
+        return
+    }
+
+    //@todo save action needed to be added
+}
+
+const deletePreset = () => {
+    if (!showDeleteModal.value) {
+        showDeleteModal.value = true
+        return
+    }
+
+    //@todo delete action needed to be added
 }
 
 onBeforeMount(() => preferencesKey.value && getPresets())
 </script>
 
-<template></template>
+<template>
+    <div class="pt-2 pr-2">
+        <div class="flex flex-wrap items-center"></div>
+    </div>
+</template>
 
 <style scoped></style>

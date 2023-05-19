@@ -100,3 +100,9 @@ export const SELECTION_TYPE = {
     SINGLE: 'single',
     MULTIPLE: 'multiple',
 }
+
+export const ACTION = {
+    CLICK: 'click',
+    HOVER: 'hover',
+    CONTEXT: 'context',
+}

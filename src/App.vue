@@ -1,10 +1,7 @@
 <script setup>
 import { AcademicCapIcon } from '@heroicons/vue/24/solid'
 import HelloWorld from './components/HelloWorld.vue'
-import Button from './components/ui/Buttons'
-import './assets/styles/app.css'
 import Skeleton from './components/ui/Skeleton'
-import Tag from './components/ui/Tag'
 import Tooltip from './components/ui/Tooltip/Tooltip.vue'
 import Badge from './components/ui/Badge/Badge.vue'
 import { ref } from 'vue'
@@ -13,11 +10,17 @@ import CheckBoxGroup from './components/ui/CheckBox/CheckBoxGroup.vue'
 import Switcher from './components/ui/Switcher/Switcher.vue'
 import AvatarGroup from './components/ui/Avatar/AvatarGroup.vue'
 import Avatar from './components/ui/Avatar/Avatar.vue'
-import { Radio, RadioGroup } from './components/ui/Radio'
+import { RadioGroup } from './components/ui/Radio'
 import Card from './components/ui/Card'
 import { TimeLine, TimeLineItem } from './components/ui/TimeLine'
 import { Segment, SegmentItem } from './components/ui/Segment'
+import InputComp from '@/components/ui/Input'
+import InputGroup from '@/components/ui/InputGroup/InputGroup.vue'
+import InputAddon from '@/components/ui/InputGroup/InputAddon.vue'
+import FormContainer from '@/components/ui/Form/FormContainer.vue'
+import FormItem from '@/components/ui/Form/FormItem.vue'
 
+const data = ref()
 const checked = ref(['Selection B'])
 const radio = ref('1')
 const switchedChecked = ref(false)
@@ -31,7 +34,7 @@ const selectedValue = ref(['left'])
 <template>
     <HelloWorld msg="Vite + Vue" class="iuasda" />
     <Alert show-icon closable type="success">Additional description and information about copywriting </Alert>
-    <Button variant="solid" shape="none" color="blue-600" active> Click Me! </Button>
+    <Button variant="solid" shape="none" color="blue-600" active>Click Me!</Button>
     <Button size="lg" variant="twoTone" shape="none" block color="blue-600">
         <template #icon><AcademicCapIcon class="h-4" /></template> Default</Button
     >
@@ -214,4 +217,27 @@ const selectedValue = ref(['left'])
         </Segment>
         {{ selectedValue }}
     </div>
+    <InputGroup class="mb-4" size="sm">
+        <InputAddon>@</InputAddon>
+        <InputComp v-model="data" placeholder="Basic usage">
+            <template #prefix> <AcademicCapIcon class="h-4" /> </template>
+        </InputComp>
+        <Button>Search</Button>
+    </InputGroup>
+
+    <FormContainer>
+        <FormItem label="Name">
+            <template #extra>
+                <Tooltip message="Hello" class="p-2" is-open> ? </Tooltip>
+            </template>
+            <InputComp v-model="data" placeholder="Basic usage">
+                <template #prefix> <AcademicCapIcon class="h-4" /> </template>
+            </InputComp>
+        </FormItem>
+        <FormItem>
+            <Button type="submit">Submit</Button>
+        </FormItem>
+    </FormContainer>
+
+    {{ data }}
 </template>
