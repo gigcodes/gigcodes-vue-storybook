@@ -1,10 +1,7 @@
 <script setup>
 import { AcademicCapIcon } from '@heroicons/vue/24/solid'
 import HelloWorld from './components/HelloWorld.vue'
-import Button from './components/ui/Buttons'
-import './assets/styles/app.css'
 import Skeleton from './components/ui/Skeleton'
-import Tag from './components/ui/Tag'
 import Tooltip from './components/ui/Tooltip/Tooltip.vue'
 import Badge from './components/ui/Badge/Badge.vue'
 import { ref } from 'vue'
@@ -16,7 +13,9 @@ import Avatar from './components/ui/Avatar/Avatar.vue'
 import { Radio, RadioGroup } from './components/ui/Radio'
 import Card from './components/ui/Card'
 import { TimeLine, TimeLineItem } from './components/ui/TimeLine'
+import InputComp from '@/components/ui/Input'
 
+const data = ref()
 const checked = ref(['Selection B'])
 const radio = ref('1')
 const switchedChecked = ref(false)
@@ -29,7 +28,7 @@ const debug = () => {
 <template>
     <HelloWorld msg="Vite + Vue" class="iuasda" />
     <Alert show-icon closable type="success">Additional description and information about copywriting </Alert>
-    <Button variant="solid" shape="none" color="blue-600" active> Click Me! </Button>
+    <Button variant="solid" shape="none" color="blue-600" active>Click Me!</Button>
     <Button size="lg" variant="twoTone" shape="none" block color="blue-600">
         <template #icon><AcademicCapIcon class="h-4" /></template> Default</Button
     >
@@ -176,4 +175,9 @@ const debug = () => {
             </TimeLineItem>
         </TimeLine>
     </div>
+    <InputComp v-model="data" placeholder="Basic usage" size="sm">
+        <template #prefix> <AcademicCapIcon class="h-4" /> </template>
+    </InputComp>
+
+    {{ data }}
 </template>

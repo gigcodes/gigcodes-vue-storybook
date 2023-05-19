@@ -95,3 +95,9 @@ export const TRANSITION_TYPE = {
     SCALE: 'scale',
     FADE: 'fade',
 }
+
+export const ACTION = {
+    CLICK: 'click',
+    HOVER: 'hover',
+    CONTEXT: 'context',
+}
