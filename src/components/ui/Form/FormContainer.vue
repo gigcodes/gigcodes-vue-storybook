@@ -4,7 +4,7 @@ export default {
 }
 </script>
 <script setup>
-import { inject, provide, useAttrs } from 'vue'
+import { computed, inject, provide, useAttrs } from 'vue'
 import { DEFAULT_CONFIG, LAYOUT, SIZES } from '@/components/ui/utils/constant.js'
 import classNames from 'classnames'
 
@@ -31,7 +31,7 @@ const props = defineProps({
 provide('form', {
     labelWidth: props.labelWidth,
     layout: props.layout,
-    size: props.size || controlSize,
+    size: computed(() => props.size || controlSize),
 })
 
 const { class: className, ...restAttrs } = useAttrs()

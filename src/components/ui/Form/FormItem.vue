@@ -36,7 +36,7 @@ const props = defineProps({
 const { controlSize } = inject('config', DEFAULT_CONFIG)
 const formContext = inject('form', null)
 
-const formItemLabelHeight = props.size || formContext?.size || controlSize
+const formItemLabelHeight = props.size || formContext?.size?.value || controlSize
 const formItemLabelWidth = props.labelWidth || formContext?.labelWidth
 const formItemLayout = props.layout || formContext?.layout
 
