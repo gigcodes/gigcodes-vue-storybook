@@ -1,6 +1,6 @@
 <template>
     <button
-        v-if="!hasSlotComponentType"
+        v-if="!custom"
         :class="
             classNames(
                 'segment-item segment-item-default',
@@ -13,10 +13,11 @@
         v-bind="restAttrs"
         @click="onSegmentItemClick"
     >
-        <slot />
+        <slot :value="value" :disabled="disabled" :active="active" :size="size" :segment-click="onSegmentItemClick" />
     </button>
     <slot
         v-else
+        :hello="'asd'"
         :value="value"
         :disabled="disabled"
         :active="active"
@@ -31,7 +32,7 @@ export default {
 </script>
 <script setup>
 import classNames from 'classnames'
-import { computed, inject, useAttrs, useSlots } from 'vue'
+import { computed, inject, useAttrs } from 'vue'
 import { CONTROL_SIZES, SIZES } from '../utils/constant'
 
 const props = defineProps({
@@ -40,15 +41,12 @@ const props = defineProps({
         type: Boolean,
         default: false,
     },
+    custom: Boolean,
 })
 
 const { size, value, onActive, onDeactivate, selectionType } = inject('segment', null)
 const { class: className, ...restAttrs } = useAttrs()
 const active = computed(() => value.value.includes(props.value))
-
-const slots = useSlots()
-
-const hasSlotComponentType = slots.default()?.filter((item) => typeof item.type !== 'symbol').length
 
 const getSegmentSize = computed(() => {
     let sizeClass = ''

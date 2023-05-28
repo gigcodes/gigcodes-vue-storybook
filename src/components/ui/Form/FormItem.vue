@@ -87,13 +87,14 @@ const slots = useSlots()
             <slot />
             <Presence>
                 <Motion
-                    v-if="invalid"
                     :initial="initialStyle"
                     :animate="enterStyle"
                     :exit="exitStyle"
                     :transition="{ duration: 0.15, easing: 'ease' }"
                 >
-                    {{ errorMessage }}
+                    <template v-if="invalid">
+                        {{ errorMessage }}
+                    </template>
                 </Motion>
             </Presence>
         </div>
