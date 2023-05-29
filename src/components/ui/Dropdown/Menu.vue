@@ -4,6 +4,7 @@ import useUniqueId from '@/components/hooks/useUniqueId.js'
 import useUncertainRef from '@/components/hooks/useUncertainRef.js'
 import { computed, inject, provide, useAttrs } from 'vue'
 import { useDropdownMenuContext } from '@/components/hooks/dropdownMenuContext.js'
+import { Motion, Presence } from 'motion/vue'
 
 const props = defineProps({
     classPrefix: PropTypes.string,
@@ -57,14 +58,18 @@ export default {
 }
 </script>
 <template>
-    <ul
-        v-if="!hidden"
-        :id="menuId"
-        ref="menuRef"
-        :class="menuClass"
-        v-bind="restAttrs"
-        @click.prevent="emits('toggle')"
-    >
-        <slot />
-    </ul>
+    <Presence>
+        <Motion v-if="!hidden" :initial="initialStyle" :animate="enterStyle" :exit="exitStyle" class="box">
+            <ul
+                v-show="!hidden"
+                :id="menuId"
+                ref="menuRef"
+                :class="menuClass"
+                v-bind="restAttrs"
+                @click.prevent="emits('toggle')"
+            >
+                <slot />
+            </ul>
+        </Motion>
+    </Presence>
 </template>

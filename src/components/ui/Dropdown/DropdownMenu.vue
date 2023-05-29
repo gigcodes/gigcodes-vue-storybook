@@ -35,8 +35,9 @@ const slots = useSlots()
 const dropdownSubmenu = h(
     Menu,
     {
-        class: dropdownSubmenuClass,
+        class: dropdownSubmenuClass.value,
         onToggle: handleToggleSubmenu,
+        onSelect: parentMenu?.select,
         placement: props.placement,
         ...restAttrs,
     },

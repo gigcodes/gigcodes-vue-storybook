@@ -22,6 +22,7 @@ import { InputAddon, InputGroup } from '@/components/ui/InputGroup'
 import { FormContainer, FormItem } from '@/components/ui/Form'
 import { Avatar, AvatarGroup } from '@/components/ui/Avatar'
 import { CheckBox, CheckBoxGroup } from '@/components/ui/CheckBox'
+import { Dropdown, DropdownItem, DropdownMenu } from '@/components/ui/Dropdown'
 
 import type { App } from 'vue'
 
@@ -65,6 +66,9 @@ export default {
         app.component('Card', Card)
         app.component('CheckBox', CheckBox)
         app.component('CheckBoxGroup', CheckBoxGroup)
+        app.component('Dropdown', Dropdown)
+        app.component('DropdownMenu', DropdownMenu)
+        app.component('DropdownItem', DropdownItem)
     },
 }
 
@@ -104,4 +108,7 @@ export {
     Card,
     CheckBox,
     CheckBoxGroup,
+    Dropdown,
+    DropdownMenu,
+    DropdownItem,
 }

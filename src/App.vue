@@ -295,14 +295,14 @@ const onSelect = (e) => alert(e)
         <StepItem />
         <StepItem />
     </Steps>
-    <Dropdown title="Click Me!">
+    <Dropdown title="Click Me!" @select="onSelect">
         <DropdownItem event-key="a">Item A</DropdownItem>
         <DropdownItem event-key="b">Item B</DropdownItem>
         <DropdownItem event-key="c">Item C</DropdownItem>
         <DropdownItem event-key="d">Item D</DropdownItem>
         <DropdownMenu title="Right Item 3">
-            <DropdownItem>Item 3-2</DropdownItem>
-            <DropdownItem>Item 3-3</DropdownItem>
+            <DropdownItem event-key="3">Item 3-2</DropdownItem>
+            <DropdownItem event-key="4"> Item 3-3</DropdownItem>
         </DropdownMenu>
     </Dropdown>
 </template>
