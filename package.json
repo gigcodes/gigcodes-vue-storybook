@@ -9,7 +9,8 @@
     "preview": "vite preview",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
-    "build:styles": "postcss src/assets/styles/app.css -o dist/gc-ui.css"
+    "build:styles": "postcss src/assets/styles/app.css -o dist/gc-ui.css",
+    "deploy-storybook": "gh-pages -d storybook-static"
   },
   "main": "dist/gc-ui.umd.js",
   "module": "dist/gc-ui.es.js",
@@ -71,6 +72,7 @@
     "eslint-plugin-prettier": "^4.2.1",
     "eslint-plugin-storybook": "^0.6.12",
     "eslint-plugin-vue": "^9.14.1",
+    "gh-pages": "^5.0.0",
     "prettier": "^2.8.8",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
