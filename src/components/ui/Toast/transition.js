@@ -39,8 +39,8 @@ const scaleTransition = (offsetX, offsetY) => {
     return {
         'top-end': {
             default: {
-                top: offsetY,
-                right: offsetX,
+                top: `${offsetY}px`,
+                right: `${offsetX}px`,
             },
             variants: {
                 ...scaleMotionProps,
@@ -48,8 +48,8 @@ const scaleTransition = (offsetX, offsetY) => {
         },
         'top-start': {
             default: {
-                top: offsetY,
-                left: offsetX,
+                top: `${offsetY}px`,
+                left: `${offsetX}px`,
             },
             variants: {
                 ...scaleMotionProps,
@@ -57,7 +57,7 @@ const scaleTransition = (offsetX, offsetY) => {
         },
         'top-center': {
             default: {
-                top: offsetY,
+                top: `${offsetY}px`,
                 left: '50%',
                 transform: 'translateX(-50%)',
             },
@@ -67,8 +67,8 @@ const scaleTransition = (offsetX, offsetY) => {
         },
         'bottom-end': {
             default: {
-                bottom: offsetY,
-                right: offsetX,
+                bottom: `${offsetY}px`,
+                right: `${offsetX}px`,
             },
             variants: {
                 ...scaleMotionProps,
@@ -76,8 +76,8 @@ const scaleTransition = (offsetX, offsetY) => {
         },
         'bottom-start': {
             default: {
-                bottom: offsetY,
-                left: offsetX,
+                bottom: `${offsetY}px`,
+                left: `${offsetX}px`,
             },
             variants: {
                 ...scaleMotionProps,
@@ -85,7 +85,7 @@ const scaleTransition = (offsetX, offsetY) => {
         },
         'bottom-center': {
             default: {
-                bottom: offsetY,
+                bottom: `${offsetY}px`,
                 left: '50%',
                 transform: 'translateX(-50%)',
             },
@@ -100,8 +100,8 @@ const fadeTransition = (offsetX, offsetY) => {
     return {
         'top-end': {
             default: {
-                top: offsetY,
-                right: offsetX,
+                top: `${offsetY}px`,
+                right: `${offsetX}px`,
             },
             variants: {
                 ...fadeMotionProps,
@@ -109,8 +109,8 @@ const fadeTransition = (offsetX, offsetY) => {
         },
         'top-start': {
             default: {
-                top: offsetY,
-                left: offsetX,
+                top: `${offsetY}px`,
+                left: `${offsetX}px`,
             },
             variants: {
                 ...fadeMotionProps,
@@ -118,7 +118,7 @@ const fadeTransition = (offsetX, offsetY) => {
         },
         'top-center': {
             default: {
-                top: offsetY,
+                top: `${offsetY}px`,
                 left: '50%',
                 transform: 'translateX(-50%)',
             },
@@ -128,8 +128,8 @@ const fadeTransition = (offsetX, offsetY) => {
         },
         'bottom-end': {
             default: {
-                bottom: offsetY,
-                right: offsetX,
+                bottom: `${offsetY}px`,
+                right: `${offsetX}px`,
             },
             variants: {
                 ...fadeMotionProps,
@@ -137,8 +137,8 @@ const fadeTransition = (offsetX, offsetY) => {
         },
         'bottom-start': {
             default: {
-                bottom: offsetY,
-                left: offsetX,
+                bottom: `${offsetY}px`,
+                left: `${offsetX}px`,
             },
             variants: {
                 ...fadeMotionProps,
@@ -146,7 +146,7 @@ const fadeTransition = (offsetX, offsetY) => {
         },
         'bottom-center': {
             default: {
-                bottom: offsetY,
+                bottom: `${offsetY}px`,
                 left: '50%',
                 transform: 'translateX(-50%)',
             },

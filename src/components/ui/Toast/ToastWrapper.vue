@@ -1,48 +1,31 @@
-<template>
-    <div>toast</div>
-</template>
 <script setup>
-import { PLACEMENT, TRANSITION_TYPE } from '../utils/constant'
-import { ref as reference } from 'vue'
+import { h, ref, useAttrs } from 'vue'
+import PropTypes from 'vue-types'
+import { PLACEMENT } from '@/components/ui/utils/constant.js'
+import { getPlacementTransition } from '@/components/ui/Toast/transition.js'
+import classNames from 'classnames'
+import chainedFunction from '@/components/ui/utils/chainedFunction.js'
+import { Motion, Presence } from 'motion/vue'
+// import { Motion, Presence } from 'motion/vue'
 
 const props = defineProps({
-    placement: {
-        type: String,
-        default: PLACEMENT.TOP_END,
-        validator(value) {
-            return [
-                PLACEMENT.TOP_START,
-                PLACEMENT.TOP_CENTER,
-                PLACEMENT.TOP_END,
-                PLACEMENT.BOTTOM_START,
-                PLACEMENT.BOTTOM_CENTER,
-                PLACEMENT.BOTTOM_END,
-            ].includes(value)
-        },
-    },
-    offsetX: {
-        type: [Number, String],
-        default: 30,
-    },
-    offsetY: {
-        type: [Number, String],
-        default: 30,
-    },
-    transitionType: {
-        type: String,
-        default: TRANSITION_TYPE.SCALE,
-        validator(value) {
-            return [TRANSITION_TYPE.SCALE, TRANSITION_TYPE.FADE].includes(value)
-        },
-    },
-    block: {
-        type: Boolean,
-        default: false,
-    },
+    placement: PropTypes.oneOf([
+        PLACEMENT.TOP_START,
+        PLACEMENT.TOP_CENTER,
+        PLACEMENT.TOP_END,
+        PLACEMENT.BOTTOM_START,
+        PLACEMENT.BOTTOM_CENTER,
+        PLACEMENT.BOTTOM_END,
+    ]).def(PLACEMENT.TOP_END),
+    offsetX: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).def(30),
+    offsetY: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).def(30),
+    transitionType: PropTypes.oneOf(['scale', 'fade']).def('scale'),
+    block: PropTypes.bool.def(false),
+    messageKey: PropTypes.string,
 })
 
 const useMessages = (msgKey) => {
-    let messages = reference([])
+    let messages = ref([])
 
     const getKey = (key) => {
         if (typeof key === 'undefined' && messages.value.length) {
@@ -78,4 +61,59 @@ const useMessages = (msgKey) => {
     }
     return { messages, push, removeAll, remove }
 }
+const rootRef = ref(null)
+const { messages, remove, push, removeAll } = useMessages(props.messageKey)
+
+defineExpose({ root: rootRef, push, removeAll, remove })
+const placementTransition = getPlacementTransition({
+    offsetX: props.offsetX,
+    offsetY: props.offsetY,
+    placement: props.placement,
+    transitionType: props.transitionType,
+})
+
+const { class: className, ...restAttrs } = useAttrs()
+
+const toastProps = {
+    triggerByToast: true,
+    ...restAttrs,
+}
+
+const renderNode = (item) =>
+    h(item.node, {
+        ...toastProps,
+        onClose: chainedFunction(item.node?.onClose, () => remove(item.key)),
+        class: classNames(item.node?.attrs?.class),
+    })
 </script>
+
+<template>
+    <div ref="rootRef" :style="placementTransition.default" :class="classNames(className, 'toast', block && 'w-full')">
+        <template v-for="(item, key) in messages" :key="key">
+            <Presence>
+                <Motion
+                    :initial="placementTransition.variants.initial"
+                    :animate="placementTransition.variants.animate"
+                    :exit="placementTransition.variants.exit"
+                >
+                    <component :is="renderNode(item)" v-show="item.visible" />
+                </Motion>
+            </Presence>
+        </template>
+    </div>
+</template>
+<style>
+.slide-fade-enter-active {
+    transition: all 0.3s ease-out;
+}
+
+.slide-fade-leave-active {
+    transition: all 0.8s cubic-bezier(1, 0.5, 0.8, 1);
+}
+
+.slide-fade-enter-from,
+.slide-fade-leave-to {
+    transform: translateX(20px);
+    opacity: 0;
+}
+</style>

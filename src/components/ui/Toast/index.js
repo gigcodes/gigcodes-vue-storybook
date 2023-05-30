@@ -1,3 +1,4 @@
-import Toast from './Toast.vue'
+import createToaster from './helpers/api.js'
+import Toast from '@/components/ui/Toast/Toast.vue'
 
-export default Toast
+export { Toast, createToaster }

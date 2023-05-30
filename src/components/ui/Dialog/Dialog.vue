@@ -1,4 +1,8 @@
-<template></template>
+<script>
+export default {
+    inheritAttrs: false,
+}
+</script>
 <script setup>
 import useWindowSize from '../utils/useWindowSize.js'
 import { ref, toRefs, useAttrs } from 'vue'
@@ -26,7 +30,7 @@ const props = defineProps({
         type: Number,
         default: 150,
     },
-    bodyOpenClassName: Number,
+    bodyOpenClassName: String,
 })
 
 const currentSize = useWindowSize()
@@ -56,3 +60,4 @@ const defaultDialogContentClass = 'dialog-content'
 
 const dialogClass = classNames(defaultDialogContentClass, props.contentClassName)
 </script>
+<template></template>
