@@ -23,6 +23,8 @@ import { FormContainer, FormItem } from '@/components/ui/Form'
 import { Avatar, AvatarGroup } from '@/components/ui/Avatar'
 import { CheckBox, CheckBoxGroup } from '@/components/ui/CheckBox'
 import { Dropdown, DropdownItem, DropdownMenu } from '@/components/ui/Dropdown'
+import { createToaster, Toast } from '@/components/ui/Toast'
+import Notification from '@/components/ui/Notification'
 
 import type { App } from 'vue'
 
@@ -69,6 +71,8 @@ export default {
         app.component('Dropdown', Dropdown)
         app.component('DropdownMenu', DropdownMenu)
         app.component('DropdownItem', DropdownItem)
+        app.component('Toast', Toast)
+        app.component('Notification', Notification)
     },
 }
 
@@ -111,4 +115,7 @@ export {
     Dropdown,
     DropdownMenu,
     DropdownItem,
+    Toast,
+    createToaster,
+    Notification,
 }
