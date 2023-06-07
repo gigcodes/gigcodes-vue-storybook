@@ -8,7 +8,7 @@
         Show toaster
     </Button>
     <Toast ref="toaster" />
-    <TimeInput format="12" />
+    <TimeInputRange v-model="date" clearable />
 </template>
 <script setup>
 import { AcademicCapIcon } from '@heroicons/vue/24/solid'
@@ -17,8 +17,10 @@ import Alert from '@/components/ui/Alert/Alert.vue'
 import { ref } from 'vue'
 import Toast from '@/components/ui/Toast/Toast.vue'
 import { createToaster } from '@/components/ui/Toast'
-import TimeInput from './components/ui/TimeInput/TimeInput.vue'
+import TimeInputRange from '@/components/ui/TimeInput/TimeInputRange.vue'
+import dayjs from 'dayjs'
 
+const date = ref([new Date(), dayjs(new Date()).add(60, 'minutes').toDate()])
 const toaster = ref(null)
 const createToast = () => createToaster.info('hello word')
 </script>

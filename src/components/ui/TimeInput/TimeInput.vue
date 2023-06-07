@@ -13,11 +13,11 @@
         :form="form"
         @click="() => hoursRef.focus()"
     >
-        <template #prefix>
+        <template v-if="slots.prefix && prefix" #prefix>
             <slot name="prefix" />
         </template>
-        <template #suffix>
-            <CloseButton v-if="clearable && _value" @click="handleClear" />
+        <template v-if="suffix" #suffix>
+            <CloseButton v-if="clearable && modelValue" @click="handleClear" />
             <slot v-else-if="slots?.suffix" name="suffix" />
             <ClockIcon v-else class="h-4" />
         </template>
@@ -118,12 +118,15 @@ const props = defineProps({
         type: String,
         default: 'pm',
     },
-    prefix: String,
+    prefix: {
+        type: Boolean,
+        default: true,
+    },
     showSeconds: Boolean,
     size: String,
     suffix: {
-        type: Object,
-        default: () => null,
+        type: Boolean,
+        default: true,
     },
     timeFieldPlaceholder: {
         type: String,
@@ -140,7 +143,7 @@ const { class: className, style, ...restAttrs } = useAttrs()
 
 const uuid = useUniqueId(props.id)
 const slots = useSlots()
-const emits = defineEmits(['update:modelValue'])
+const emits = defineEmits(['update:modelValue', 'change'])
 const hoursRef = ref(null)
 const minutesRef = ref(null)
 const secondsRef = ref(null)
@@ -159,6 +162,7 @@ const setDate = (change) => {
     )
     time.value = getTimeValues(newDate, props.format, props.amLabel, props.pmLabel)
     emits('update:modelValue', newDate)
+    emits('change', newDate)
 }
 
 const handleHoursChange = createTimeHandler({
@@ -212,4 +216,6 @@ const handleClear = () => {
     time.value.amPm = ''
     hoursRef.value.focus()
 }
+
+defineExpose({ focus: () => hoursRef.value.focus() })
 </script>

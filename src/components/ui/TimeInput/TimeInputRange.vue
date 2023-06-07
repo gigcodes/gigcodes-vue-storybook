@@ -1,6 +1,6 @@
 <script setup>
 import useUniqueId from '@/components/hooks/useUniqueId'
-import { ref, useAttrs, watch } from 'vue'
+import { ref, useAttrs, useSlots, watch } from 'vue'
 import Input from '../Input'
 import TimeInput from './TimeInput.vue'
 import CloseButton from '../CloseButton'
@@ -60,6 +60,7 @@ const handleClear = () => {
     value.value = [null, null]
     fromTimeRef.value?.focus()
 }
+const slots = useSlots()
 
 const forwardProps = {
     amPmPlaceholder: props.amPmPlaceholder,
@@ -85,11 +86,11 @@ const focusTimeRef = () => fromTimeRef.value?.focus()
         @click="focusTimeRef"
     >
         <template #suffix>
-            <CloseButton v-if="clearable && value" class="h-4" @click="handleClear" />
-            <slot v-else name="suffix"></slot>
+            <CloseButton v-if="clearable && value" @click="handleClear" />
+            <slot v-else-if="slots" name="suffix"></slot>
         </template>
-        <template #prefix>
-            <slot name="suffix"></slot>
+        <template v-if="slots.prefix" #prefix>
+            <slot name="prefix"></slot>
         </template>
         <div class="time-input-wrapper">
             <TimeInput
@@ -100,19 +101,17 @@ const focusTimeRef = () => fromTimeRef.value?.focus()
                 :name="name"
                 :next-ref="toTimeRef"
                 :clearable="false"
-                @change="
-                    (date) => {
-                        value = [date, value[1]]
-                    }
-                "
+                unstyle
+                :suffix="false"
             />
             <span class="time-input-separator">{{ seperator }}</span>
             <TimeInput
                 ref="toTimeRef"
                 v-model="value[1]"
+                unstyle
                 v-bind="forwardProps"
                 :clearable="false"
-                @change="(data) => (value = [value[0], date])"
+                :suffix="false"
             />
         </div>
     </Input>
