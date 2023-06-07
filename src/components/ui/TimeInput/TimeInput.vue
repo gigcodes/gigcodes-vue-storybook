@@ -55,7 +55,6 @@
                 ref="secondsRef"
                 :value="time.seconds"
                 :class="timeFieldClass"
-                :with-separator="showSeconds"
                 :size="size"
                 :max="59"
                 :placeholder="timeFieldPlaceholder"
@@ -67,13 +66,14 @@
             <AmPmInput
                 v-if="format === '12'"
                 ref="amPmRef"
-                v-model="time.amPm"
+                :value="time.amPm"
                 :placeholder="amPmPlaceholder"
                 :am-label="amLabel"
                 :pm-label="pmLabel"
                 aria-label="am pm"
                 :disabled="disabled"
-                @change="handleAmPmChange"
+                :change="handleAmPmChange"
+                :set-value="(val) => (time.amPm = val)"
             />
         </div>
     </Input>

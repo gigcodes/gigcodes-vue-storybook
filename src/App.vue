@@ -8,7 +8,7 @@
         Show toaster
     </Button>
     <Toast ref="toaster" />
-    <TimeInput />
+    <TimeInput format="12" />
 </template>
 <script setup>
 import { AcademicCapIcon } from '@heroicons/vue/24/solid'

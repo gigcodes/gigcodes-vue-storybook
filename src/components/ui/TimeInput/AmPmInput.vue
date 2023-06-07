@@ -5,9 +5,11 @@ import classNames from 'classnames'
 const props = defineProps({
     amLabel: String,
     pmLabel: String,
-    modelValue: String,
+    value: String,
+    change: Function,
+    setValue: Function,
 })
-const emit = defineEmits(['change', 'update:modelValue', 'focus'])
+const emit = defineEmits(['focus'])
 defineOptions({
     inheritAttrs: false,
 })
@@ -21,7 +23,7 @@ const handleClick = (event) => {
 const handleKeyDown = (event) => {
     if (event.key === 'ArrowUp' || event.key === 'ArrowDown') {
         event.preventDefault()
-        emit('change', props.modelValue === props.amLabel ? props.pmLabel : props.amLabel, true)
+        props.change(props.value === props.amLabel ? props.pmLabel : props.amLabel, true)
     }
 }
 
@@ -35,32 +37,33 @@ const handleChange = (event) => {
 
     if (lastInputVal === 'p') {
         event.preventDefault()
-        emit('change', props.pmLabel, true)
+        props.change(props.pmLabel, true)
         return
     }
 
     if (lastInputVal === 'a') {
         event.preventDefault()
-        emit('change', props.amLabel, true)
+        props.change(props.amLabel, true)
         return
     }
 
-    emit('change', props.modelValue.toString(), true)
+    props.change(props.value.toString(), true)
 }
 
 const { class: className, ...restAttrs } = useAttrs()
+defineExpose({ focus: () => inputRef.value.focus(), select: () => inputRef.value.select() })
 </script>
 
 <template>
     <input
         ref="inputRef"
         type="text"
-        :value="modelValue"
+        :value="value"
         :class="classNames('time-input-field', 'am-pm-input', className)"
         v-bind="restAttrs"
         @click="handleClick"
         @focus="handleFocus"
         @keydown="handleKeyDown"
-        @change="handleChange"
+        @input="handleChange"
     />
 </template>
