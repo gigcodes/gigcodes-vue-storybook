@@ -6,7 +6,7 @@ const props = defineProps({
     eventKey: String,
 })
 
-const menu = inject('menu')
+const menu = inject('menu', null)
 const handleClick = () => {
     if (menu) {
         menu.emits(props.eventKey)

@@ -17,7 +17,7 @@ import { Menu, MenuItem } from '@/components/ui/Menu'
 import { Radio, RadioGroup } from '@/components/ui/Radio'
 import { TabContent, TabList, TabNav, Tabs } from '@/components/ui/Tabs'
 import { StepItem, Steps } from '@/components/ui/Steps'
-import { TimeLine, TimeLineItem } from '@/components/ui/TimeLine'
+import { Timeline, TimelineItem } from '@/components/ui/TimeLine'
 import { InputAddon, InputGroup } from '@/components/ui/InputGroup'
 import { FormContainer, FormItem } from '@/components/ui/Form'
 import { Avatar, AvatarGroup } from '@/components/ui/Avatar'
@@ -45,8 +45,8 @@ export default {
         app.component('Steps', Steps)
         app.component('StepItem', StepItem)
         app.component('Switcher', Switcher)
-        app.component('TimeLine', TimeLine)
-        app.component('TimeLineItem', TimeLineItem)
+        app.component('TimeLine', Timeline)
+        app.component('TimeLineItem', TimelineItem)
         app.component('StatusIcon', StatusIcon)
         app.component('Spinner', Spinner)
         app.component('Skeleton', Skeleton)
@@ -90,7 +90,8 @@ export {
     Steps,
     StepItem,
     Switcher,
-    TimeLineItem,
+    TimelineItem,
+    Timeline,
     StatusIcon,
     Spinner,
     Skeleton,

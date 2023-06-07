@@ -44,9 +44,9 @@ const props = defineProps({
     custom: Boolean,
 })
 
-const { size, value, onActive, onDeactivate, selectionType } = inject('segment', null)
+const { size, value: modelValue, onActive, onDeactivate, selectionType } = inject('segment', null)
 const { class: className, ...restAttrs } = useAttrs()
-const active = computed(() => value.value.includes(props.value))
+const active = computed(() => modelValue.value.includes(props.value))
 
 const getSegmentSize = computed(() => {
     let sizeClass = ''
@@ -74,7 +74,7 @@ const onSegmentItemClick = () => {
                 onActive([props.value])
             }
             if (selectionType === 'multiple') {
-                const nextValue = [...value.value, ...[props.value]]
+                const nextValue = [...modelValue.value, ...[props.value]]
                 onActive(nextValue)
             }
         } else if (selectionType === 'multiple') {

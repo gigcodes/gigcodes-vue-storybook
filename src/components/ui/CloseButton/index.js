@@ -1,3 +1,3 @@
-import CloseButton from "./CloseButton.vue";
+import CloseButton from './CloseButton.vue'
 
-export default CloseButton;
+export default CloseButton

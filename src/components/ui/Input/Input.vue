@@ -63,8 +63,8 @@ const value = reference(props.modelValue)
 const prefixGutter = reference(0)
 const suffixGutter = reference(0)
 const { themeColor, controlSize, primaryColorLevel, direction } = inject('config', DEFAULT_CONFIG)
-const formControlSize = inject('form')?.size
-const inputGroupSize = inject('inputGroup')?.size
+const formControlSize = inject('form', {})?.size
+const inputGroupSize = inject('inputGroup', {})?.size
 
 const textArea = props.type === 'textarea'
 

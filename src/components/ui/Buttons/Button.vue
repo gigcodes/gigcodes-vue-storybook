@@ -77,8 +77,8 @@ const props = defineProps({
 })
 
 const { themeColor, controlSize, primaryColorLevel } = inject('config', DEFAULT_CONFIG)
-const formControlSize = inject('form')?.size
-const inputGroupSize = inject('inputGroup')?.size
+const formControlSize = inject('form', {})?.size
+const inputGroupSize = inject('inputGroup', {})?.size
 const defaultClass = 'button'
 const sizeIconClass = 'inline-flex items-center justify-center'
 

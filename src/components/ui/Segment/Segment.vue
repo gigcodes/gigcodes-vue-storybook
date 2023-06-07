@@ -29,8 +29,8 @@ const emits = defineEmits(['update:modelValue'])
 
 const { class: className, ...restAttrs } = useAttrs()
 
-const formControlSize = inject('form')?.size
-const inputGroupSize = inject('inputGroup')?.size
+const formControlSize = inject('form', {})?.size
+const inputGroupSize = inject('inputGroup', {})?.size
 const { controlSize } = inject('config', DEFAULT_CONFIG)
 const selectedValue = reference(props.modelValue)
 

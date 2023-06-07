@@ -13,7 +13,7 @@ const props = defineProps({
 })
 
 const { controlSize } = inject('config', DEFAULT_CONFIG)
-const formControlSize = inject('form')?.size
+const formControlSize = inject('form', {})?.size
 const inputGroupSize = props.size || formControlSize || controlSize
 const { class: className, ...restAttrs } = useAttrs()
 

@@ -1,223 +1,66 @@
-<template>
-    <div>
-        <input
-            ref="hoursRef"
-            v-model="time.hours"
-            @input="handleHoursChange($event.target.value, time.minutes)"
-            :class="timeFieldClass"
-            :size="size"
-            :max="format === '12' ? 12 : 23"
-            :placeholder="timeFieldPlaceholder"
-            aria-label="hours"
-            :disabled="disabled"
-            :name="name"
-        />
-        <input
-            ref="minutesRef"
-            v-model="time.minutes"
-            @input="handleMinutesChange($event.target.value, time.seconds)"
-            :class="timeFieldClass"
-            :size="size"
-            :max="59"
-            :placeholder="timeFieldPlaceholder"
-            aria-label="minutes"
-            :disabled="disabled"
-        />
-        <input
-            v-if="showSeconds"
-            ref="secondsRef"
-            v-model="time.seconds"
-            @input="handleSecondsChange($event.target.value)"
-            :class="timeFieldClass"
-            :size="size"
-            :max="59"
-            :placeholder="timeFieldPlaceholder"
-            aria-label="seconds"
-            :disabled="disabled"
-        />
-        <am-pm-input
-            v-if="format === '12'"
-            ref="amPmRef"
-            v-model="time.amPm"
-            @change="handleAmPmChange"
-            :placeholder="amPmPlaceholder"
-            :am-label="amLabel"
-            :pm-label="pmLabel"
-            :size="size"
-            aria-label="am pm"
-            :disabled="disabled"
-        ></am-pm-input>
-    </div>
-</template>
+<script setup>
+import { ref, useAttrs } from 'vue'
+import classNames from 'classnames'
 
-<script>
-import { ref, reactive, watch } from 'vue';
-import { getTimeValues, getDate, createAmPmHandler, createTimeHandler } from './utils';
+const props = defineProps({
+    amLabel: String,
+    pmLabel: String,
+    modelValue: String,
+})
+const emit = defineEmits(['change', 'update:modelValue', 'focus'])
+defineOptions({
+    inheritAttrs: false,
+})
+const inputRef = ref(null)
 
-export default {
-  name: 'TimeInput',
-  props: {
-    amLabel: {
-      type: String,
-      default: 'am'
-    },
-    amPmPlaceholder: {
-      type: String,
-      default: 'am'
-    },
-    className: String,
-    clearable: {
-      type: Boolean,
-      default: true
-    },
-    defaultValue: [Date, String],
-    disabled: Boolean,
-    format: {
-      type: String,
-      default: '24'
-    },
-    field: Object,
-    form: Object,
-    id: String,
-    invalid: Boolean,
-    name: String,
-    nextRef: Object,
-    onChange: Function,
-    pmLabel: {
-      type: String,
-      default: 'pm'
-    },
-    prefix: String,
-    showSeconds: {
-      type: Boolean,
-      default: false
-    },
-    size: String,
-    style: Object,
-    suffix: {
-      type: Object,
-      default: () => null
-    },
-    timeFieldPlaceholder: {
-      type: String,
-      default: '--'
-    },
-    timeFieldClass: String,
-    value: [Date, String]
-  },
-  emits: ['update:modelValue', 'change'],
-  setup(props, { emit }) {
-    const hoursRef = ref(null);
-    const minutesRef = ref(null);
-    const secondsRef = ref(null);
-    const amPmRef = ref(null);
-    const time = reactive(
-      getTimeValues(props.value || props.defaultValue, props.format, props.amLabel, props.pmLabel)
-    );
+const handleClick = (event) => {
+    event.stopPropagation()
+    inputRef.value.select()
+}
 
-    watch(
-      () => [props.value, props.format, props.amLabel, props.pmLabel],
-      () => {
-        time = getTimeValues(props.value || props.defaultValue, props.format, props.amLabel, props.pmLabel);
-      }
-    );
+const handleKeyDown = (event) => {
+    if (event.key === 'ArrowUp' || event.key === 'ArrowDown') {
+        event.preventDefault()
+        emit('change', props.modelValue === props.amLabel ? props.pmLabel : props.amLabel, true)
+    }
+}
 
-    watch(
-      () => props.value,
-      () => {
-        if (props.value && props.value.getTime() !== time.getTime()) {
-          emit('update:modelValue', props.value);
-        }
-      }
-    );
+const handleFocus = (event) => {
+    emit('focus', event)
+    inputRef.value.select()
+}
 
-    const setDate = (change) => {
-      const timeWithChange = { ...time, ...change };
-      const newDate = getDate(
-        timeWithChange.hours,
-        timeWithChange.minutes,
-        timeWithChange.seconds,
-        props.format,
-        props.pmLabel,
-        timeWithChange.amPm
-      );
-      emit('update:modelValue', newDate);
-      emit('change', newDate);
-    };
+const handleChange = (event) => {
+    const lastInputVal = event.target.value.slice(-1).toLowerCase()
 
-    const handleHoursChange = createTimeHandler({
-      onChange: (val, carryOver) => {
-        setDate({
-          hours: val,
-          minutes: carryOver ?? time.minutes
-        });
-      },
-      min: props.format === '12' ? 1 : 0,
-      max: props.format === '12' ? 12 : 23,
-      nextRef: minutesRef,
-      nextMax: 59
-    });
+    if (lastInputVal === 'p') {
+        event.preventDefault()
+        emit('change', props.pmLabel, true)
+        return
+    }
 
-    const handleMinutesChange = createTimeHandler({
-      onChange: (val, carryOver) => {
-        setDate({
-          minutes: val,
-          seconds: carryOver ?? time.seconds
-        });
-      },
-      min: 0,
-      max: 59,
-      nextRef: props.showSeconds ? secondsRef : props.format === '12' ? amPmRef : props.nextRef,
-      nextMax: props.showSeconds ? 59 : undefined
-    });
+    if (lastInputVal === 'a') {
+        event.preventDefault()
+        emit('change', props.amLabel, true)
+        return
+    }
 
-    const handleSecondsChange = createTimeHandler({
-      onChange: (val) => {
-        setDate({ seconds: val });
-      },
-      min: 0,
-      max: 59,
-      nextRef: props.format === '12' ? amPmRef : props.nextRef
-    });
+    emit('change', props.modelValue.toString(), true)
+}
 
-    const handleAmPmChange = createAmPmHandler({
-      amLabel: props.amLabel,
-      pmLabel: props.pmLabel,
-      onChange: (val) => {
-        setDate({ amPm: val });
-      },
-      nextRef: props.nextRef
-    });
-
-    const handleClear = () => {
-      time.hours = '';
-      time.minutes = '';
-      time.seconds = '';
-      time.amPm = '';
-      emit('update:modelValue', null);
-      emit('change', null);
-      hoursRef.value.focus();
-    };
-
-    const suffixSlot = props.clearable && props.value ? (
-      <close-button @click="handleClear" />
-  ) : (
-      props.suffix
-    );
-
-    return {
-      time,
-      hoursRef,
-      minutesRef,
-      secondsRef,
-      amPmRef,
-      handleHoursChange,
-      handleMinutesChange,
-      handleSecondsChange,
-      handleAmPmChange,
-      handleClear,
-      suffixSlot
-    };
-  }
-};
+const { class: className, ...restAttrs } = useAttrs()
 </script>
+
+<template>
+    <input
+        ref="inputRef"
+        type="text"
+        :value="modelValue"
+        :class="classNames('time-input-field', 'am-pm-input', className)"
+        v-bind="restAttrs"
+        @click="handleClick"
+        @focus="handleFocus"
+        @keydown="handleKeyDown"
+        @change="handleChange"
+    />
+</template>

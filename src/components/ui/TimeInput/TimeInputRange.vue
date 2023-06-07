@@ -1,88 +1,117 @@
 <script setup>
-import { ref, useAttrs } from 'vue'
-import { clamp, padTime } from '@/components/ui/TimeInput/utils/index.js'
-import classNames from 'classnames'
+import useUniqueId from '@/components/hooks/useUniqueId'
+import { ref, useAttrs, watch } from 'vue'
+import Input from '../Input'
+import TimeInput from './TimeInput.vue'
+import CloseButton from '../CloseButton'
 
+const props = defineProps({
+    invalid: Boolean,
+    showSeconds: Boolean,
+    clearable: Boolean,
+    format: {
+        type: String,
+        default: '24',
+    },
+    timeFieldPlaceholder: {
+        type: String,
+        default: '--',
+    },
+    amPmPlaceholder: {
+        type: String,
+        default: 'am',
+    },
+    seperator: {
+        type: String,
+        default: '~',
+    },
+    disabled: Boolean,
+    size: String,
+    id: String,
+    modelValue: {
+        type: Array,
+        default: () => [null, null],
+    },
+    name: String,
+    amLabel: String,
+    pmLabel: String,
+    field: String,
+    form: String,
+    timeFieldClass: String,
+})
+
+const emit = defineEmits(['update:modelValue'])
 defineOptions({
     inheritAttrs: false,
 })
+const { class: className, style, ...restAttrs } = useAttrs()
 
-const { class: className, ...restAttrs } = useAttrs()
-const props = defineProps({
-    modelValue: [String, Number],
-    withSeparator: Boolean,
-    max: Number,
-    min: {
-        type: Number,
-        default: 0,
-    },
-})
-const emits = defineEmits(['focus', 'blur', 'change', 'update:modelValue'])
-const digitsEntered = ref(0)
-const inputRef = ref(null)
+const uuid = useUniqueId(props.id)
 
-const handleFocus = (e) => {
-    emits('focus', e)
-    inputRef.value.select()
-    digitsEntered.value = 0
+const fromTimeRef = ref()
+
+const toTimeRef = ref()
+
+const value = ref(props.modelValue)
+
+watch(value, (val) => emit('update:modelValue', val))
+
+const handleClear = () => {
+    value.value = [null, null]
+    fromTimeRef.value?.focus()
 }
 
-const handleBlur = (e) => {
-    emits('blur', e)
-    if (digitsEntered.value === 1) {
-        emits('change', e.currentTarget.value, false)
-    }
+const forwardProps = {
+    amPmPlaceholder: props.amPmPlaceholder,
+    disabled: props.disabled,
+    format: props.format,
+    size: props.size,
+    timeFieldPlaceholder: props.timeFieldPlaceholder,
+    showSeconds: props.showSeconds,
 }
 
-const handleClick = (e) => {
-    e.stopPropagation()
-    inputRef.value.select()
-}
-
-const handleKeyDown = (e) => {
-    if (e.key === 'ArrowUp') {
-        e.preventDefault()
-        const padded = padTime(clamp(parseInt(e.currentTarget.value, 10) + 1, props.min, props.max).toString())
-        if (props.modelValue !== padded) {
-            emits('change', padded, false)
-        }
-    }
-
-    if (e.key === 'ArrowDown') {
-        e.preventDefault()
-        const padded = padTime(clamp(parseInt(e.currentTarget.value, 10) - 1, props.min, props.max).toString())
-
-        if (props.modelValue !== padded) {
-            emits('change', padded, false)
-        }
-    }
-}
-
-const handleChange = (event) => {
-    digitsEntered.value = digitsEntered.value + 1
-
-    const _val = parseInt(event.currentTarget.value, 10).toString()
-
-    if (_val === '0' && digitsEntered.value === 0) {
-        emits('update:modelValue', '00')
-        return
-    }
-    emits('change', _val, true, digitsEntered.value > 0)
-}
+const focusTimeRef = () => fromTimeRef.value?.focus()
 </script>
+
 <template>
-    <input
-        ref="inputRef"
-        type="text"
-        inputmode="numeric"
-        :value="modelValue"
-        :class="classNames('time-input-field', className)"
+    <Input
+        as-element="div"
+        :invalid="invalid"
+        :size="size"
+        :class="className"
+        :style="style"
+        :disabled="disabled"
         v-bind="restAttrs"
-        @change="handleChange"
-        @click="handleClick"
-        @focus="handleFocus"
-        @blur="handleBlur"
-        @keydown="handleKeyDown"
-    />
-    <span v-if="withSeparator">:</span>
+        @click="focusTimeRef"
+    >
+        <template #suffix><slot name="suffix"></slot></template>
+        <template #prefix>
+            <CloseButton v-if="clearable && value" @click="handleClear" />
+            <slot v-else name="suffix"></slot>
+        </template>
+        <div class="time-input-wrapper">
+            <TimeInput
+                v-bind="forwardProps"
+                :id="uuid"
+                ref="fromTimeRef"
+                v-model="value[0]"
+                :name="name"
+                :next-ref="toTimeRef"
+                :clearable="false"
+                @change="
+                    (date) => {
+                        value = [date, value[1]]
+                    }
+                "
+            />
+            <span class="time-input-separator">{{ seperator }}</span>
+            <TimeInput
+                ref="toTimeRef"
+                v-model="value[1]"
+                v-bind="forwardProps"
+                :clearable="false"
+                @change="(data) => (value = [value[0], date])"
+            />
+        </div>
+    </Input>
 </template>

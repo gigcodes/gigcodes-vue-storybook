@@ -22,10 +22,10 @@ const emits = defineEmits(['update:modelValue'])
 
 const { themeColor, primaryColorLevel } = inject('config', DEFAULT_CONFIG)
 
-const groupValue = inject('value')
-const name = inject('name')
-const color = inject('color')
-const onGroupChange = inject('onGroupChange')
+const groupValue = inject('value', null)
+const name = inject('name', null)
+const injectedColor = inject('color', null)
+const onGroupChange = inject('onGroupChange', null)
 
 const isChecked = () => {
     if (typeof groupValue !== 'undefined' && typeof props.value !== 'undefined') {
@@ -76,7 +76,7 @@ const onCheckboxChange = () => {
     onGroupChange?.(props.value, nextChecked)
 }
 
-const checkboxColor = props.color || color || `${themeColor}-${primaryColorLevel}`
+const checkboxColor = props.color || injectedColor || `${themeColor}-${primaryColorLevel}`
 
 const checkboxDefaultClass = `checkbox text-${checkboxColor}`
 const labelDefaultClass = `checkbox-label`
