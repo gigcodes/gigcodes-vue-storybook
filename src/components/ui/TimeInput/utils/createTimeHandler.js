@@ -12,7 +12,6 @@ export function createTimeHandler({ onChange, nextRef, min, max, nextMax }) {
         if (Number.isNaN(parsed)) {
             return
         }
-
         if (parsed > allButLastDigit(max) || forceTriggerShift) {
             const lastDigit = parsed % 10
 

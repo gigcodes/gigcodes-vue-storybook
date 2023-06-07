@@ -84,10 +84,12 @@ const focusTimeRef = () => fromTimeRef.value?.focus()
         v-bind="restAttrs"
         @click="focusTimeRef"
     >
-        <template #suffix><slot name="suffix"></slot></template>
-        <template #prefix>
-            <CloseButton v-if="clearable && value" @click="handleClear" />
+        <template #suffix>
+            <CloseButton v-if="clearable && value" class="h-4" @click="handleClear" />
             <slot v-else name="suffix"></slot>
+        </template>
+        <template #prefix>
+            <slot name="suffix"></slot>
         </template>
         <div class="time-input-wrapper">
             <TimeInput

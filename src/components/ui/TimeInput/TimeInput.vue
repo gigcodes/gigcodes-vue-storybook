@@ -13,9 +13,11 @@
         :form="form"
         @click="() => hoursRef.focus()"
     >
-        <template #prefix><slot name="prefix" /></template>
+        <template #prefix>
+            <slot name="prefix" />
+        </template>
         <template #suffix>
-            <CloseButton v-if="clearable && modelValue" @click="handleClear" />
+            <CloseButton v-if="clearable && _value" @click="handleClear" />
             <slot v-else-if="slots?.suffix" name="suffix" />
             <ClockIcon v-else class="h-4" />
         </template>
@@ -23,7 +25,7 @@
             <TimeInputField
                 :id="uuid"
                 ref="hoursRef"
-                v-model="time.hours"
+                :value="time.hours"
                 :class="timeFieldClass"
                 with-separator
                 :size="size"
@@ -32,11 +34,12 @@
                 aria-label="hours"
                 :disabled="disabled"
                 :name="name"
-                @change="handleHoursChange"
+                :change="handleHoursChange"
+                :set-value="(val) => (time.hours = val)"
             />
             <TimeInputField
                 ref="minutesRef"
-                v-model="time.minutes"
+                :value="time.minutes"
                 :class="timeFieldClass"
                 :with-separator="showSeconds"
                 :size="size"
@@ -44,12 +47,13 @@
                 :placeholder="timeFieldPlaceholder"
                 aria-label="minutes"
                 :disabled="disabled"
-                @change="handleMinutesChange"
+                :change="handleMinutesChange"
+                :set-value="(val) => (time.minutes = val)"
             />
             <TimeInputField
                 v-if="showSeconds"
                 ref="secondsRef"
-                v-model="time.seconds"
+                :value="time.seconds"
                 :class="timeFieldClass"
                 :with-separator="showSeconds"
                 :size="size"
@@ -57,7 +61,8 @@
                 :placeholder="timeFieldPlaceholder"
                 aria-label="seconds"
                 :disabled="disabled"
-                @change="handleSecondsChange"
+                :change="handleSecondsChange"
+                :set-value="(val) => (time.seconds = val)"
             />
             <AmPmInput
                 v-if="format === '12'"
@@ -75,14 +80,15 @@
 </template>
 
 <script setup>
-import { ref, useAttrs, useSlots, watch } from 'vue'
-import { getTimeValues, getDate, createAmPmHandler, createTimeHandler } from './utils'
+import { ref, useAttrs, useSlots } from 'vue'
+import { createAmPmHandler, createTimeHandler, getDate, getTimeValues } from './utils'
 import useUniqueId from '@/components/hooks/useUniqueId'
 import Input from '../Input'
 import CloseButton from '../CloseButton'
 import TimeInputField from './TimeInputField.vue'
 import AmPmInput from './AmPmInput.vue'
 import { ClockIcon } from '@heroicons/vue/24/outline'
+
 const props = defineProps({
     amLabel: {
         type: String,
@@ -134,31 +140,15 @@ const { class: className, style, ...restAttrs } = useAttrs()
 
 const uuid = useUniqueId(props.id)
 const slots = useSlots()
-const emits = defineEmits(['update:modelValue', 'change'])
+const emits = defineEmits(['update:modelValue'])
 const hoursRef = ref(null)
 const minutesRef = ref(null)
 const secondsRef = ref(null)
 const amPmRef = ref(null)
 const time = ref(getTimeValues(props.modelValue, props.format, props.amLabel, props.pmLabel))
 
-watch(
-    () => [props.modelValue, props.format, props.amLabel, props.pmLabel],
-    () => {
-        time.value = getTimeValues(props.modelValue, props.format, props.amLabel, props.pmLabel)
-    }
-)
-
-watch(
-    () => props.modelValue,
-    () => {
-        if (props.modelValue && props.modelValue.getTime() !== time.value.getTime()) {
-            emits('update:modelValue', props.modelValue)
-        }
-    }
-)
-
 const setDate = (change) => {
-    const timeWithChange = { ...time, ...change }
+    const timeWithChange = { ...time.value, ...change }
     const newDate = getDate(
         timeWithChange.hours,
         timeWithChange.minutes,
@@ -167,8 +157,8 @@ const setDate = (change) => {
         props.pmLabel,
         timeWithChange.amPm
     )
+    time.value = getTimeValues(newDate, props.format, props.amLabel, props.pmLabel)
     emits('update:modelValue', newDate)
-    emits('change', newDate)
 }
 
 const handleHoursChange = createTimeHandler({
@@ -220,8 +210,6 @@ const handleClear = () => {
     time.value.minutes = ''
     time.value.seconds = ''
     time.value.amPm = ''
-    emits('update:modelValue', null)
-    emits('change', null)
     hoursRef.value.focus()
 }
 </script>
