@@ -1,34 +1,38 @@
 <template>
-    <textarea v-if="textArea" v-bind="inputProps" v-model="value" :style="style" @input="updateValue"></textarea>
+    <textarea v-if="textArea" v-bind="inputProps" :value="modelValue" :style="style" @input="updateValue"></textarea>
     <span v-else-if="(slots?.prefix || slots?.suffix) && !textArea" :class="inputWrapperClass">
         <div v-if="slots?.prefix" ref="prefixNode" class="input-suffix-start">
             <slot name="prefix" />
         </div>
-        <input v-bind="inputProps" v-model="value" :style="{ ...affixGutterStyle(), ...style }" @input="updateValue" />
+        <component
+            :is="asElement"
+            v-bind="inputProps"
+            :value="modelValue"
+            :style="{ ...affixGutterStyle(), ...style }"
+            @input="updateValue"
+        >
+            <slot />
+        </component>
         <div v-if="slots?.suffix" ref="suffixNode" class="input-suffix-end">
             <slot name="suffix" />
         </div>
     </span>
-    <input
+    <component
+        :is="asElement"
         v-else
         v-bind="inputProps"
-        v-model="value"
+        :value="modelValue"
         :style="{ ...affixGutterStyle(), ...style }"
         @input="updateValue"
-    />
+    >
+        <slot />
+    </component>
 </template>
-<script>
-export default {
-    inheritAttrs: false,
-}
-</script>
 <script setup>
 import { CONTROL_SIZES, DEFAULT_CONFIG, SIZES } from '../utils/constant'
-import { computed, inject, onMounted, ref as reference, useAttrs, useSlots } from 'vue'
+import { computed, inject, onMounted, ref, useAttrs, useSlots } from 'vue'
 import { get, isEmpty, isNil } from 'lodash'
 import classNames from 'classnames'
-
-const { class: className, style, ...restAttrs } = useAttrs()
 
 const props = defineProps({
     asElement: {
@@ -52,23 +56,26 @@ const props = defineProps({
     field: Object,
 })
 
+defineOptions({
+    inheritAttrs: false,
+})
+
+const { class: className, style, ...restAttrs } = useAttrs()
+
 const emits = defineEmits(['update:modelValue'])
 
 const updateValue = (e) => {
     emits('update:modelValue', e.target.value)
 }
 
-const value = reference(props.modelValue)
-
-const prefixGutter = reference(0)
-const suffixGutter = reference(0)
+const prefixGutter = ref(0)
+const suffixGutter = ref(0)
 const { themeColor, controlSize, primaryColorLevel, direction } = inject('config', DEFAULT_CONFIG)
 const formControlSize = inject('form', {})?.size
 const inputGroupSize = inject('inputGroup', {})?.size
+const inputSize = props.size || inputGroupSize || formControlSize || controlSize
 
 const textArea = props.type === 'textarea'
-
-const inputSize = props.size || inputGroupSize || formControlSize || controlSize
 
 const isInvalid = computed(() => {
     let validate = false
@@ -99,8 +106,8 @@ const inputClass = classNames(
     isInvalid.value && 'input-invalid',
     textArea && 'input-textarea'
 )
-const prefixNode = reference(null)
-const suffixNode = reference(null)
+const prefixNode = ref(null)
+const suffixNode = ref(null)
 
 const getAffixSize = () => {
     if (!prefixNode.value && !suffixNode.value) return
@@ -147,13 +154,10 @@ const affixGutterStyle = () => {
     return gutterStyle
 }
 
-const ref = reference()
-
 const inputProps = {
     className: !props.unstyle ? inputClass : '',
     disabled: props.disabled,
     type: props.type,
-    ref,
     ...props.field,
     ...restAttrs,
 }

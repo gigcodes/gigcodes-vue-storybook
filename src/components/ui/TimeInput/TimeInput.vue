@@ -1,11 +1,8 @@
 <template>
     <Input
-        v-model="time.hours"
         :invalid="invalid"
         as-element="div"
         :size="size"
-        :max="format === '12' ? 12 : 23"
-        :placeholder="timeFieldPlaceholder"
         aria-label="hours"
         :disabled="disabled"
         :name="name"
@@ -19,7 +16,8 @@
         <template #prefix><slot name="prefix" /></template>
         <template #suffix>
             <CloseButton v-if="clearable && modelValue" @click="handleClear" />
-            <slot v-else name="suffix" />
+            <slot v-else-if="slots?.suffix" name="suffix" />
+            <ClockIcon v-else class="h-4" />
         </template>
         <div class="time-input-wrapper">
             <TimeInputField
@@ -77,13 +75,14 @@
 </template>
 
 <script setup>
-import { ref, useAttrs, watch } from 'vue'
+import { ref, useAttrs, useSlots, watch } from 'vue'
 import { getTimeValues, getDate, createAmPmHandler, createTimeHandler } from './utils'
 import useUniqueId from '@/components/hooks/useUniqueId'
 import Input from '../Input'
 import CloseButton from '../CloseButton'
 import TimeInputField from './TimeInputField.vue'
 import AmPmInput from './AmPmInput.vue'
+import { ClockIcon } from '@heroicons/vue/24/outline'
 const props = defineProps({
     amLabel: {
         type: String,
@@ -134,7 +133,7 @@ defineOptions({
 const { class: className, style, ...restAttrs } = useAttrs()
 
 const uuid = useUniqueId(props.id)
-
+const slots = useSlots()
 const emits = defineEmits(['update:modelValue', 'change'])
 const hoursRef = ref(null)
 const minutesRef = ref(null)

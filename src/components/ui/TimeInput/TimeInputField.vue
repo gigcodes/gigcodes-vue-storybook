@@ -1,6 +1,6 @@
 <script setup>
 import { ref, useAttrs } from 'vue'
-import { clamp, padTime } from '@/components/ui/TimeInput/utils/index.js'
+import { clamp, padTime } from './utils/index.js'
 import classNames from 'classnames'
 
 defineOptions({
@@ -42,7 +42,7 @@ const handleClick = (e) => {
 const handleKeyDown = (e) => {
     if (e.key === 'ArrowUp') {
         e.preventDefault()
-        const padded = padTime(clamp(parseInt(e.currentTarget.value, 10) + 1, props.min, props.max).toString())
+        const padded = padTime(clamp(parseInt(e.target.value, 10) + 1, props.min, props.max).toString())
         if (props.modelValue !== padded) {
             emits('change', padded, false)
         }
@@ -50,7 +50,7 @@ const handleKeyDown = (e) => {
 
     if (e.key === 'ArrowDown') {
         e.preventDefault()
-        const padded = padTime(clamp(parseInt(e.currentTarget.value, 10) - 1, props.min, props.max).toString())
+        const padded = padTime(clamp(parseInt(e.target.value, 10) - 1, props.min, props.max).toString())
 
         if (props.modelValue !== padded) {
             emits('change', padded, false)
@@ -61,7 +61,7 @@ const handleKeyDown = (e) => {
 const handleChange = (event) => {
     digitsEntered.value = digitsEntered.value + 1
 
-    const _val = parseInt(event.currentTarget.value, 10).toString()
+    const _val = parseInt(event.target.value, 10).toString()
 
     if (_val === '0' && digitsEntered.value === 0) {
         emits('update:modelValue', '00')
@@ -69,6 +69,8 @@ const handleChange = (event) => {
     }
     emits('change', _val, true, digitsEntered.value > 0)
 }
+
+defineExpose({ focus: () => inputRef.value.focus(), select: () => inputRef.value.select() })
 </script>
 <template>
     <input
