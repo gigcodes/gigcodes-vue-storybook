@@ -73,9 +73,9 @@ const suffixGutter = ref(0)
 const { themeColor, controlSize, primaryColorLevel, direction } = inject('config', DEFAULT_CONFIG)
 const formControlSize = inject('form', {})?.size
 const inputGroupSize = inject('inputGroup', {})?.size
-const inputSize = props.size || inputGroupSize || formControlSize || controlSize
+const inputSize = computed(() => props.size || inputGroupSize || formControlSize || controlSize)
 
-const textArea = props.type === 'textarea'
+const textArea = computed(() => props.type === 'textarea')
 
 const isInvalid = computed(() => {
     let validate = false
@@ -94,17 +94,20 @@ const isInvalid = computed(() => {
 const slots = useSlots()
 
 const inputDefaultClass = 'input'
-const inputSizeClass = `input-${inputSize} h-${CONTROL_SIZES[inputSize]}`
-const inputFocusClass = `focus:ring-${themeColor}-${primaryColorLevel} focus-within:ring-${themeColor}-${primaryColorLevel} focus-within:border-${themeColor}-${primaryColorLevel} focus:border-${themeColor}-${primaryColorLevel}`
-const inputWrapperClass = `input-wrapper ${props.prefix || props.suffix ? className : ''}`
+const inputSizeClass = computed(() => `input-${inputSize.value} h-${CONTROL_SIZES[inputSize]}`)
+const inputFocusClass = computed(
+    () =>
+        `focus:ring-${themeColor}-${primaryColorLevel} focus-within:ring-${themeColor}-${primaryColorLevel} focus-within:border-${themeColor}-${primaryColorLevel} focus:border-${themeColor}-${primaryColorLevel}`
+)
+const inputWrapperClass = computed(() => `input-wrapper ${props.prefix || props.suffix ? className : ''}`)
 const inputClass = classNames(
     inputDefaultClass,
-    !textArea && inputSizeClass,
-    !isInvalid.value && inputFocusClass,
+    !textArea.value && inputSizeClass.value,
+    !isInvalid.value && inputFocusClass.value,
     !slots.prefix && !slots.suffix ? className : '',
     props.disabled && 'input-disabled',
     isInvalid.value && 'input-invalid',
-    textArea && 'input-textarea'
+    textArea.value && 'input-textarea'
 )
 const prefixNode = ref(null)
 const suffixNode = ref(null)
