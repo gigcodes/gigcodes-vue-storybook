@@ -44,13 +44,16 @@ const { class: className, ...restAttrs } = useAttrs()
 const slots = useSlots()
 
 const emits = defineEmits(['onClose'])
-
+defineOptions({
+    inheritAttrs: false,
+})
 const props = defineProps({
     type: {
         type: String,
         validator(value) {
             return ['info', 'success', 'warning', 'danger'].includes(value)
         },
+        default: 'warning',
     },
     duration: {
         type: Number,
@@ -73,10 +76,6 @@ const props = defineProps({
         default: null,
     },
 })
-
-const DEFAULT_TYPE = 'warning'
-
-const TYPE_ARRAY = ['success', 'danger', 'info', 'warning']
 
 const TYPE_MAP = {
     success: {
@@ -109,17 +108,7 @@ const TYPE_MAP = {
     },
 }
 
-const getType = () => {
-    const { type } = props
-    if (TYPE_ARRAY.includes(type)) {
-        return type
-    }
-    return DEFAULT_TYPE
-}
-
-const type = getType()
-
-const typeMap = TYPE_MAP[type]
+const typeMap = TYPE_MAP[props.type]
 
 const display = ref('show')
 
