@@ -1,15 +1,16 @@
 <template>
-    <textarea v-if="textArea" v-bind="inputProps" :value="modelValue" :style="style" @input="updateValue"></textarea>
+    <textarea v-if="textArea" v-bind="inputProps" :value="modelValue" :style="style" v-on="events"></textarea>
     <span v-else-if="(slots?.prefix || slots?.suffix) && !textArea" :class="inputWrapperClass">
         <div v-if="slots?.prefix" ref="prefixNode" class="input-suffix-start">
             <slot name="prefix" />
         </div>
+        asd
         <component
             :is="asElement"
             v-bind="inputProps"
             :value="modelValue"
-            :style="{ ...affixGutterStyle(), ...style }"
-            @input="updateValue"
+            :style="{ ...affixGutterStyle, ...style }"
+            v-on="events"
         >
             <slot />
         </component>
@@ -22,8 +23,8 @@
         v-else
         v-bind="inputProps"
         :value="modelValue"
-        :style="{ ...affixGutterStyle(), ...style }"
-        @input="updateValue"
+        :style="{ ...affixGutterStyle, ...style }"
+        v-on="events"
     >
         <slot />
     </component>
@@ -62,10 +63,16 @@ defineOptions({
 
 const { class: className, style, ...restAttrs } = useAttrs()
 
-const emits = defineEmits(['update:modelValue'])
+const emits = defineEmits(['update:modelValue', 'focus', 'blur', 'change', 'keydown', 'click', 'keyup'])
 
-const updateValue = (e) => {
-    emits('update:modelValue', e.target.value)
+const events = {
+    click: (e) => emits('click', e.target.value),
+    keydown: (e) => emits('keydown', e.target.value),
+    keyup: (e) => emits('keyup', e.target.value),
+    focus: (e) => emits('focus', e.target.value),
+    blur: (e) => emits('blur', e.target.value),
+    input: (event) => emits('update:modelValue', event.target.value),
+    change: (e) => emits('update:modelValue', e.target.value),
 }
 
 const prefixGutter = ref(0)
@@ -129,7 +136,7 @@ onMounted(() => getAffixSize())
 
 const remToPxConvertion = (pixel) => 0.0625 * pixel
 
-const affixGutterStyle = () => {
+const affixGutterStyle = computed(() => {
     const leftGutter = `${remToPxConvertion(prefixGutter.value) + 1}rem`
     const rightGutter = `${remToPxConvertion(suffixGutter.value) + 1}rem`
     const gutterStyle = {}
@@ -155,7 +162,7 @@ const affixGutterStyle = () => {
     }
 
     return gutterStyle
-}
+})
 
 const inputProps = {
     className: !props.unstyle ? inputClass : '',
