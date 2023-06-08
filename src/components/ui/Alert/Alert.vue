@@ -33,7 +33,7 @@
 
 <script setup>
 import { CheckCircleIcon, ExclamationCircleIcon, InformationCircleIcon, XCircleIcon } from '@heroicons/vue/24/solid'
-import { ref, useAttrs, useSlots } from 'vue'
+import { computed, ref, useAttrs, useSlots } from 'vue'
 import useTimeout from '../../hooks/useTimeout.js'
 import classNames from 'classnames'
 import CloseButton from '../CloseButton'
@@ -108,7 +108,7 @@ const TYPE_MAP = {
     },
 }
 
-const typeMap = TYPE_MAP[props.type]
+const typeMap = computed(() => TYPE_MAP[props.type])
 
 const display = ref('show')
 
@@ -124,15 +124,17 @@ const handleClose = () => {
 
 const alertDefaultClass = 'p-4 relative flex'
 
-const alertClass = classNames(
-    'alert',
-    alertDefaultClass,
-    typeMap.backgroundColor,
-    typeMap.textColor,
-    !props.title ? 'font-semibold' : '',
-    props.closable ? 'justify-between' : '',
-    props.closable && !props.title ? 'items-center' : '',
-    'rounded-lg',
-    className
+const alertClass = computed(() =>
+    classNames(
+        'alert',
+        alertDefaultClass,
+        typeMap.value.backgroundColor,
+        typeMap.value.textColor,
+        !props.title ? 'font-semibold' : '',
+        props.closable ? 'justify-between' : '',
+        props.closable && !props.title ? 'items-center' : '',
+        'rounded-lg',
+        className
+    )
 )
 </script>
