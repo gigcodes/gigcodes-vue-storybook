@@ -1,5 +1,12 @@
 <template>
-    <textarea v-if="textArea" v-bind="inputProps" :value="modelValue" :style="style" v-on="events"></textarea>
+    <textarea
+        v-if="textArea"
+        v-bind="inputProps"
+        :disabled="disabled"
+        :value="modelValue ?? value"
+        :style="style"
+        v-on="events"
+    ></textarea>
     <span v-else-if="(slots?.prefix || slots?.suffix) && !textArea" :class="inputWrapperClass">
         <div v-if="slots?.prefix" ref="prefixNode" class="input-suffix-start">
             <slot name="prefix" />
@@ -8,7 +15,8 @@
         <component
             :is="asElement"
             v-bind="inputProps"
-            :value="modelValue"
+            :value="modelValue ?? value"
+            :disabled="disabled"
             :style="{ ...affixGutterStyle, ...style }"
             v-on="events"
         >
@@ -22,7 +30,8 @@
         :is="asElement"
         v-else
         v-bind="inputProps"
-        :value="modelValue"
+        :disabled="disabled"
+        :value="modelValue ?? value"
         :style="{ ...affixGutterStyle, ...style }"
         v-on="events"
     >
@@ -53,6 +62,7 @@ const props = defineProps({
     invalid: Boolean,
     modelValue: [String, Number],
     unstyle: Boolean,
+    disabled: Boolean,
     form: Object,
     field: Object,
 })
@@ -61,16 +71,16 @@ defineOptions({
     inheritAttrs: false,
 })
 
-const { class: className, style, ...restAttrs } = useAttrs()
+const { class: className, style, value, ...restAttrs } = useAttrs()
 
 const emits = defineEmits(['update:modelValue', 'focus', 'blur', 'change', 'keydown', 'click', 'keyup'])
 
 const events = {
-    click: (e) => emits('click', e.target.value),
-    keydown: (e) => emits('keydown', e.target.value),
-    keyup: (e) => emits('keyup', e.target.value),
-    focus: (e) => emits('focus', e.target.value),
-    blur: (e) => emits('blur', e.target.value),
+    click: (e) => emits('click', e),
+    keydown: (e) => emits('keydown', e),
+    keyup: (e) => emits('keyup', e),
+    focus: (e) => emits('focus', e),
+    blur: (e) => emits('blur', e),
     input: (event) => emits('update:modelValue', event.target.value),
     change: (e) => emits('update:modelValue', e.target.value),
 }
