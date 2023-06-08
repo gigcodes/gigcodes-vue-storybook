@@ -1,15 +1,12 @@
-<script>
-export default {
-    inheritAttrs: false,
-}
-</script>
 <script setup>
 import { computed, inject, provide, useAttrs } from 'vue'
 import { DEFAULT_CONFIG, LAYOUT, SIZES } from '@/components/ui/utils/constant.js'
 import classNames from 'classnames'
 
 const { controlSize } = inject('config', DEFAULT_CONFIG)
-
+defineOptions({
+    inheritAttrs: false,
+})
 const props = defineProps({
     layout: {
         type: String,

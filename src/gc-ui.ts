@@ -25,13 +25,23 @@ import { CheckBox, CheckBoxGroup } from '@/components/ui/CheckBox'
 import { Dropdown, DropdownItem, DropdownMenu } from '@/components/ui/Dropdown'
 import { createToaster, Toast } from '@/components/ui/Toast'
 import Notification from '@/components/ui/Notification'
-
+import Tooltip from '@/components/ui/Tooltip'
+import {
+    Dropdown as VDropDown,
+    Menu as VMenu,
+    Tooltip as VTooltip,
+    VClosePopper,
+    VTooltip as TooltipD,
+} from 'floating-vue'
 import type { App } from 'vue'
 
 import './assets/styles/app.css'
 
 export default {
     install: (app: App) => {
+        app.directive('tooltip', TooltipD)
+        app.directive('close-popper', VClosePopper)
+
         app.component('Alert', Alert)
         app.component('Segment', Segment)
         app.component('SegmentItem', SegmentItem)
@@ -58,7 +68,7 @@ export default {
         app.component('Menu', Menu)
         app.component('InputAddon', InputAddon)
         app.component('InputGroup', InputGroup)
-        app.component('Input', Input)
+        app.component('UiInput', Input)
         app.component('FormContainer', FormContainer)
         app.component('FormItem', FormItem)
         app.component('CloseButton', CloseButton)
@@ -73,6 +83,10 @@ export default {
         app.component('DropdownItem', DropdownItem)
         app.component('Toast', Toast)
         app.component('Notification', Notification)
+        app.component('VDropdown', VDropDown)
+        app.component('VTooltip', VTooltip)
+        app.component('VMenu', VMenu)
+        app.component('Tooltip', Tooltip)
     },
 }
 
@@ -119,4 +133,8 @@ export {
     Toast,
     createToaster,
     Notification,
+    VDropDown,
+    VMenu,
+    VTooltip,
+    Tooltip,
 }

@@ -1,26 +1,15 @@
 <template>
     <HelloWorld msg="Vite + Vue" class="iuasda" />
     <Alert show-icon closable type="success">Additional description and information about copywriting</Alert>
-    <Button size="lg" variant="twoTone" shape="none" block color="blue-600" @click="() => createToast()">
-        <template #icon>
-            <AcademicCapIcon class="h-4" />
-        </template>
-        Show toaster
-    </Button>
-    <Toast ref="toaster" />
-    <TimeInputRange v-model="date" clearable />
+    <Input :value="inputeVal" placeholder="Basic usage" />
 </template>
 <script setup>
-import { AcademicCapIcon } from '@heroicons/vue/24/solid'
 import HelloWorld from './components/HelloWorld.vue'
 import Alert from '@/components/ui/Alert/Alert.vue'
 import { ref } from 'vue'
-import Toast from '@/components/ui/Toast/Toast.vue'
 import { createToaster } from '@/components/ui/Toast'
-import TimeInputRange from '@/components/ui/TimeInput/TimeInputRange.vue'
-import dayjs from 'dayjs'
+import Input from '@/components/ui/Input/Input.vue'
 
-const date = ref([new Date(), dayjs(new Date()).add(60, 'minutes').toDate()])
-const toaster = ref(null)
+const inputeVal = ref('karthic')
 const createToast = () => createToaster.info('hello word')
 </script>
