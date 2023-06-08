@@ -3,6 +3,7 @@ declare const _sfc_main: import('./vue/dist/vue.esm-bundler.js').DefineComponent
     type: {
         type: StringConstructor;
         validator(value: unknown): boolean;
+        default: string;
     };
     duration: {
         type: NumberConstructor;
@@ -28,6 +29,7 @@ declare const _sfc_main: import('./vue/dist/vue.esm-bundler.js').DefineComponent
     type: {
         type: StringConstructor;
         validator(value: unknown): boolean;
+        default: string;
     };
     duration: {
         type: NumberConstructor;
@@ -52,6 +54,7 @@ declare const _sfc_main: import('./vue/dist/vue.esm-bundler.js').DefineComponent
 }>> & {
     onOnClose?: ((...args: any[]) => any) | undefined;
 }, {
+    type: string;
     duration: number;
     triggerByToast: boolean;
     closable: boolean;
