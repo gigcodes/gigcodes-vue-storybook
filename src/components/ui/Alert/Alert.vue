@@ -112,7 +112,7 @@ const typeMap = computed(() => TYPE_MAP[props.type])
 
 const display = ref('show')
 
-const { clear } = useTimeout(emits('onClose'), props.duration, props.duration > 0)
+const { clear } = useTimeout(() => emits('onClose'), props.duration, props.duration > 0)
 
 const handleClose = () => {
     emits('onClose')
