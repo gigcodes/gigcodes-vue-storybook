@@ -1,19 +1,23 @@
 <template>
-    <component :is="indicator" ref="reference" :class="spinnerClass" :style="spinnerStyle" v-bind="restAttrs" />
+    <component
+        :is="indicator"
+        ref="reference"
+        :class="classNames(props.isSpinning && 'animate-spin', spinnerColor && `text-${spinnerColor}`, className)"
+        :style="spinnerStyle"
+        v-bind="restAttrs"
+    />
 </template>
-<script>
-export default {
-    inheritAttrs: false,
-}
-</script>
 <script setup>
-import { useAttrs, ref as reference, inject } from 'vue'
+import { computed, inject, ref as reference, useAttrs } from 'vue'
 import { DEFAULT_CONFIG } from '../utils/constant'
 import { ArrowPathIcon } from '@heroicons/vue/24/solid'
 import classNames from 'classnames'
 
 const { class: className, ...restAttrs } = useAttrs()
 const ref = reference(null)
+defineOptions({
+    inheritAttrs: false,
+})
 const props = defineProps({
     size: {
         type: [String, Number],
@@ -36,14 +40,12 @@ const props = defineProps({
 
 const { themeColor, primaryColorLevel } = inject('config', DEFAULT_CONFIG)
 
-const spinnerColor = props.color || (props.enableTheme && `${themeColor}-${primaryColorLevel}`)
+const spinnerColor = computed(() => props.color || (props.enableTheme && `${themeColor}-${primaryColorLevel}`))
 
-const spinnerStyle = {
+const spinnerStyle = computed(() => ({
     height: props.size,
     width: props.size,
-}
-
-const spinnerClass = classNames(props.isSpinning && 'animate-spin', spinnerColor && `text-${spinnerColor}`, className)
+}))
 
 defineExpose([ref])
 </script>
