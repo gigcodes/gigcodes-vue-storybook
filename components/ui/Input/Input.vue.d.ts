@@ -13,6 +13,7 @@ declare const _sfc_main: import('./vue/dist/vue.esm-bundler.js').DefineComponent
         validator(value: unknown): boolean;
     };
     invalid: BooleanConstructor;
+    placeholder: StringConstructor;
     modelValue: (StringConstructor | NumberConstructor)[];
     unstyle: BooleanConstructor;
     disabled: BooleanConstructor;
@@ -32,6 +33,7 @@ declare const _sfc_main: import('./vue/dist/vue.esm-bundler.js').DefineComponent
         validator(value: unknown): boolean;
     };
     invalid: BooleanConstructor;
+    placeholder: StringConstructor;
     modelValue: (StringConstructor | NumberConstructor)[];
     unstyle: BooleanConstructor;
     disabled: BooleanConstructor;
