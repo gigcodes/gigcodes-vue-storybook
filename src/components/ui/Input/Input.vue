@@ -60,6 +60,7 @@ const props = defineProps({
         },
     },
     invalid: Boolean,
+    placeholder: String,
     modelValue: [String, Number],
     unstyle: Boolean,
     disabled: Boolean,
@@ -111,20 +112,22 @@ const isInvalid = computed(() => {
 const slots = useSlots()
 
 const inputDefaultClass = 'input'
-const inputSizeClass = computed(() => `input-${inputSize.value} h-${CONTROL_SIZES[inputSize]}`)
+const inputSizeClass = computed(() => `input-${inputSize.value} h-${CONTROL_SIZES[inputSize.value]}`)
 const inputFocusClass = computed(
     () =>
         `focus:ring-${themeColor}-${primaryColorLevel} focus-within:ring-${themeColor}-${primaryColorLevel} focus-within:border-${themeColor}-${primaryColorLevel} focus:border-${themeColor}-${primaryColorLevel}`
 )
 const inputWrapperClass = computed(() => `input-wrapper ${props.prefix || props.suffix ? className : ''}`)
-const inputClass = classNames(
-    inputDefaultClass,
-    !textArea.value && inputSizeClass.value,
-    !isInvalid.value && inputFocusClass.value,
-    !slots.prefix && !slots.suffix ? className : '',
-    props.disabled && 'input-disabled',
-    isInvalid.value && 'input-invalid',
-    textArea.value && 'input-textarea'
+const inputClass = computed(() =>
+    classNames(
+        inputDefaultClass,
+        !textArea.value && inputSizeClass.value,
+        !isInvalid.value && inputFocusClass.value,
+        !slots.prefix && !slots.suffix ? className : '',
+        props.disabled && 'input-disabled',
+        isInvalid.value && 'input-invalid',
+        textArea.value && 'input-textarea'
+    )
 )
 const prefixNode = ref(null)
 const suffixNode = ref(null)
@@ -174,13 +177,14 @@ const affixGutterStyle = computed(() => {
     return gutterStyle
 })
 
-const inputProps = {
-    className: !props.unstyle ? inputClass : '',
+const inputProps = computed(() => ({
+    className: !props.unstyle ? inputClass.value : '',
     disabled: props.disabled,
     type: props.type,
+    placeholder: props.placeholder,
     ...props.field,
     ...restAttrs,
-}
+}))
 
 defineExpose({ prefixNode, suffixNode })
 </script>

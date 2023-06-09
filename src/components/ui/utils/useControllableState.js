@@ -1,4 +1,4 @@
-import { ref, computed, watch, onMounted } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
 
 export default function useControllableState({ prop, defaultProp, onChange = () => {} }) {
     const uncontrolledProp = useUncontrolledState({ defaultProp, onChange })
@@ -6,9 +6,8 @@ export default function useControllableState({ prop, defaultProp, onChange = () 
     const value = computed(() => (isControlled.value ? prop : uncontrolledProp.value))
 
     const setValue = (nextValue) => {
-        const setter = nextValue
         if (isControlled.value) {
-            const value = typeof nextValue === 'function' ? setter(prop) : nextValue
+            const value = typeof nextValue === 'function' ? nextValue(prop) : nextValue
             if (value !== prop) {
                 onChange(value)
             }
