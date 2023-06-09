@@ -1,14 +1,12 @@
-<script>
-export default {
-    inheritAttrs: false,
-}
-</script>
 <script setup>
 import { computed, inject, ref, useAttrs, watch } from 'vue'
 import { DEFAULT_CONFIG } from '../utils/constant.js'
 import classNames from 'classnames'
 import Spinner from '../Spinner'
 
+defineOptions({
+    inheritAttrs: false,
+})
 const props = defineProps({
     modelValue: Boolean,
     disabled: Boolean,
@@ -49,7 +47,7 @@ const getControlProps = () => {
 
 const controlProps = computed(getControlProps)
 
-const switcherColor = props.color || `${themeColor}-${primaryColorLevel}`
+const switcherColor = computed(() => props.color || `${themeColor}-${primaryColorLevel}`)
 
 const { class: className, ...restAttrs } = useAttrs()
 
@@ -59,18 +57,18 @@ const handleChange = () => {
         return
     }
     if (typeof props.modelValue === 'undefined') {
-        switcherChecked.value = nextChecked
         emits('update:modelValue', nextChecked)
     } else {
         emits('update:modelValue', !switcherChecked.value)
     }
+    switcherChecked.value = nextChecked
 }
 
 const switcherClass = computed(() =>
     classNames(
         'switcher',
         {
-            [`switcher-checked bg-${switcherColor} dark:bg-${switcherColor}`]:
+            [`switcher-checked bg-${switcherColor.value} dark:bg-${switcherColor.value}`]:
                 switcherChecked.value || controlProps.value.checked,
         },
         { 'switcher-disabled': props.disabled },
