@@ -74,8 +74,8 @@ defineExpose({ dayRefs: days.value?.dayRefs })
             :has-previous="m.hasPrevious"
             :class="className"
             :render-center="dateViewCount > 1"
-            @next="() => emit('monthChange', month.add(paginateBy, 'months').toDate())"
-            @previous="() => emit('monthChange', month.subtract(paginateBy, 'months').toDate())"
+            @next="() => emit('monthChange', dayjs(month).add(paginateBy, 'months').toDate())"
+            @previous="() => emit('monthChange', dayjs(month).subtract(paginateBy, 'months').toDate())"
         >
             <div>
                 <button
