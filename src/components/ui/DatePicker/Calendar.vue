@@ -3,9 +3,9 @@
 </template>
 
 <script setup>
-import CalendarBase from '@/components/ui/DatePicker/CalendarBase.vue'
+import CalendarBase from './CalendarBase.vue'
 import { computed } from 'vue'
-import { isSameDate } from '@/components/ui/DatePicker/utils/index.js'
+import { isSameDate } from './utils/index.js'
 
 const emit = defineEmits(['change'])
 const props = defineProps({

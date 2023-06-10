@@ -1,11 +1,11 @@
 <script setup>
 import { computed, inject, ref, useAttrs } from 'vue'
-import { DEFAULT_CONFIG } from '@/components/ui/utils/constant.js'
-import useControllableState from '@/components/ui/utils/useControllableState.js'
+import { DEFAULT_CONFIG } from '../utils/constant.js'
+import useControllableState from '../utils/useControllableState.js'
 import classNames from 'classnames'
-import YearTable from '@/components/ui/DatePicker/tables/YearTable.vue'
-import MonthTable from '@/components/ui/DatePicker/tables/MonthTable.vue'
-import DateTable from '@/components/ui/DatePicker/tables/DateTable.vue'
+import YearTable from './tables/YearTable.vue'
+import MonthTable from './tables/MonthTable.vue'
+import DateTable from './tables/DateTable.vue'
 
 const { locale: themeLocale } = inject('config', DEFAULT_CONFIG)
 

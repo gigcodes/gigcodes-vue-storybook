@@ -1,10 +1,11 @@
 <script setup>
 import dayjs from 'dayjs'
 import localizedFormat from 'dayjs/plugin/localizedFormat'
-import { ref, useAttrs } from 'vue'
+import { ref, useAttrs, useSlots } from 'vue'
 import Input from '@/components/ui/Input/Input.vue'
 import placeholder from 'lodash/fp/placeholder.js'
 import { offset, useFloating } from '@floating-ui/vue'
+import CloseButton from '@/components/ui/CloseButton/CloseButton.vue'
 
 dayjs.extend(localizedFormat)
 
@@ -38,10 +39,18 @@ const props = defineProps({
     },
 })
 
-const emit = defineEmits(['openDropdown', 'closeDropdown', 'update:dropDownOpened', 'keyDown', 'blur', 'focus'])
+const emit = defineEmits([
+    'openDropdown',
+    'closeDropdown',
+    'update:dropDownOpened',
+    'keyDown',
+    'blur',
+    'focus',
+    'clear',
+])
 
 const handleInputClick = () => (!props.inputtable ? toggleDropdown() : openDropdown())
-
+const slots = useSlots()
 const closeDropdown = () => {
     emit('update:dropDownOpened', false)
     emit('closeDropdown')
@@ -104,7 +113,18 @@ const { floatingStyles } = useFloating(reference, floating, {
         @change="(e) => emit('change', e)"
         @focus="handleInputFocus"
         @keydown="handleKeyDown"
-    />
+    >
+        <template #suffix>
+            <slot v-if="!clearable" name="suffix" />
+            <div @click="emit('clear')">
+                <slot v-if="slots.clearButton" name="clearButton" />
+                <CloseButton v-else class="text-base" />
+            </div>
+        </template>
+        <template #prefix>
+            <slot name="prefix" />
+        </template>
+    </Input>
     <div ref="floating" class="picker" :style="floatingStyles">
         <div v-if="dropDownOpened" class="picker-panel">
             <slot />
