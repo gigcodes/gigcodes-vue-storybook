@@ -1,5 +1,5 @@
 <template>
-    <button ref="ref" v-bind="restAttrs" :disabled="disabled || loading" :class="classes">
+    <button v-bind="restAttrs" :disabled="disabled || loading" :class="classes">
         <span v-if="loading && slots.default" class="flex items-center justify-center">
             <Spinner :enable-theme="false" class="mr-1" />
             <slot />
@@ -17,13 +17,11 @@
     </button>
 </template>
 <script setup>
-import { computed, inject, ref as reference, useAttrs, useSlots } from 'vue'
+import { computed, inject, useAttrs, useSlots } from 'vue'
 import { CONTROL_SIZES, DEFAULT_CONFIG, SIZES } from '../utils/constant'
 import Spinner from '../Spinner'
 import useColorLevel from '../utils/useColorLevel'
 import classNames from 'classnames'
-
-const ref = reference(null)
 
 const { class: className, ...restAttrs } = useAttrs()
 const slots = useSlots()
@@ -197,6 +195,4 @@ const classes = computed(() =>
         props.block ? 'w-full' : ''
     )
 )
-
-defineExpose({ ref })
 </script>

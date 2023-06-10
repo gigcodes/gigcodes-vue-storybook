@@ -1,5 +1,5 @@
 <template>
-    <div :class="['picker-header', 'flex', 'items-center', 'justify-between', 'mb-2']" v-bind="$attrs">
+    <div class="picker-header flex items-center justify-between mb-2" v-bind="$attrs">
         <template v-if="!renderCenter">
             <slot v-if="slots.default"></slot>
             <button
@@ -14,14 +14,12 @@
                 {{ label }}
             </button>
         </template>
-        <div :class="['flex', 'items-center', 'rtl:flex-row-reverse', renderCenter && 'justify-between', 'w-full']">
+        <div :class="classNames(renderCenter && 'justify-between w-full', 'flex items-center rtl:flex-row-reverse')">
             <Button
-                v-if="hasPrevious"
                 type="button"
                 variant="plain"
-                :class="['opacity-0', 'cursor-default', !hasPrevious && renderCenter && 'opacity-0 cursor-default']"
+                :class="classNames(!hasPrevious && renderCenter && 'opacity-0 cursor-default')"
                 size="sm"
-                :icon="ChevronLeftIcon"
                 :disabled="!hasPrevious"
                 :aria-label="previousLabel"
                 @click="(e) => emit('previous', e)"
@@ -46,10 +44,9 @@
                 </button>
             </template>
             <Button
-                v-if="hasNext"
                 type="button"
                 variant="plain"
-                :class="['opacity-0', 'cursor-default', !hasNext && renderCenter && 'opacity-0 cursor-default']"
+                :class="classNames(!hasNext && renderCenter && 'opacity-0 cursor-default')"
                 size="sm"
                 :disabled="!hasNext"
                 :aria-label="nextLabel"
@@ -66,8 +63,9 @@
 
 <script setup>
 import Button from '../../Buttons'
-import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/vue/24/outline'
+import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/vue/24/solid'
 import { useSlots } from 'vue'
+import classNames from 'classnames'
 
 defineProps({
     hasNext: Boolean,

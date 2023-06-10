@@ -1,5 +1,5 @@
 <script setup>
-import { computed, inject, ref, watch } from 'vue'
+import { computed, inject, ref, useSlots, watch } from 'vue'
 import { DEFAULT_CONFIG } from '@/components/ui/utils/constant.js'
 import useControllableState from '@/components/ui/utils/useControllableState.js'
 import capitalize from '@/components/ui/utils/capitalize.js'
@@ -188,6 +188,8 @@ const handleChange = (event) => {
         inputState.value = event.target.value
     }
 }
+
+const slots = useSlots()
 </script>
 <template>
     <BasePicker
@@ -208,13 +210,13 @@ const handleChange = (event) => {
         @close-dropdown="closeDropdown"
         @clear="handleClear"
     >
-        <template #prefix>
+        <template v-if="slots.inputPrefix" #prefix>
             <slot name="inputPrefix" />
         </template>
-        <template #suffix>
+        <template v-if="slots.inputSuffix" #suffix>
             <slot name="inputSuffix" />
         </template>
-        <template #clearButton>
+        <template v-if="slots.clearButton" #clearButton>
             <slot name="clearButton" />
         </template>
         <Calendar

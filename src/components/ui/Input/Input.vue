@@ -1,6 +1,7 @@
 <template>
     <textarea
         v-if="textArea"
+        ref="inputRef"
         v-bind="inputProps"
         :disabled="disabled"
         :value="modelValue ?? value"
@@ -11,9 +12,9 @@
         <div v-if="slots?.prefix" ref="prefixNode" class="input-suffix-start">
             <slot name="prefix" />
         </div>
-        asd
         <component
             :is="asElement"
+            ref="inputRef"
             v-bind="inputProps"
             :value="modelValue ?? value"
             :disabled="disabled"
@@ -29,6 +30,7 @@
     <component
         :is="asElement"
         v-else
+        ref="inputRef"
         v-bind="inputProps"
         :disabled="disabled"
         :value="modelValue ?? value"
@@ -185,6 +187,7 @@ const inputProps = computed(() => ({
     ...props.field,
     ...restAttrs,
 }))
+const inputRef = ref()
 
-defineExpose({ prefixNode, suffixNode })
+defineExpose({ prefixNode, suffixNode, focus: () => inputRef.value.focus() })
 </script>

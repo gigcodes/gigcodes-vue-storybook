@@ -15,7 +15,14 @@
         @clear="handleClear"
         @blur="handleInputBlur"
         @focus="handleInputFocus"
+        @change="handleChange"
     >
+        <template #prefix>
+            <slot name="inputPrefix"></slot>
+        </template>
+        <template #suffix>
+            <slot name="inputSuffix"></slot>
+        </template>
         <Calendar
             v-if="inputtable"
             :locale="finalLocale"
@@ -38,7 +45,7 @@
             :render-day="renderDay"
             :weekend-days="weekendDays"
             :year-label-format="yearLabelFormat"
-            @month-change="setCalendarMonth"
+            @month-change="(month) => (calendarMonth = month)"
             @change="handleValueChange"
         />
         <div class="flex items-center gap-4 mt-4">
@@ -47,10 +54,10 @@
                 :value="_value"
                 :format="amPm ? '12' : '24'"
                 :clearable="false"
-                :size="'sm'"
+                size="sm"
                 @change="handleTimeChange"
             />
-            <Button :size="'sm'" :disabled="!_value" @click="handleOk">
+            <Button size="sm" :disabled="!_value" @click="handleOk">
                 {{ okButtonContent }}
             </Button>
         </div>
@@ -61,7 +68,7 @@
 import { inject, onMounted, ref, watch } from 'vue'
 import dayjs from 'dayjs'
 import capitalize from '../utils/capitalize'
-import TimeInput from '../TimeInput'
+import { TimeInput } from '../TimeInput'
 import Calendar from './Calendar'
 import BasePicker from './BasePicker'
 import Button from '../Buttons'
@@ -247,8 +254,6 @@ const dateFormat = ref(props.inputFormat || DEFAULT_INPUT_FORMAT)
 const inputRef = ref(null)
 const dropdownOpened = ref(props.defaultOpen || false)
 
-// eslint-disable-next-line no-unused-vars
-const [_, setLastValidValue] = useState(props.defaultValue ?? null)
 const [_value, setValue] = useControllableState({
     prop: props.value,
     defaultProp: props.defaultValue,
@@ -305,7 +310,6 @@ const handleValueChange = (date) => {
 
 const handleClear = () => {
     setValue(null)
-    setLastValidValue(null)
     inputState.value = ''
     props.openPickerOnClear && openDropdown()
     inputRef.value?.focus()
@@ -330,7 +334,6 @@ const handleChange = (e) => {
     const date = parseDate(e.target.value)
     if (dayjs(date).isValid()) {
         setValue(date)
-        setLastValidValue(date)
         props.closePickerOnChange && (inputState.value = e.target.value)
         calendarMonth.value = date
     } else {

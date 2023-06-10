@@ -3,9 +3,9 @@ import dayjs from 'dayjs'
 import localizedFormat from 'dayjs/plugin/localizedFormat'
 import { ref, useAttrs, useSlots } from 'vue'
 import Input from '@/components/ui/Input/Input.vue'
-import placeholder from 'lodash/fp/placeholder.js'
 import { offset, useFloating } from '@floating-ui/vue'
 import CloseButton from '@/components/ui/CloseButton/CloseButton.vue'
+import { CalendarIcon } from '@heroicons/vue/24/outline'
 
 dayjs.extend(localizedFormat)
 
@@ -37,6 +37,7 @@ const props = defineProps({
         type: String,
         default: 'bottom-start',
     },
+    placeholder: String,
 })
 
 const emit = defineEmits([
@@ -47,6 +48,7 @@ const emit = defineEmits([
     'blur',
     'focus',
     'clear',
+    'change',
 ])
 
 const handleInputClick = () => (!props.inputtable ? toggleDropdown() : openDropdown())
@@ -91,11 +93,13 @@ const handleInputFocus = (event) => {
 const { class: className, ...rest } = useAttrs()
 const reference = ref(null)
 const floating = ref(null)
-const middleware = ref(offset(10))
+const middleware = ref([offset(10)])
 const { floatingStyles } = useFloating(reference, floating, {
     placement: props.placement,
     middleware,
 })
+
+defineExpose({ focus: () => reference.value?.focus() })
 </script>
 <template>
     <Input
@@ -115,11 +119,16 @@ const { floatingStyles } = useFloating(reference, floating, {
         @keydown="handleKeyDown"
     >
         <template #suffix>
-            <slot v-if="!clearable" name="suffix" />
-            <div @click="emit('clear')">
-                <slot v-if="slots.clearButton" name="clearButton" />
-                <CloseButton v-else class="text-base" />
-            </div>
+            <template v-if="clearable">
+                <div @click="emit('clear')">
+                    <slot v-if="slots.clearButton" name="clearButton" />
+                    <CloseButton v-else class="text-base" />
+                </div>
+            </template>
+            <template v-else>
+                <slot v-if="slots.prefix" />
+                <CalendarIcon v-else class="h-4" />
+            </template>
         </template>
         <template #prefix>
             <slot name="prefix" />

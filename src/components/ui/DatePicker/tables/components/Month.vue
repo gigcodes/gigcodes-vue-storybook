@@ -1,5 +1,5 @@
 <script setup>
-import { computed, h, inject, ref, useAttrs } from 'vue'
+import { computed, inject, ref, useAttrs } from 'vue'
 import { DEFAULT_CONFIG } from '@/components/ui/utils/constant.js'
 import { getMonthDays, getWeekdaysNames, isSameDate } from '@/components/ui/DatePicker/utils/index.js'
 import dayjs from 'dayjs'
@@ -32,9 +32,9 @@ const props = defineProps({
     fullWidth: Boolean,
     hideWeekdays: Boolean,
     hideOutOfMonthDates: Boolean,
-    isDateInRange: { type: Function, default: () => false },
-    isDateFirstInRange: { type: Function, default: () => false },
-    isDateLastInRange: { type: Function, default: () => false },
+    isDateInRange: [Function, Boolean],
+    isDateFirstInRange: [Function, Boolean],
+    isDateLastInRange: [Function, Boolean],
     focusable: { type: Boolean, default: true },
     preventFocus: { type: Boolean, default: true },
     size: {
@@ -46,9 +46,8 @@ const props = defineProps({
 })
 const finalLocale = computed(() => props.locale || themeLocale)
 const days = getMonthDays(props.month, props.firstDayOfWeek)
-const weekdays = getWeekdaysNames(finalLocale, props.firstDayOfWeek, props.weekdayLabelFormat).map((weekday) =>
-    h('th', { class: 'week-day-cell', key: weekday }, [h('span', { class: 'week-day-cell-content' }, weekday)])
-)
+const weekdays = getWeekdaysNames(finalLocale, props.firstDayOfWeek, props.weekdayLabelFormat)
+
 const hasValue = computed(() =>
     Array.isArray(props.modelValue)
         ? props.modelValue.every((item) => item instanceof Date)
@@ -88,19 +87,19 @@ const dayRefs = ref([])
 const dayProps = computed(() => {
     const propsData = {
         month: props.month,
-        hasValue: Array.isArray(props.value)
-            ? props.value.every((item) => item instanceof Date)
-            : props.value instanceof Date,
+        hasValue: Array.isArray(props.modelValue)
+            ? props.modelValue.every((item) => item instanceof Date)
+            : props.modelValue instanceof Date,
         minDate: props.minDate,
         maxDate: props.maxDate,
-        value: props.value,
+        value: props.modelValue,
         disableDate: props.disableDate,
         disableOutOfMonth: props.disableOutOfMonth,
         range: props.range,
         weekendDays: props.weekendDays,
     }
 
-    return days.value.map((row) => row.map((date) => getDayProps({ date, ...propsData })))
+    return days.map((row) => row.map((date) => getDayProps({ date, ...propsData })))
 })
 const setDayRef = (rowIndex, cellIndex) => (button) => {
     if (dayRefs.value) {
@@ -119,7 +118,9 @@ const emit = defineEmits(['change', 'keydown', 'mouseenter'])
     <table :class="classNames('picker-table', className)" v-bind="rest" cellspacing="0">
         <thead v-if="!hideWeekdays">
             <tr>
-                <component :is="weekdays" />
+                <th v-for="(weekday, i) in weekdays" :key="i" class="week-day-cell">
+                    <span class="week-day-cell-content">{{ weekday }}</span>
+                </th>
             </tr>
         </thead>
         <tbody>
@@ -130,15 +131,19 @@ const emit = defineEmits(['change', 'keydown', 'mouseenter'])
                         :out-of-month="dayProps[rowIndex][cellIndex].outOfMonth"
                         :weekend="dayProps[rowIndex][cellIndex].weekend"
                         :in-range="
-                            dayProps[rowIndex][cellIndex].inRange || isDateInRange(date, dayProps[rowIndex][cellIndex])
+                            dayProps[rowIndex][cellIndex].inRange || typeof isDateInRange === 'function'
+                                ? isDateInRange(date, dayProps[rowIndex][cellIndex])
+                                : isDateInRange
                         "
                         :first-in-range="
-                            dayProps[rowIndex][cellIndex].firstInRange ||
-                            isDateFirstInRange(date, dayProps[rowIndex][cellIndex])
+                            dayProps[rowIndex][cellIndex].firstInRange || typeof isDateFirstInRange === 'function'
+                                ? isDateFirstInRange(date, dayProps[rowIndex][cellIndex])
+                                : isDateFirstInRange
                         "
                         :last-in-range="
-                            dayProps[rowIndex][cellIndex].lastInRange ||
-                            isDateLastInRange(date, dayProps[rowIndex][cellIndex])
+                            dayProps[rowIndex][cellIndex].lastInRange || typeof isDateLastInRange === 'function'
+                                ? isDateLastInRange(date, dayProps[rowIndex][cellIndex])
+                                : isDateLastInRange
                         "
                         :first-in-month="isSameDate(date, firstIncludedDay)"
                         :selected="

@@ -18,10 +18,7 @@ const props = defineProps({
     dayClassName: String,
     defaultMonth: Date,
     month: Date,
-    labelFormat: {
-        type: String,
-        default: 'MMMM YYYY',
-    },
+    labelFormat: Object,
     monthLabelFormat: {
         type: String,
         default: 'MMM',
@@ -80,8 +77,8 @@ const [_month, setMonth] = useControllableState({
     onChange: (e) => emit('monthChange', e),
 })
 
-const yearSelection = ref(_month.getFullYear())
-const monthSelection = ref(_month.getMonth())
+const yearSelection = ref(_month.value.getFullYear())
+const monthSelection = ref(_month.value.getMonth())
 
 const minYear = props.minDate instanceof Date ? props.minDate.getFullYear() : 100
 const maxYear = props.maxDate instanceof Date ? props.maxDate.getFullYear() : 10000

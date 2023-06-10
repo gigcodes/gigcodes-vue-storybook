@@ -21,5 +21,3 @@ const handleChange = (date) => {
     emit('change', isSelected.value ? props.value.filter((val) => !isSameDate(val, date)) : [...props.value, date])
 }
 </script>
-
-<style lang="scss" scoped></style>

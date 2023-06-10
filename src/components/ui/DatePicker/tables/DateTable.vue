@@ -1,7 +1,7 @@
 <script setup>
 import capitalize from '@/components/ui/utils/capitalize.js'
 import dayjs from 'dayjs'
-import { computed, inject, useAttrs } from 'vue'
+import { computed, inject, ref, useAttrs } from 'vue'
 import { DEFAULT_CONFIG } from '@/components/ui/utils/constant.js'
 import { isMonthInRange } from '@/components/ui/DatePicker/utils/index.js'
 import Header from '@/components/ui/DatePicker/tables/Header.vue'
@@ -63,13 +63,15 @@ defineOptions({
     inheritAttrs: false,
 })
 const { class: className, ...rest } = useAttrs()
+const days = ref(null)
+defineExpose({ dayRefs: days.value?.dayRefs })
 </script>
 
 <template>
-    <div v-for="(monthDate, index) in months" :key="index" class="day-picker">
+    <div v-for="(m, index) in months" :key="index" class="day-picker">
         <Header
-            :has-next="index + 1 === dateViewCount && isMonthInRange({ date: nextMonth, minDate, maxDate })"
-            :has-previous="index === 0 && isMonthInRange({ date: previousMonth, minDate, maxDate })"
+            :has-next="m.hasNext"
+            :has-previous="m.hasPrevious"
             :class="className"
             :render-center="dateViewCount > 1"
             @next="() => emit('monthChange', month.add(paginateBy, 'months').toDate())"
@@ -83,7 +85,13 @@ const { class: className, ...rest } = useAttrs()
                     @click="() => emit('nextLevel', 'month')"
                     @mousedown="(event) => preventFocus && event.preventDefault()"
                 >
-                    {{ formatMonthLabel({ month: monthDate, locale, format: labelFormat?.month || 'MMM' }) }}
+                    {{
+                        formatMonthLabel({
+                            month: m.monthDate,
+                            locale,
+                            format: labelFormat?.month || 'MMM',
+                        })
+                    }}
                 </button>
                 <button
                     :class="pickerHeaderLabelClass"
@@ -92,13 +100,19 @@ const { class: className, ...rest } = useAttrs()
                     @click="() => emit('nextLevel', 'year')"
                     @mousedown="(event) => preventFocus && event.preventDefault()"
                 >
-                    {{ formatMonthLabel({ month: monthDate, locale, format: labelFormat?.year || 'YYYY' }) }}
+                    {{
+                        formatMonthLabel({
+                            month: m.monthDate,
+                            locale,
+                            format: labelFormat?.year || 'YYYY',
+                        })
+                    }}
                 </button>
             </div>
         </Header>
         <Month
-            :month="monthDate"
-            :days-refs="daysRefs[index]"
+            ref="days"
+            :month="m.monthDate"
             :min-date="minDate"
             :max-date="maxDate"
             :class="className"

@@ -36,7 +36,7 @@
 </template>
 
 <script setup>
-import Header from './Header'
+import Header from './Header.vue'
 import { formatYear, getMonthsNames, isMonthInRange } from '../utils'
 import { computed, inject, useAttrs } from 'vue'
 import { DEFAULT_CONFIG } from '@/components/ui/utils/constant.js'

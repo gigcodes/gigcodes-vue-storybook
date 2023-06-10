@@ -4,9 +4,6 @@ import DateTimepicker from './DateTimepicker'
 import Calendar from './Calendar'
 import RangeCalendar from './RangeCalendar'
 
-DatePicker.DatePickerRange = DatePickerRange
-DatePicker.DateTimepicker = DateTimepicker
-
-export { Calendar, RangeCalendar }
+export { Calendar, RangeCalendar, DatePickerRange, DateTimepicker }
 
 export default DatePicker

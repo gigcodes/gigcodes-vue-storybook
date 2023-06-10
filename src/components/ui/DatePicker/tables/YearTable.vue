@@ -38,7 +38,7 @@
 
 <script setup>
 import { computed, inject, ref, useAttrs } from 'vue'
-import Header from './Header'
+import Header from './Header.vue'
 import { formatYear, getDecadeRange } from '../utils'
 import { DEFAULT_CONFIG } from '@/components/ui/utils/constant.js'
 
