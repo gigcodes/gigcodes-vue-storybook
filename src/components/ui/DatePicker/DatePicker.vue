@@ -79,7 +79,7 @@ const [_value, setValue] = useControllableState({
     onChange: (e) => emit('change', e),
 })
 
-const calendarMonth = ref(_value || props.defaultMonth || new Date())
+const calendarMonth = ref(_value.value || props.defaultMonth || new Date())
 const focused = ref(false)
 const inputState = ref(
     _value instanceof Date ? capitalize(dayjs(_value).locale(finalLocale.value).format(dateFormat.value)) : ''
@@ -119,6 +119,7 @@ watch(
 const handleValueChange = (date) => {
     setValue(date)
     inputState.value = capitalize(dayjs(date).locale(finalLocale.value).format(dateFormat.value))
+    dropdownOpened.value = false
     emit('dropdownClose')
     window.setTimeout(() => inputRef.value?.focus(), 0)
 }
@@ -127,6 +128,8 @@ const handleClear = () => {
     setValue(null)
     lastValidValue.value = null
     inputState.value = ''
+    dropdownOpened.value = false
+    emit('dropdownClose')
     props.openPickerOnClear && openDropdown()
     inputRef.value?.focus()
 }

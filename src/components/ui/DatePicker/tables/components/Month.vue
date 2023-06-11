@@ -19,7 +19,7 @@ const props = defineProps({
     weekdayLabelFormat: String,
     maxDate: Number,
     minDate: Number,
-    modelValue: [Array, String, Number],
+    value: [Array, String, Number, Date],
     disableDate: [Function, Boolean],
     disableOutOfMonth: Boolean,
     dayClassName: Function,
@@ -45,25 +45,23 @@ const props = defineProps({
     weekendDays: { type: Array, default: () => [0, 6] },
 })
 const finalLocale = computed(() => props.locale || themeLocale)
-const days = getMonthDays(props.month, props.firstDayOfWeek)
-const weekdays = getWeekdaysNames(finalLocale, props.firstDayOfWeek, props.weekdayLabelFormat)
+const days = computed(() => getMonthDays(props.month, props.firstDayOfWeek))
+const weekdays = computed(() => getWeekdaysNames(finalLocale, props.firstDayOfWeek, props.weekdayLabelFormat))
 
 const hasValue = computed(() =>
-    Array.isArray(props.modelValue)
-        ? props.modelValue.every((item) => item instanceof Date)
-        : props.modelValue instanceof Date
+    Array.isArray(props.value) ? props.value.every((item) => item instanceof Date) : props.value instanceof Date
 )
 
 const hasValueInMonthRange = computed(
     () =>
-        props.modelValue instanceof Date &&
-        dayjs(props.modelValue).isAfter(dayjs(props.month).startOf('month')) &&
-        dayjs(props.modelValue).isBefore(dayjs(props.month).endOf('month'))
+        props.value instanceof Date &&
+        dayjs(props.value).isAfter(dayjs(props.month).startOf('month')) &&
+        dayjs(props.value).isBefore(dayjs(props.month).endOf('month'))
 )
 
 const firstIncludedDay = computed(
     () =>
-        days
+        days.value
             .flatMap((_) => _)
             .find((date) => {
                 const dayProps = getDayProps({
@@ -72,7 +70,7 @@ const firstIncludedDay = computed(
                     hasValue: hasValue.value,
                     minDate: props.minDate,
                     maxDate: props.maxDate,
-                    value: props.modelValue,
+                    value: props.value,
                     disableDate: props.disableDate,
                     disableOutOfMonth: props.disableOutOfMonth,
                     range: props.range,
@@ -87,19 +85,19 @@ const dayRefs = ref([])
 const dayProps = computed(() => {
     const propsData = {
         month: props.month,
-        hasValue: Array.isArray(props.modelValue)
-            ? props.modelValue.every((item) => item instanceof Date)
-            : props.modelValue instanceof Date,
+        hasValue: Array.isArray(props.value)
+            ? props.value.every((item) => item instanceof Date)
+            : props.value instanceof Date,
         minDate: props.minDate,
         maxDate: props.maxDate,
-        value: props.modelValue,
+        value: props.value,
         disableDate: props.disableDate,
         disableOutOfMonth: props.disableOutOfMonth,
         range: props.range,
         weekendDays: props.weekendDays,
     }
 
-    return days.map((row) => row.map((date) => getDayProps({ date, ...propsData })))
+    return days.value.map((row) => row.map((date) => getDayProps({ date, ...propsData })))
 })
 const setDayRef = (rowIndex, cellIndex) => (button) => {
     if (dayRefs.value) {

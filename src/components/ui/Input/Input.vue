@@ -64,6 +64,7 @@ const props = defineProps({
     invalid: Boolean,
     placeholder: String,
     modelValue: [String, Number],
+    value: [String, Number],
     unstyle: Boolean,
     disabled: Boolean,
     form: Object,
@@ -74,7 +75,7 @@ defineOptions({
     inheritAttrs: false,
 })
 
-const { class: className, style, value, ...restAttrs } = useAttrs()
+const { class: className, style, ...restAttrs } = useAttrs()
 
 const emits = defineEmits(['update:modelValue', 'focus', 'blur', 'change', 'keydown', 'click', 'keyup'])
 

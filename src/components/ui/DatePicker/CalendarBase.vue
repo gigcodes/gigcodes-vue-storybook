@@ -71,10 +71,12 @@ const finalLocale = computed(() => props.locale || themeLocale)
 const paginate = computed(() => props.paginateBy ?? props.dateViewCount)
 
 const emit = defineEmits(['monthChange', 'change', 'dayMouseEnter'])
+
+const emitMonthChange = (month) => emit('monthChange', month)
 const [_month, setMonth] = useControllableState({
     prop: props.month,
     defaultProp: props.defaultMonth !== undefined ? props.defaultMonth : new Date(),
-    onChange: (e) => emit('monthChange', e),
+    onChange: emitMonthChange,
 })
 
 const yearSelection = ref(_month.value.getFullYear())
@@ -228,7 +230,7 @@ const { class: className, style, ...rest } = useAttrs()
             :is-date-last-in-range="isDateLastInRange"
             :is-date-first-in-range="isDateFirstInRange"
             :weekend-days="weekendDays"
-            @month-change="(m) => setMonth(m)"
+            @month-change="setMonth"
             @next-level="(v) => (selectionState = v)"
             @day-key-down="handleDayKeyDown"
             @change="(e) => emit('change', e)"
