@@ -14,6 +14,7 @@ delete restAttrs.size
 const props = defineProps({
     modelValue: [String, Number],
     withSeparator: Boolean,
+    disabled: Boolean,
     max: Number,
     min: {
         type: Number,
@@ -96,6 +97,7 @@ defineExpose({ focus: () => inputRef.value?.focus(), select: () => inputRef.valu
         :value="modelValue"
         :class="classNames('time-input-field', className)"
         v-bind="restAttrs"
+        :disabled="disabled"
         @input="handleChange"
         @click="handleClick"
         @focus="handleFocus"

@@ -210,7 +210,7 @@ const handleClear = () => {
     time.value.minutes = ''
     time.value.seconds = ''
     time.value.amPm = ''
-    hoursRef.value.focus()
+    hoursRef.value?.focus()
 }
 
 defineExpose({ focus: () => hoursRef.value.focus() })

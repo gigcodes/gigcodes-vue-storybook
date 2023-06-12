@@ -113,7 +113,7 @@ watch(
 const handleValueChange = (date) => {
     setValue(date)
     inputState.value = capitalize(dayjs(date).locale(finalLocale.value).format(dateFormat.value))
-    dropdownOpened.value = false
+    // dropdownOpened.value = false
     window.setTimeout(() => inputRef.value?.focus(), 0)
 }
 

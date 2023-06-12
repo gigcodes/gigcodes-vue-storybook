@@ -1,7 +1,6 @@
 <script setup>
-import { computed, inject, ref, useAttrs } from 'vue'
+import { computed, inject, ref, useAttrs, watch } from 'vue'
 import { DEFAULT_CONFIG } from '../utils/constant.js'
-import useControllableState from '../utils/useControllableState.js'
 import classNames from 'classnames'
 import YearTable from './tables/YearTable.vue'
 import MonthTable from './tables/MonthTable.vue'
@@ -71,13 +70,18 @@ const finalLocale = computed(() => props.locale || themeLocale)
 const paginate = computed(() => props.paginateBy ?? props.dateViewCount)
 
 const emit = defineEmits(['monthChange', 'change', 'dayMouseEnter'])
+const monthComputed = computed(() =>
+    props.month ?? props.defaultMonth !== undefined ? props.defaultMonth : new Date()
+)
 
-const emitMonthChange = (month) => emit('monthChange', month)
-const [_month, setMonth] = useControllableState({
-    prop: props.month,
-    defaultProp: props.defaultMonth !== undefined ? props.defaultMonth : new Date(),
-    onChange: emitMonthChange,
-})
+const _month = ref(monthComputed.value)
+
+watch(monthComputed, (val) => (_month.value = val))
+
+const setMonth = (value) => {
+    _month.value = value
+    emit('monthChange', value)
+}
 
 const yearSelection = ref(_month.value.getFullYear())
 const monthSelection = ref(_month.value.getMonth())

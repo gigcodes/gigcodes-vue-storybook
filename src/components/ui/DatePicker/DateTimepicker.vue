@@ -149,7 +149,6 @@ const handleValueChange = (date) => {
         date.setMinutes(now.getMinutes())
     }
     setValue(date)
-    console.log(_value.value, date)
     if (!props.modelValue && !props.closePickerOnChange) {
         inputState.value = dayjs(date).locale(finalLocale.value).format(dateFormat.value)
     }
@@ -162,7 +161,7 @@ const handleValueChange = (date) => {
 const handleClear = () => {
     setValue(null)
     inputState.value = ''
-    props.openPickerOnClear && (dropdownOpened.value = true)
+    props.openPickerOnClear && (dropdownOpened.value = false)
     inputRef.value?.focus()
     emit('update:modelValue', null)
 }
@@ -268,7 +267,7 @@ onMounted(() => {
             :render-day="renderDay"
             :weekend-days="weekendDays"
             :year-label-format="yearLabelFormat"
-            @month-change="(month) => (calendarMonth = month)"
+            @month-change="(v) => (calendarMonth = v)"
             @change="handleValueChange"
         />
         <div class="flex items-center gap-4 mt-4">

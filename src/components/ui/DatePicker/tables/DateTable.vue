@@ -24,6 +24,7 @@ const props = defineProps({
     labelFormat: Object,
     weekdayLabelFormat: String,
     preventFocus: Boolean,
+    value: Date,
 })
 
 const emit = defineEmits(['monthChange', 'nextLevel', 'dayKeyDown'])
@@ -121,6 +122,7 @@ defineExpose({ dayRefs: days.value?.dayRefs })
             :prevent-focus="preventFocus"
             :render-day="renderDay"
             :weekday-label-format="weekdayLabelFormat"
+            :value="value"
             v-bind="rest"
             @keydown="(args) => emit('dayKeyDown', { index, ...args })"
         />

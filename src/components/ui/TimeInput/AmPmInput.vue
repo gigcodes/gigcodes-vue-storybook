@@ -1,13 +1,13 @@
 <script setup>
-import { ref, useAttrs } from 'vue'
+import { ref, useAttrs, watch } from 'vue'
 import classNames from 'classnames'
 
 const props = defineProps({
     amLabel: String,
     pmLabel: String,
-    value: String,
+    modelValue: String,
     change: Function,
-    setValue: Function,
+    disabled: Boolean,
 })
 const emit = defineEmits(['focus', 'change'])
 
@@ -48,9 +48,14 @@ const handleChange = (event) => {
         emit('change', { value: props.amLabel, triggerShift: true })
         return
     }
-    emit('change', { value: props.value.toString(), triggerShift: true })
+    emit('change', { value: props.modelValue?.toString(), triggerShift: true })
 }
+const meridian = ref(props.modelValue)
 
+watch(
+    () => props.modelValue,
+    (val) => (meridian.value = val)
+)
 const { class: className, ...restAttrs } = useAttrs()
 defineExpose({ focus: () => inputRef.value?.focus(), select: () => inputRef.value?.select() })
 </script>
@@ -58,9 +63,10 @@ defineExpose({ focus: () => inputRef.value?.focus(), select: () => inputRef.valu
 <template>
     <input
         ref="inputRef"
+        v-model="meridian"
         type="text"
-        :value="value"
         :class="classNames('time-input-field', 'am-pm-input', className)"
+        :disabled="disabled"
         v-bind="restAttrs"
         @click="handleClick"
         @focus="handleFocus"
