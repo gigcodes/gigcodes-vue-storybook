@@ -126,7 +126,7 @@ defineExpose({ focus: () => reference.value?.focus() })
                 </div>
             </template>
             <template v-else>
-                <slot v-if="slots.prefix" />
+                <slot v-if="slots.prefix" name="suffix" />
                 <CalendarIcon v-else class="h-4" />
             </template>
         </template>
