@@ -15,7 +15,7 @@ const props = defineProps({
         default: 'date',
     },
     locale: String,
-    dayClassName: String,
+    dayClassName: Function,
     defaultMonth: Date,
     month: Date,
     labelFormat: Object,

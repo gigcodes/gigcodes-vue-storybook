@@ -16,7 +16,7 @@ const props = defineProps({
     clearButton: Boolean,
     closePickerOnChange: Boolean,
     dateViewCount: Number,
-    dayClassName: String,
+    dayClassName: Function,
     dayStyle: String,
     defaultMonth: Date,
     defaultOpen: Boolean,

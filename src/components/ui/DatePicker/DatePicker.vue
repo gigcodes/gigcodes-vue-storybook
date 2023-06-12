@@ -13,7 +13,7 @@ const props = defineProps({
     locale: String,
     type: String,
     size: String,
-    dayClassName: String,
+    dayClassName: Function,
     inputFormat: String,
     closePickerOnChange: {
         type: Boolean,
@@ -55,14 +55,11 @@ const props = defineProps({
         type: String,
         default: 'monday',
     },
-    dayStyle: {
-        type: Object,
-        default: () => {},
-    },
-    defaultValue: [Date, String, Array],
+    dayStyle: Function,
+    modelValue: [Date, String, Array],
     dateViewCount: Number,
 })
-const emit = defineEmits(['change', 'dropdownClose', 'dropdownOpen', 'blur', 'focus'])
+const emit = defineEmits(['update:modelValue', 'dropdownClose', 'dropdownOpen', 'blur', 'focus'])
 const { locale: themeLocale } = inject('config', DEFAULT_CONFIG)
 const finalLocale = computed(() => props.locale || themeLocale)
 const dateFormat = computed(() =>
@@ -71,12 +68,12 @@ const dateFormat = computed(() =>
 
 const dropdownOpened = ref(props.defaultOpen)
 const inputRef = ref(null)
-const lastValidValue = ref(props.defaultValue ?? null)
+const lastValidValue = ref(props.modelValue ?? null)
 
 const [_value, setValue] = useControllableState({
     prop: props.value,
-    defaultProp: props.defaultValue,
-    onChange: (e) => emit('change', e),
+    defaultProp: props.modelValue,
+    onChange: (e) => emit('update:modelValue', e),
 })
 
 const calendarMonth = ref(_value.value || props.defaultMonth || new Date())
@@ -84,16 +81,6 @@ const focused = ref(false)
 const inputState = ref(
     _value instanceof Date ? capitalize(dayjs(_value).locale(finalLocale.value).format(dateFormat.value)) : ''
 )
-
-const closeDropdown = () => {
-    dropdownOpened.value = false
-    emit('dropdownClose')
-}
-
-const openDropdown = () => {
-    openDropdown.value = true
-    emit('dropdownOpen')
-}
 
 watch(
     () => [props.value, focused.value, themeLocale],
@@ -110,7 +97,7 @@ watch(
 watch(
     () => [themeLocale],
     () => {
-        if (props.defaultValue instanceof Date && inputState && !focused.value) {
+        if (props.modelValue instanceof Date && inputState && !focused.value) {
             inputState.value = capitalize(dayjs(_value).locale(finalLocale.value).format(dateFormat.value))
         }
     }
@@ -120,7 +107,6 @@ const handleValueChange = (date) => {
     setValue(date)
     inputState.value = capitalize(dayjs(date).locale(finalLocale.value).format(dateFormat.value))
     dropdownOpened.value = false
-    emit('dropdownClose')
     window.setTimeout(() => inputRef.value?.focus(), 0)
 }
 
@@ -129,8 +115,7 @@ const handleClear = () => {
     lastValidValue.value = null
     inputState.value = ''
     dropdownOpened.value = false
-    emit('dropdownClose')
-    props.openPickerOnClear && openDropdown()
+    props.openPickerOnClear && (dropdownOpened.value = true)
     inputRef.value?.focus()
 }
 
@@ -160,7 +145,6 @@ const setDateFromInput = () => {
 const handleInputBlur = (event) => {
     emit('blur', event)
     focused.value = false
-
     if (props.inputtable) {
         setDateFromInput()
     }
@@ -168,7 +152,7 @@ const handleInputBlur = (event) => {
 
 const handleKeyDown = (event) => {
     if (event.key === 'Enter' && props.inputtable) {
-        closeDropdown()
+        dropdownOpened.value = false
         setDateFromInput()
     }
 }
@@ -179,7 +163,7 @@ const handleInputFocus = (event) => {
 }
 
 const handleChange = (event) => {
-    openDropdown()
+    dropdownOpened.value = true
 
     const date = parseDate(event.target.value)
     if (dayjs(date).isValid()) {
@@ -197,7 +181,7 @@ const slots = useSlots()
 <template>
     <BasePicker
         ref="inputRef"
-        v-model:drop-down-opened="dropdownOpened"
+        v-model:dropdown="dropdownOpened"
         :inputtable="inputtable"
         :size="size"
         :name="name"
@@ -205,12 +189,10 @@ const slots = useSlots()
         :clearable="type === 'date' ? false : clearable && !!_value && !disabled"
         :disabled="disabled"
         :type="type"
-        @open-dropdown="openDropdown"
         @change="handleChange"
         @blur="handleInputBlur"
         @focus="handleInputFocus"
         @key-down="handleKeyDown"
-        @close-dropdown="closeDropdown"
         @clear="handleClear"
     >
         <template v-if="slots.inputPrefix" #prefix>

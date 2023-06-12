@@ -31,7 +31,7 @@ const props = defineProps({
         type: Boolean,
         default: true,
     },
-    dropDownOpened: Boolean,
+    dropdown: Boolean,
     type: String,
     placement: {
         type: String,
@@ -40,32 +40,20 @@ const props = defineProps({
     placeholder: String,
 })
 
-const emit = defineEmits([
-    'openDropdown',
-    'closeDropdown',
-    'update:dropDownOpened',
-    'keyDown',
-    'blur',
-    'focus',
-    'clear',
-    'change',
-])
+const emit = defineEmits(['update:dropdown', 'keyDown', 'blur', 'focus', 'clear', 'change'])
 
 const handleInputClick = () => (!props.inputtable ? toggleDropdown() : openDropdown())
 const slots = useSlots()
 const closeDropdown = () => {
-    emit('update:dropDownOpened', false)
-    emit('closeDropdown')
+    emit('update:dropdown', false)
 }
 
 const toggleDropdown = () => {
-    emit('update:dropDownOpened', !props.dropDownOpened)
-    !props.dropDownOpened ? emit('openDropdown') : emit('closeDropdown')
+    emit('update:dropdown', !props.dropdown)
 }
 
 const openDropdown = () => {
-    emit('update:dropDownOpened', true)
-    emit('closeDropdown')
+    emit('update:dropdown', true)
 }
 
 const handleKeyDown = (event) => {
@@ -135,7 +123,7 @@ defineExpose({ focus: () => reference.value?.focus() })
         </template>
     </Input>
     <div ref="floating" class="picker" :style="floatingStyles">
-        <div v-if="dropDownOpened" class="picker-panel">
+        <div v-if="dropdown" class="picker-panel">
             <slot />
         </div>
     </div>

@@ -2,20 +2,19 @@
     <BasePicker
         ref="inputRef"
         v-model:drop-down-opened="dropdownOpened"
-        :class="className"
         :input-label="inputState"
         :clearable="clearable && !!_value && !disabled"
         :clear-button-label="clearButtonLabel"
         :disabled="disabled"
         :size="size"
-        :input-prefix="inputPrefix"
-        :input-suffix="inputSuffix"
         :name="name"
         :prevent-focus="false"
         @clear="handleClear"
         @blur="handleInputBlur"
         @focus="handleInputFocus"
         @change="handleChange"
+        @open-dropdown="openDropdown"
+        @close-dropdown="closeDropdown"
     >
         <template #prefix>
             <slot name="inputPrefix"></slot>
@@ -24,9 +23,8 @@
             <slot name="inputSuffix"></slot>
         </template>
         <Calendar
-            v-if="inputtable"
             :locale="finalLocale"
-            :month="calendarMonth"
+            :month="inputtable ? calendarMonth : undefined"
             :default-month="defaultMonth || (_value instanceof Date ? _value : new Date())"
             :value="_value instanceof Date ? _value : _value && dayjs(_value).toDate()"
             :label-format="labelFormat"
@@ -82,10 +80,6 @@ const props = defineProps({
         type: Boolean,
         default: true,
     },
-    className: {
-        type: String,
-        default: '',
-    },
     clearable: {
         type: Boolean,
         default: true,
@@ -107,69 +101,28 @@ const props = defineProps({
         default: '',
     },
     dayStyle: {
-        type: String,
-        default: '',
-    },
-    defaultMonth: {
-        type: Date,
+        type: Function,
         default: undefined,
     },
-    defaultOpen: {
-        type: Boolean,
-        default: false,
-    },
+    defaultMonth: Date,
+    defaultOpen: Boolean,
     defaultValue: {
         type: [Date, null],
         default: null,
     },
-    defaultView: {
-        type: String,
-        default: '',
-    },
-    disabled: {
-        type: Boolean,
-        default: false,
-    },
-    disableDate: {
-        type: Function,
-        default: undefined,
-    },
-    enableHeaderLabel: {
-        type: Boolean,
-        default: undefined,
-    },
-    disableOutOfMonth: {
-        type: Boolean,
-        default: undefined,
-    },
+    defaultView: String,
+    disabled: Boolean,
+    disableDate: Boolean,
+    enableHeaderLabel: Boolean,
+    disableOutOfMonth: Boolean,
     firstDayOfWeek: {
         type: String,
         default: 'monday',
     },
-    hideOutOfMonthDates: {
-        type: Boolean,
-        default: undefined,
-    },
-    hideWeekdays: {
-        type: Boolean,
-        default: undefined,
-    },
-    inputFormat: {
-        type: String,
-        default: '',
-    },
-    inputPrefix: {
-        type: String,
-        default: '',
-    },
-    inputSuffix: {
-        type: String,
-        default: '',
-    },
-    inputtable: {
-        type: Boolean,
-        default: undefined,
-    },
+    hideOutOfMonthDates: Boolean,
+    hideWeekdays: Boolean,
+    inputFormat: String,
+    inputtable: Boolean,
     labelFormat: {
         type: Object,
         default: () => ({
@@ -177,10 +130,7 @@ const props = defineProps({
             year: 'YYYY',
         }),
     },
-    locale: {
-        type: String,
-        default: '',
-    },
+    locale: String,
     maxDate: {
         type: Date,
         default: undefined,
@@ -221,10 +171,7 @@ const props = defineProps({
         type: Array,
         default: () => [],
     },
-    yearLabelFormat: {
-        type: Object,
-        default: () => ({}),
-    },
+    yearLabelFormat: String,
 })
 
 const { locale: themeLocale } = inject('config', DEFAULT_CONFIG)
@@ -304,6 +251,8 @@ const parseDate = (date) => dayjs(date, dateFormat.value, finalLocale.value).toD
 
 const handleInputBlur = (e) => {
     emit('blur', e)
+    closeDropdown()
+
     focused.value = false
 }
 
