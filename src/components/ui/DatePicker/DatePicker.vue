@@ -1,7 +1,6 @@
 <script setup>
 import { computed, inject, ref, useSlots, watch } from 'vue'
 import { DEFAULT_CONFIG } from '@/components/ui/utils/constant.js'
-import useControllableState from '@/components/ui/utils/useControllableState.js'
 import capitalize from '@/components/ui/utils/capitalize.js'
 import dayjs from 'dayjs'
 import BasePicker from '@/components/ui/DatePicker/BasePicker.vue'
@@ -58,6 +57,10 @@ const props = defineProps({
     dayStyle: Function,
     modelValue: [Date, String, Array],
     dateViewCount: Number,
+    defaultValue: {
+        type: [Date, null],
+        default: null,
+    },
 })
 const emit = defineEmits(['update:modelValue', 'dropdownClose', 'dropdownOpen', 'blur', 'focus'])
 const { locale: themeLocale } = inject('config', DEFAULT_CONFIG)
@@ -70,26 +73,30 @@ const dropdownOpened = ref(props.defaultOpen)
 const inputRef = ref(null)
 const lastValidValue = ref(props.modelValue ?? null)
 
-const [_value, setValue] = useControllableState({
-    prop: props.value,
-    defaultProp: props.modelValue,
-    onChange: (e) => emit('update:modelValue', e),
-})
+const _value = ref(props.modelValue)
+
+const setValue = (value) => {
+    _value.value = value
+    lastValidValue.value = value
+    emit('update:modelValue', value)
+}
 
 const calendarMonth = ref(_value.value || props.defaultMonth || new Date())
 const focused = ref(false)
 const inputState = ref(
-    _value instanceof Date ? capitalize(dayjs(_value).locale(finalLocale.value).format(dateFormat.value)) : ''
+    _value.value instanceof Date
+        ? capitalize(dayjs(_value.value).locale(finalLocale.value).format(dateFormat.value))
+        : ''
 )
 
 watch(
-    () => [props.value, focused.value, themeLocale],
+    () => [props.modelValue, focused.value, themeLocale],
     () => {
         if (props.value === null && !focused.value) {
             inputState.value = ''
         }
         if (props.value instanceof Date && !focused.value) {
-            inputState.value = capitalize(dayjs(props.value).locale(finalLocale.value).format(dateFormat.value))
+            inputState.value = capitalize(dayjs(props.modelValue).locale(finalLocale.value).format(dateFormat.value))
         }
     }
 )
@@ -98,7 +105,7 @@ watch(
     () => [themeLocale],
     () => {
         if (props.modelValue instanceof Date && inputState && !focused.value) {
-            inputState.value = capitalize(dayjs(_value).locale(finalLocale.value).format(dateFormat.value))
+            inputState.value = capitalize(dayjs(_value.value).locale(finalLocale.value).format(dateFormat.value))
         }
     }
 )
@@ -117,12 +124,13 @@ const handleClear = () => {
     dropdownOpened.value = false
     props.openPickerOnClear && (dropdownOpened.value = true)
     inputRef.value?.focus()
+    emit('update:modelValue', null)
 }
 
-const parseDate = (date) => dayjs(date, dateFormat.value, props.finalLocale).toDate()
+const parseDate = (date) => dayjs(date, dateFormat.value, finalLocale.value).toDate()
 
 const setDateFromInput = () => {
-    let date = typeof _value === 'string' ? parseDate(_value) : _value
+    let date = typeof _value.value === 'string' ? parseDate(_value.value) : _value.value
 
     if (props.maxDate && dayjs(date).isAfter(props.maxDate)) {
         date = props.maxDate

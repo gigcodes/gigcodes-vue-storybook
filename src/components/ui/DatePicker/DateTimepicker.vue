@@ -1,67 +1,3 @@
-<template>
-    <BasePicker
-        ref="inputRef"
-        v-model:drop-down-opened="dropdownOpened"
-        :input-label="inputState"
-        :clearable="clearable && !!_value && !disabled"
-        :clear-button-label="clearButtonLabel"
-        :disabled="disabled"
-        :size="size"
-        :name="name"
-        :prevent-focus="false"
-        @clear="handleClear"
-        @blur="handleInputBlur"
-        @focus="handleInputFocus"
-        @change="handleChange"
-        @open-dropdown="openDropdown"
-        @close-dropdown="closeDropdown"
-    >
-        <template #prefix>
-            <slot name="inputPrefix"></slot>
-        </template>
-        <template #suffix>
-            <slot name="inputSuffix"></slot>
-        </template>
-        <Calendar
-            :locale="finalLocale"
-            :month="inputtable ? calendarMonth : undefined"
-            :default-month="defaultMonth || (_value instanceof Date ? _value : new Date())"
-            :value="_value instanceof Date ? _value : _value && dayjs(_value).toDate()"
-            :label-format="labelFormat"
-            :day-class-name="dayClassName"
-            :day-style="dayStyle"
-            :disable-out-of-month="disableOutOfMonth"
-            :min-date="minDate"
-            :max-date="maxDate"
-            :disable-date="disableDate"
-            :first-day-of-week="firstDayOfWeek"
-            :date-view-count="dateViewCount"
-            :enable-header-label="enableHeaderLabel"
-            :default-view="defaultView"
-            :hide-out-of-month-dates="hideOutOfMonthDates"
-            :hide-weekdays="hideWeekdays"
-            :render-day="renderDay"
-            :weekend-days="weekendDays"
-            :year-label-format="yearLabelFormat"
-            @month-change="(month) => (calendarMonth = month)"
-            @change="handleValueChange"
-        />
-        <div class="flex items-center gap-4 mt-4">
-            <TimeInput
-                :disabled="!_value"
-                :value="_value"
-                :format="amPm ? '12' : '24'"
-                :clearable="false"
-                size="sm"
-                @change="handleTimeChange"
-            />
-            <Button size="sm" :disabled="!_value" @click="handleOk">
-                {{ okButtonContent }}
-            </Button>
-        </div>
-    </BasePicker>
-</template>
-
 <script setup>
 import { inject, onMounted, ref, watch } from 'vue'
 import dayjs from 'dayjs'
@@ -70,7 +6,6 @@ import { TimeInput } from '../TimeInput'
 import Calendar from './Calendar.vue'
 import BasePicker from './BasePicker.vue'
 import Button from '../Buttons'
-import useControllableState from '@/components/ui/utils/useControllableState.js'
 import { DEFAULT_CONFIG, SIZES } from '@/components/ui/utils/constant.js'
 
 const DEFAULT_INPUT_FORMAT = 'DD-MMM-YYYY hh:mm a'
@@ -96,14 +31,8 @@ const props = defineProps({
         type: Number,
         default: undefined,
     },
-    dayClassName: {
-        type: String,
-        default: '',
-    },
-    dayStyle: {
-        type: Function,
-        default: undefined,
-    },
+    dayClassName: Function,
+    dayStyle: Function,
     defaultMonth: Date,
     defaultOpen: Boolean,
     defaultValue: {
@@ -163,7 +92,7 @@ const props = defineProps({
         type: String,
         default: '',
     },
-    value: {
+    modelValue: {
         type: [Date, null],
         default: null,
     },
@@ -176,18 +105,18 @@ const props = defineProps({
 
 const { locale: themeLocale } = inject('config', DEFAULT_CONFIG)
 
-const emit = defineEmits(['focus', 'change', 'blur', 'dropdownClose', 'dropdownOpen'])
+const emit = defineEmits(['focus', 'update:modelValue', 'blur', 'dropdownClose', 'dropdownOpen'])
 
 const finalLocale = ref(props.locale || themeLocale)
 const dateFormat = ref(props.inputFormat || DEFAULT_INPUT_FORMAT)
 const inputRef = ref(null)
 const dropdownOpened = ref(props.defaultOpen || false)
+const _value = ref(props.modelValue)
 
-const [_value, setValue] = useControllableState({
-    prop: props.value,
-    defaultProp: props.defaultValue,
-    onChange: (e) => emit('change', e),
-})
+const setValue = (value) => {
+    _value.value = value
+    emit('update:modelValue', value)
+}
 
 const calendarMonth = ref(_value.value || props.defaultMonth || new Date())
 const focused = ref(false)
@@ -196,16 +125,6 @@ const inputState = ref(
         ? capitalize(dayjs(_value.value).locale(finalLocale.value).format(dateFormat.value))
         : ''
 )
-
-const closeDropdown = () => {
-    dropdownOpened.value = false
-    emit('dropdownClose')
-}
-
-const openDropdown = () => {
-    dropdownOpened.value = true
-    emit('dropdownOpen')
-}
 
 watch(
     () => props.value,
@@ -230,29 +149,28 @@ const handleValueChange = (date) => {
         date.setMinutes(now.getMinutes())
     }
     setValue(date)
-    if (!props.value && !props.closePickerOnChange) {
+    console.log(_value.value, date)
+    if (!props.modelValue && !props.closePickerOnChange) {
         inputState.value = dayjs(date).locale(finalLocale.value).format(dateFormat.value)
     }
     props.closePickerOnChange &&
         (inputState.value = capitalize(dayjs(date).locale(finalLocale.value).format(dateFormat.value)))
-    props.closePickerOnChange && closeDropdown()
+    props.closePickerOnChange && (dropdownOpened.value = false)
     window.setTimeout(() => inputRef.value?.focus(), 0)
 }
 
 const handleClear = () => {
     setValue(null)
     inputState.value = ''
-    props.openPickerOnClear && openDropdown()
+    props.openPickerOnClear && (dropdownOpened.value = true)
     inputRef.value?.focus()
-    emit('change', null)
+    emit('update:modelValue', null)
 }
 
 const parseDate = (date) => dayjs(date, dateFormat.value, finalLocale.value).toDate()
 
 const handleInputBlur = (e) => {
     emit('blur', e)
-    closeDropdown()
-
     focused.value = false
 }
 
@@ -262,7 +180,7 @@ const handleInputFocus = (e) => {
 }
 
 const handleChange = (e) => {
-    openDropdown()
+    dropdownOpened.value = true
 
     const date = parseDate(e.target.value)
     if (dayjs(date).isValid()) {
@@ -292,14 +210,14 @@ const handleTimeChange = (time) => {
 
     props.closePickerOnChange &&
         (inputState.value = capitalize(dayjs(newDateTime).locale(finalLocale.value).format(dateFormat.value)))
-    props.closePickerOnChange && closeDropdown()
+    props.closePickerOnChange && (dropdownOpened.value = false)
 }
 
 const handleOk = () => {
     inputState.value = capitalize(dayjs(_value.value).locale(finalLocale.value).format(dateFormat.value))
-    closeDropdown()
+    dropdownOpened.value = false
     window.setTimeout(() => inputRef.value?.focus(), 0)
-    emit('change', _value.value)
+    emit('update:modelValue', _value.value)
 }
 
 onMounted(() => {
@@ -307,3 +225,64 @@ onMounted(() => {
     dateFormat.value = props.inputFormat || DEFAULT_INPUT_FORMAT
 })
 </script>
+<template>
+    <BasePicker
+        ref="inputRef"
+        v-model:dropdown="dropdownOpened"
+        :input-label="inputState"
+        :clearable="clearable && !!_value && !disabled"
+        :clear-button-label="clearButtonLabel"
+        :disabled="disabled"
+        :size="size"
+        :name="name"
+        :prevent-focus="false"
+        @clear="handleClear"
+        @blur="handleInputBlur"
+        @focus="handleInputFocus"
+        @change="handleChange"
+    >
+        <template #prefix>
+            <slot name="inputPrefix"></slot>
+        </template>
+        <template #suffix>
+            <slot name="inputSuffix"></slot>
+        </template>
+        <Calendar
+            :locale="finalLocale"
+            :month="inputtable ? calendarMonth : undefined"
+            :default-month="defaultMonth || (_value instanceof Date ? _value : new Date())"
+            :value="_value instanceof Date ? _value : _value && dayjs(_value).toDate()"
+            :label-format="labelFormat"
+            :day-class-name="dayClassName"
+            :day-style="dayStyle"
+            :disable-out-of-month="disableOutOfMonth"
+            :min-date="minDate"
+            :max-date="maxDate"
+            :disable-date="disableDate"
+            :first-day-of-week="firstDayOfWeek"
+            :date-view-count="dateViewCount"
+            :enable-header-label="enableHeaderLabel"
+            :default-view="defaultView"
+            :hide-out-of-month-dates="hideOutOfMonthDates"
+            :hide-weekdays="hideWeekdays"
+            :render-day="renderDay"
+            :weekend-days="weekendDays"
+            :year-label-format="yearLabelFormat"
+            @month-change="(month) => (calendarMonth = month)"
+            @change="handleValueChange"
+        />
+        <div class="flex items-center gap-4 mt-4">
+            <TimeInput
+                :value="_value"
+                :disabled="!_value"
+                :format="amPm ? '12' : '24'"
+                :clearable="false"
+                size="sm"
+                @change="handleTimeChange"
+            />
+            <Button size="sm" :disabled="!_value" @click="handleOk">
+                {{ okButtonContent }}
+            </Button>
+        </div>
+    </BasePicker>
+</template>
