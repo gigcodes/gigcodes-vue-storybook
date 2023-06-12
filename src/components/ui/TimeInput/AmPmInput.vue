@@ -9,27 +9,29 @@ const props = defineProps({
     change: Function,
     setValue: Function,
 })
-const emit = defineEmits(['focus'])
+const emit = defineEmits(['focus', 'change'])
+
 defineOptions({
     inheritAttrs: false,
 })
+
 const inputRef = ref(null)
 
 const handleClick = (event) => {
     event.stopPropagation()
-    inputRef.value.select()
+    inputRef.value?.select()
 }
 
 const handleKeyDown = (event) => {
     if (event.key === 'ArrowUp' || event.key === 'ArrowDown') {
         event.preventDefault()
-        props.change(props.value === props.amLabel ? props.pmLabel : props.amLabel, true)
+        emit('change', { value: props.value === props.amLabel ? props.pmLabel : props.amLabel, triggerShift: true })
     }
 }
 
 const handleFocus = (event) => {
     emit('focus', event)
-    inputRef.value.select()
+    inputRef.value?.select()
 }
 
 const handleChange = (event) => {
@@ -37,21 +39,20 @@ const handleChange = (event) => {
 
     if (lastInputVal === 'p') {
         event.preventDefault()
-        props.change(props.pmLabel, true)
+        emit('change', { value: props.pmLabel, triggerShift: true })
         return
     }
 
     if (lastInputVal === 'a') {
         event.preventDefault()
-        props.change(props.amLabel, true)
+        emit('change', { value: props.amLabel, triggerShift: true })
         return
     }
-
-    props.change(props.value.toString(), true)
+    emit('change', { value: props.value.toString(), triggerShift: true })
 }
 
 const { class: className, ...restAttrs } = useAttrs()
-defineExpose({ focus: () => inputRef.value.focus(), select: () => inputRef.value.select() })
+defineExpose({ focus: () => inputRef.value?.focus(), select: () => inputRef.value?.select() })
 </script>
 
 <template>

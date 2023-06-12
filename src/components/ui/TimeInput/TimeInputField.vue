@@ -8,45 +8,52 @@ defineOptions({
 })
 
 const { class: className, ...restAttrs } = useAttrs()
+
+delete restAttrs.size
+
 const props = defineProps({
-    value: [String, Number],
-    setValue: Function,
+    modelValue: [String, Number],
     withSeparator: Boolean,
-    change: Function,
     max: Number,
     min: {
         type: Number,
         default: 0,
     },
 })
-const emits = defineEmits(['focus', 'blur', 'update:value'])
+const emits = defineEmits(['focus', 'blur', 'update:modelValue', 'change'])
 const digitsEntered = ref(0)
 const inputRef = ref(null)
 
 const handleFocus = (e) => {
     emits('focus', e)
-    inputRef.value.select()
+    inputRef.value?.select()
     digitsEntered.value = 0
 }
 
 const handleBlur = (e) => {
     emits('blur', e)
     if (digitsEntered.value === 1) {
-        props.change(e.currentTarget.value, false)
+        emits('change', {
+            value: e.currentTarget.value,
+            triggerShift: false,
+        })
     }
 }
 
 const handleClick = (e) => {
     e.stopPropagation()
-    inputRef.value.select()
+    inputRef.value?.select()
 }
 
 const handleKeyDown = (e) => {
     if (e.key === 'ArrowUp') {
         e.preventDefault()
         const padded = padTime(clamp(parseInt(e.currentTarget.value, 10) + 1, props.min, props.max).toString())
-        if (props.modelValue !== padded) {
-            props.change(padded, false)
+        if (props.value !== padded) {
+            emits('change', {
+                value: padded,
+                triggerShift: false,
+            })
         }
     }
 
@@ -54,8 +61,11 @@ const handleKeyDown = (e) => {
         e.preventDefault()
         const padded = padTime(clamp(parseInt(e.currentTarget.value, 10) - 1, props.min, props.max).toString())
 
-        if (props.modelValue !== padded) {
-            props.change(padded, false)
+        if (props.value !== padded) {
+            emits('change', {
+                value: padded,
+                triggerShift: true,
+            })
         }
     }
 }
@@ -66,20 +76,24 @@ const handleChange = (event) => {
     const _val = parseInt(event.currentTarget.value, 10).toString()
 
     if (_val === '0' && digitsEntered.value === 0) {
-        emits('update:value', '00')
+        emits('update:modelValue', '00')
         return
     }
-    props.change(_val, true, digitsEntered.value > 1)
+    emits('change', {
+        value: _val,
+        triggerShift: true,
+        forceTriggerShift: digitsEntered.value > 1,
+    })
 }
 
-defineExpose({ focus: () => inputRef.value.focus(), select: () => inputRef.value.select() })
+defineExpose({ focus: () => inputRef.value?.focus(), select: () => inputRef.value?.select() })
 </script>
 <template>
     <input
         ref="inputRef"
         type="text"
         inputmode="numeric"
-        :value="value"
+        :value="modelValue"
         :class="classNames('time-input-field', className)"
         v-bind="restAttrs"
         @input="handleChange"

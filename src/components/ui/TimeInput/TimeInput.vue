@@ -25,7 +25,7 @@
             <TimeInputField
                 :id="uuid"
                 ref="hoursRef"
-                :value="time.hours"
+                v-model="time.hours"
                 :class="timeFieldClass"
                 with-separator
                 :size="size"
@@ -34,12 +34,11 @@
                 aria-label="hours"
                 :disabled="disabled"
                 :name="name"
-                :change="handleHoursChange"
-                :set-value="(val) => (time.hours = val)"
+                @change="handleHoursChange"
             />
             <TimeInputField
                 ref="minutesRef"
-                :value="time.minutes"
+                v-model="time.minutes"
                 :class="timeFieldClass"
                 :with-separator="showSeconds"
                 :size="size"
@@ -47,33 +46,30 @@
                 :placeholder="timeFieldPlaceholder"
                 aria-label="minutes"
                 :disabled="disabled"
-                :change="handleMinutesChange"
-                :set-value="(val) => (time.minutes = val)"
+                @change="handleMinutesChange"
             />
             <TimeInputField
                 v-if="showSeconds"
                 ref="secondsRef"
-                :value="time.seconds"
+                v-model="time.seconds"
                 :class="timeFieldClass"
                 :size="size"
                 :max="59"
                 :placeholder="timeFieldPlaceholder"
                 aria-label="seconds"
                 :disabled="disabled"
-                :change="handleSecondsChange"
-                :set-value="(val) => (time.seconds = val)"
+                @change="handleSecondsChange"
             />
             <AmPmInput
                 v-if="format === '12'"
                 ref="amPmRef"
-                :value="time.amPm"
+                v-model="time.amPm"
                 :placeholder="amPmPlaceholder"
                 :am-label="amLabel"
                 :pm-label="pmLabel"
                 aria-label="am pm"
                 :disabled="disabled"
-                :change="handleAmPmChange"
-                :set-value="(val) => (time.amPm = val)"
+                @change="handleAmPmChange"
             />
         </div>
     </Input>

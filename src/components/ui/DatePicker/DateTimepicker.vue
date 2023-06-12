@@ -1,7 +1,7 @@
 <template>
     <BasePicker
         ref="inputRef"
-        v-model="dropdownOpened"
+        v-model:drop-down-opened="dropdownOpened"
         :class="className"
         :input-label="inputState"
         :clearable="clearable && !!_value && !disabled"
@@ -69,11 +69,11 @@ import { inject, onMounted, ref, watch } from 'vue'
 import dayjs from 'dayjs'
 import capitalize from '../utils/capitalize'
 import { TimeInput } from '../TimeInput'
-import Calendar from './Calendar'
-import BasePicker from './BasePicker'
+import Calendar from './Calendar.vue'
+import BasePicker from './BasePicker.vue'
 import Button from '../Buttons'
 import useControllableState from '@/components/ui/utils/useControllableState.js'
-import { DEFAULT_CONFIG } from '@/components/ui/utils/constant.js'
+import { DEFAULT_CONFIG, SIZES } from '@/components/ui/utils/constant.js'
 
 const DEFAULT_INPUT_FORMAT = 'DD-MMM-YYYY hh:mm a'
 
@@ -227,7 +227,7 @@ const props = defineProps({
     },
     size: {
         type: String,
-        default: '',
+        default: SIZES.MD,
     },
     style: {
         type: String,
@@ -260,10 +260,12 @@ const [_value, setValue] = useControllableState({
     onChange: props.onChange,
 })
 
-const calendarMonth = ref(_value || props.defaultMonth || new Date())
+const calendarMonth = ref(_value.value || props.defaultMonth || new Date())
 const focused = ref(false)
 const inputState = ref(
-    _value instanceof Date ? capitalize(dayjs(_value).locale(finalLocale.value).format(dateFormat.value)) : ''
+    _value.value instanceof Date
+        ? capitalize(dayjs(_value.value).locale(finalLocale.value).format(dateFormat.value))
+        : ''
 )
 
 const closeDropdown = () => {
@@ -290,9 +292,9 @@ watch(
 )
 
 const handleValueChange = (date) => {
-    if (_value) {
-        date.setHours(_value.getHours())
-        date.setMinutes(_value.getMinutes())
+    if (_value.value) {
+        date.setHours(_value.value.getHours())
+        date.setMinutes(_value.value.getMinutes())
     } else {
         const now = new Date(Date.now())
         date.setHours(now.getHours())
@@ -343,9 +345,9 @@ const handleChange = (e) => {
 
 const handleTimeChange = (time) => {
     const newDateTime = new Date(
-        _value.getFullYear(),
-        _value.getMonth(),
-        _value.getDate(),
+        _value.value.getFullYear(),
+        _value.value.getMonth(),
+        _value.value.getDate(),
         time.getHours(),
         time.getMinutes(),
         time.getSeconds(),
@@ -363,10 +365,10 @@ const handleTimeChange = (time) => {
 }
 
 const handleOk = () => {
-    inputState.value = capitalize(dayjs(_value).locale(finalLocale.value).format(dateFormat.value))
+    inputState.value = capitalize(dayjs(_value.value).locale(finalLocale.value).format(dateFormat.value))
     closeDropdown()
     window.setTimeout(() => inputRef.value?.focus(), 0)
-    props.onChange?.(_value)
+    props.onChange?.(_value.value)
 }
 
 onMounted(() => {

@@ -6,7 +6,8 @@ function allButLastDigit(value) {
 }
 
 export function createTimeHandler({ onChange, nextRef, min, max, nextMax }) {
-    return (value, triggerShift, forceTriggerShift = false) => {
+    return ({ value, triggerShift, forceTriggerShift = false }) => {
+        console.log(value, triggerShift, forceTriggerShift)
         const parsed = parseInt(value, 10)
 
         if (Number.isNaN(parsed)) {
