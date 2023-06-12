@@ -14,8 +14,8 @@ declare const _sfc_main: import('./vue/dist/vue.esm-bundler.js').DefineComponent
     };
     invalid: BooleanConstructor;
     placeholder: StringConstructor;
-    modelValue: (StringConstructor | NumberConstructor)[];
-    value: (StringConstructor | NumberConstructor)[];
+    modelValue: (StringConstructor | NumberConstructor | DateConstructor)[];
+    value: (StringConstructor | NumberConstructor | DateConstructor)[];
     unstyle: BooleanConstructor;
     disabled: BooleanConstructor;
     form: ObjectConstructor;
@@ -35,8 +35,8 @@ declare const _sfc_main: import('./vue/dist/vue.esm-bundler.js').DefineComponent
     };
     invalid: BooleanConstructor;
     placeholder: StringConstructor;
-    modelValue: (StringConstructor | NumberConstructor)[];
-    value: (StringConstructor | NumberConstructor)[];
+    modelValue: (StringConstructor | NumberConstructor | DateConstructor)[];
+    value: (StringConstructor | NumberConstructor | DateConstructor)[];
     unstyle: BooleanConstructor;
     disabled: BooleanConstructor;
     form: ObjectConstructor;
