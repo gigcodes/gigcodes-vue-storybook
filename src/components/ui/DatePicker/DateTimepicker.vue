@@ -197,26 +197,6 @@ const props = defineProps({
         type: String,
         default: 'OK',
     },
-    onBlur: {
-        type: Function,
-        default: undefined,
-    },
-    onChange: {
-        type: Function,
-        default: undefined,
-    },
-    onFocus: {
-        type: Function,
-        default: undefined,
-    },
-    onDropdownClose: {
-        type: Function,
-        default: undefined,
-    },
-    onDropdownOpen: {
-        type: Function,
-        default: undefined,
-    },
     openPickerOnClear: {
         type: Boolean,
         default: undefined,
@@ -249,6 +229,8 @@ const props = defineProps({
 
 const { locale: themeLocale } = inject('config', DEFAULT_CONFIG)
 
+const emit = defineEmits(['focus', 'change', 'blur', 'dropdownClose', 'dropdownOpen'])
+
 const finalLocale = ref(props.locale || themeLocale)
 const dateFormat = ref(props.inputFormat || DEFAULT_INPUT_FORMAT)
 const inputRef = ref(null)
@@ -257,7 +239,7 @@ const dropdownOpened = ref(props.defaultOpen || false)
 const [_value, setValue] = useControllableState({
     prop: props.value,
     defaultProp: props.defaultValue,
-    onChange: props.onChange,
+    onChange: (e) => emit('change', e),
 })
 
 const calendarMonth = ref(_value.value || props.defaultMonth || new Date())
@@ -270,12 +252,12 @@ const inputState = ref(
 
 const closeDropdown = () => {
     dropdownOpened.value = false
-    props.onDropdownClose?.()
+    emit('dropdownClose')
 }
 
 const openDropdown = () => {
     dropdownOpened.value = true
-    props.onDropdownOpen?.()
+    emit('dropdownOpen')
 }
 
 watch(
@@ -315,18 +297,18 @@ const handleClear = () => {
     inputState.value = ''
     props.openPickerOnClear && openDropdown()
     inputRef.value?.focus()
-    props.onChange?.(null)
+    emit('change', null)
 }
 
 const parseDate = (date) => dayjs(date, dateFormat.value, finalLocale.value).toDate()
 
 const handleInputBlur = (e) => {
-    typeof props.onBlur === 'function' && props.onBlur(e)
+    emit('blur', e)
     focused.value = false
 }
 
 const handleInputFocus = (e) => {
-    typeof props.onFocus === 'function' && props.onFocus(e)
+    emit('focus', e)
     focused.value = true
 }
 
@@ -368,7 +350,7 @@ const handleOk = () => {
     inputState.value = capitalize(dayjs(_value.value).locale(finalLocale.value).format(dateFormat.value))
     closeDropdown()
     window.setTimeout(() => inputRef.value?.focus(), 0)
-    props.onChange?.(_value.value)
+    emit('change', _value.value)
 }
 
 onMounted(() => {
