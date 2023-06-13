@@ -20,7 +20,7 @@ const props = defineProps({
     maxDate: Number,
     minDate: Number,
     value: [Array, String, Number, Date],
-    disableDate: [Function, Boolean],
+    disableDate: Function,
     disableOutOfMonth: Boolean,
     dayClassName: Function,
     dayStyle: Function,
@@ -32,9 +32,6 @@ const props = defineProps({
     fullWidth: Boolean,
     hideWeekdays: Boolean,
     hideOutOfMonthDates: Boolean,
-    isDateInRange: [Function, Boolean],
-    isDateFirstInRange: [Function, Boolean],
-    isDateLastInRange: [Function, Boolean],
     focusable: { type: Boolean, default: true },
     preventFocus: { type: Boolean, default: true },
     size: {
@@ -51,6 +48,43 @@ const weekdays = computed(() => getWeekdaysNames(finalLocale, props.firstDayOfWe
 const hasValue = computed(() =>
     Array.isArray(props.value) ? props.value.every((item) => item instanceof Date) : props.value instanceof Date
 )
+
+const hoveredDay = inject('hoveredDay')
+const pickedDate = inject('pickedDate')
+
+const shouldHighlightDate = (date, modifiers) => {
+    if (pickedDate.value instanceof Date && hoveredDay.value instanceof Date) {
+        const result = [hoveredDay.value, pickedDate.value]
+        result.sort((a, b) => a.getTime() - b.getTime())
+        return (
+            !modifiers.selected &&
+            dayjs(date).subtract(1, 'day').isBefore(result[1]) &&
+            dayjs(date).add(1, 'day').isAfter(result[0])
+        )
+    }
+
+    return false
+}
+
+const isPickedDateFirstInRange = (date, modifiers) => {
+    if (pickedDate.value instanceof Date && hoveredDay.value instanceof Date) {
+        const result = [hoveredDay.value, pickedDate.value]
+        result.sort((a, b) => a.getTime() - b.getTime())
+        return modifiers.selected && dayjs(date).isBefore(result[1])
+    }
+
+    return false
+}
+
+const isPickedDateLastInRange = (date, modifiers) => {
+    if (pickedDate.value instanceof Date && hoveredDay.value instanceof Date) {
+        const result = [hoveredDay.value, pickedDate.value]
+        result.sort((a, b) => a.getTime() - b.getTime())
+        return modifiers.selected && dayjs(date).isAfter(result[0])
+    }
+
+    return false
+}
 
 const hasValueInMonthRange = computed(
     () =>
@@ -99,17 +133,18 @@ const dayProps = computed(() => {
 
     return days.value.map((row) => row.map((date) => getDayProps({ date, ...propsData })))
 })
-const setDayRef = (rowIndex, cellIndex) => (button) => {
+
+const setDayRef = (rI, cI) => (button) => {
     if (dayRefs.value) {
-        if (!Array.isArray(dayRefs.value[rowIndex])) {
-            dayRefs.value[rowIndex] = []
+        if (!Array.isArray(dayRefs.value[rI])) {
+            dayRefs.value[rI] = []
         }
-        dayRefs.value[rowIndex][cellIndex] = button
+        dayRefs.value[rI][cI] = button
     }
 }
 
 defineExpose({ dayRefs })
-const emit = defineEmits(['change', 'keydown', 'mouseenter'])
+const emit = defineEmits(['change', 'keydown', 'dayMouseEnter'])
 </script>
 
 <template>
@@ -122,39 +157,23 @@ const emit = defineEmits(['change', 'keydown', 'mouseenter'])
             </tr>
         </thead>
         <tbody>
-            <tr v-for="(row, rowIndex) in days" :key="rowIndex" class="date-picker-week-cell">
-                <td v-for="(date, cellIndex) in row" :key="cellIndex">
+            <tr v-for="(row, rI) in days" :key="rI" class="date-picker-week-cell">
+                <td v-for="(date, cI) in row" :key="cI">
                     <Day
-                        :ref="setDayRef(rowIndex, cellIndex)"
-                        :out-of-month="dayProps[rowIndex][cellIndex].outOfMonth"
-                        :weekend="dayProps[rowIndex][cellIndex].weekend"
-                        :in-range="
-                            dayProps[rowIndex][cellIndex].inRange || typeof isDateInRange === 'function'
-                                ? isDateInRange(date, dayProps[rowIndex][cellIndex])
-                                : isDateInRange
-                        "
+                        :ref="setDayRef(rI, cI)"
+                        :out-of-month="dayProps[rI][cI].outOfMonth"
+                        :weekend="dayProps[rI][cI].weekend"
+                        :in-range="dayProps[rI][cI].inRange || shouldHighlightDate(date, dayProps[rI][cI])"
                         :first-in-range="
-                            dayProps[rowIndex][cellIndex].firstInRange || typeof isDateFirstInRange === 'function'
-                                ? isDateFirstInRange(date, dayProps[rowIndex][cellIndex])
-                                : isDateFirstInRange
+                            dayProps[rI][cI].firstInRange || isPickedDateFirstInRange(date, dayProps[rI][cI])
                         "
-                        :last-in-range="
-                            dayProps[rowIndex][cellIndex].lastInRange || typeof isDateLastInRange === 'function'
-                                ? isDateLastInRange(date, dayProps[rowIndex][cellIndex])
-                                : isDateLastInRange
-                        "
+                        :last-in-range="dayProps[rI][cI].lastInRange || isPickedDateLastInRange(date, dayProps[rI][cI])"
                         :first-in-month="isSameDate(date, firstIncludedDay)"
-                        :selected="
-                            dayProps[rowIndex][cellIndex].selected || dayProps[rowIndex][cellIndex].selectedInRange
-                        "
+                        :selected="dayProps[rI][cI].selected || dayProps[rI][cI].selectedInRange"
                         :has-value="hasValueInMonthRange"
-                        :disabled="dayProps[rowIndex][cellIndex].disabled"
-                        :class="
-                            typeof dayClassName === 'function'
-                                ? dayClassName(date, dayProps[rowIndex][cellIndex])
-                                : null
-                        "
-                        :style="typeof dayStyle === 'function' ? dayStyle(date, dayProps[rowIndex][cellIndex]) : null"
+                        :disabled="dayProps[rI][cI].disabled"
+                        :class="typeof dayClassName === 'function' ? dayClassName(date, dayProps[rI][cI]) : null"
+                        :style="typeof dayStyle === 'function' ? dayStyle(date, dayProps[rI][cI]) : null"
                         :full-width="fullWidth"
                         :focusable="focusable"
                         :hide-out-of-month-dates="hideOutOfMonthDates"
@@ -163,9 +182,9 @@ const emit = defineEmits(['change', 'keydown', 'mouseenter'])
                         :is-today="isSameDate(date, new Date())"
                         :value="date"
                         @click="() => emit('change', date)"
-                        @keydown="() => emit('keydown', { rowIndex, cellIndex, date, $event })"
+                        @keydown="(event) => emit('keydown', { rI, cI, date, event })"
                         @mousedown="(e) => preventFocus && e.preventFocus()"
-                        @mouseenter="(e) => emit('mouseenter', e)"
+                        @mouseenter="(e) => emit('dayMouseEnter', e)"
                     ></Day>
                 </td>
             </tr>

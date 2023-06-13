@@ -1,5 +1,5 @@
 <script setup>
-import { computed, inject, useAttrs } from 'vue'
+import { inject, ref, useAttrs } from 'vue'
 import { DEFAULT_CONFIG } from '@/components/ui/utils/constant.js'
 import classNames from 'classnames'
 
@@ -18,6 +18,7 @@ const { themeColor, primaryColorLevel } = inject('config', DEFAULT_CONFIG)
 defineOptions({
     inheritAttrs: false,
 })
+const emit = defineEmits(['mouseenter'])
 const { class: className, ...rest } = useAttrs()
 const props = defineProps({
     focusable: Boolean,
@@ -26,6 +27,7 @@ const props = defineProps({
     firstInMonth: Boolean,
     disabled: Boolean,
     isToday: Boolean,
+    inRange: Boolean,
     weekend: Boolean,
     outOfMonth: Boolean,
     hideOutOfMonthDates: Boolean,
@@ -35,38 +37,16 @@ const props = defineProps({
     value: [String, Date, Number],
 })
 
-const itemClass = computed(() =>
-    classNames(
-        'date-picker-cell-content',
-        props.disabled && 'date-picker-cell-disabled',
-        props.isToday && `border border-${themeColor}-${primaryColorLevel}`,
-        props.weekend && !props.disabled && 'date-picker-cell-weekend',
-        props.outOfMonth && !props.disabled && 'date-picker-other-month',
-        props.outOfMonth && props.hideOutOfMonthDates && 'd-none',
-        !props.outOfMonth && !props.disabled && !props.selected && 'date-picker-cell-current-month',
-        !props.disabled && !props.selected && !props.inRange && 'date-picker-cell-hoverable',
-        props.selected && !props.disabled && `bg-${themeColor}-${primaryColorLevel} text-gray-100`,
-        props.inRange &&
-            !props.disabled &&
-            !props.firstInRange &&
-            !props.lastInRange &&
-            !props.selected &&
-            `bg-${themeColor}-${primaryColorLevel} bg-opacity-10`,
-        !props.inRange && !props.firstInRange && !props.lastInRange && 'rounded-lg',
-        props.firstInRange &&
-            !props.disabled &&
-            'ltr:rounded-tl-lg ltr:rounded-bl-lg rtl:rounded-tr-lg rtl:rounded-br-lg',
-        props.lastInRange &&
-            !props.disabled &&
-            'ltr:rounded-tr-lg ltr:rounded-br-lg rtl:rounded-tl-lg rtl:rounded-bl-lg',
-        className
-    )
-)
+const button = ref(null)
+
+defineExpose({ focus: () => button.value?.focus(), disabled: props.disabled })
 </script>
 <template>
     <button
         v-bind="rest"
+        ref="button"
         type="button"
+        :disabled="disabled"
         :tabIndex="
             getDayTabIndex({
                 focusable,
@@ -75,7 +55,34 @@ const itemClass = computed(() =>
                 firstInMonth,
             })
         "
-        :class="itemClass"
+        :class="
+            classNames(
+                'date-picker-cell-content',
+                props.disabled && 'date-picker-cell-disabled',
+                props.isToday && `border border-${themeColor}-${primaryColorLevel}`,
+                props.weekend && !props.disabled && 'date-picker-cell-weekend',
+                props.outOfMonth && !props.disabled && 'date-picker-other-month',
+                props.outOfMonth && props.hideOutOfMonthDates && 'd-none',
+                !props.outOfMonth && !props.disabled && !props.selected && 'date-picker-cell-current-month',
+                !props.disabled && !props.selected && !props.inRange && 'date-picker-cell-hoverable',
+                props.selected && !props.disabled && `bg-${themeColor}-${primaryColorLevel} text-gray-100`,
+                props.inRange &&
+                    !props.disabled &&
+                    !props.firstInRange &&
+                    !props.lastInRange &&
+                    !props.selected &&
+                    `bg-${themeColor}-${primaryColorLevel} bg-opacity-10`,
+                !props.inRange && !props.firstInRange && !props.lastInRange && 'rounded-lg',
+                props.firstInRange &&
+                    !props.disabled &&
+                    'ltr:rounded-tl-lg ltr:rounded-bl-lg rtl:rounded-tr-lg rtl:rounded-br-lg',
+                props.lastInRange &&
+                    !props.disabled &&
+                    'ltr:rounded-tr-lg ltr:rounded-br-lg rtl:rounded-tl-lg rtl:rounded-bl-lg',
+                className
+            )
+        "
+        @mouseenter="(event) => emit('mouseenter', { event, value })"
     >
         {{ typeof renderDay === 'function' ? renderDay(value) : value?.getDate() }}
     </button>

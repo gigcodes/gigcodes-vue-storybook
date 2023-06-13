@@ -6,15 +6,15 @@ import RangeCalendar from '@/components/ui/DatePicker/RangeCalendar.vue'
 import BasePicker from '@/components/ui/DatePicker/BasePicker.vue'
 import useControllableState from '@/components/ui/utils/useControllableState.js'
 
-const validationRule = (val) => Array.isArray(val) && val.length === 2 && val.every((v) => v instanceof Date)
+const validationRule = (val) =>
+    Array.isArray(val.value) && val.value.length === 2 && val.value.every((v) => v instanceof Date)
 
-const isFirstDateSet = (val) => Array.isArray(val) && val.length === 2 && val[0] instanceof Date
+const isFirstDateSet = (val) => Array.isArray(val.value) && val.value.length === 2 && val.value[0] instanceof Date
 
 const props = defineProps({
-    clearable: Boolean,
-    clearButton: Boolean,
-    closePickerOnChange: Boolean,
-    dateViewCount: Number,
+    clearable: { type: Boolean, default: true },
+    closePickerOnChange: { type: Boolean, default: true },
+    dateViewCount: { type: Number, default: 1 },
     dayClassName: Function,
     dayStyle: String,
     defaultMonth: Date,
@@ -25,12 +25,12 @@ const props = defineProps({
     disableDate: Function,
     enableHeaderLabel: Boolean,
     disableOutOfMonth: Boolean,
-    firstDayOfWeek: String,
+    firstDayOfWeek: { type: String, default: 'monday' },
     hideOutOfMonthDates: Boolean,
     hideWeekdays: Boolean,
     inputFormat: String,
-    labelFormat: Object,
-    seperator: String,
+    labelFormat: { type: Object, default: () => ({ month: 'MMM', year: 'YYYY' }) },
+    seperator: { type: String, default: '~' },
     locale: String,
     maxDate: Date,
     minDate: Date,
@@ -38,20 +38,21 @@ const props = defineProps({
     renderDay: Function,
     singleDate: Boolean,
     size: String,
-    style: String,
     weekendDays: Array,
     yearLabelFormat: Object,
     modelValue: [Date, String, Array],
 })
 
 const emit = defineEmits(['change', 'update:modelValue'])
-
 const dropdownOpened = ref(props.defaultOpen)
 const inputRef = ref(null)
+
 const [_value, setValue] = useControllableState({
-    prop: props.month,
-    defaultProp: props.defaultMonth !== undefined ? props.defaultMonth : new Date(),
-    onChange: (e) => emit('update:modelValue', e),
+    prop: props.modelValue,
+    defaultProp: props.defaultValue !== undefined ? props.defaultValue : [null, null],
+    onChange: (e) => {
+        emit('update:modelValue', e)
+    },
 })
 
 const { locale: themeLocale } = inject('config', DEFAULT_CONFIG)
@@ -71,11 +72,11 @@ const valueValid = computed(() => validationRule(_value))
 const firstValueValid = computed(() => isFirstDateSet(_value))
 
 const firstDateLabel = computed(() =>
-    _value[0] ? capitalize(dayjs(_value[0]).locale(finalLocale.value).format(dateFormat.value)) : ''
+    _value.value[0] ? capitalize(dayjs(_value.value[0]).locale(finalLocale.value).format(dateFormat.value)) : ''
 )
 
 const secondDateLabel = computed(() =>
-    _value[1] ? capitalize(dayjs(_value[1]).locale(finalLocale.value).format(dateFormat.value)) : ''
+    _value.value[1] ? capitalize(dayjs(_value.value[1]).locale(finalLocale.value).format(dateFormat.value)) : ''
 )
 
 const handleClear = () => {
@@ -86,7 +87,7 @@ const handleClear = () => {
 }
 
 watch(dropdownOpened, (val) => {
-    if (!val && firstValueValid.value && _value[1] === null) {
+    if (!val && firstValueValid.value && _value.value[1] === null) {
         handleClear()
     }
 })
@@ -97,10 +98,8 @@ const slots = useSlots()
         :ref="inputRef"
         v-model:dropdown="dropdownOpened"
         :size="size"
-        :class="className"
         :input-label="firstValueValid ? `${firstDateLabel} ${seperator} ${secondDateLabel}` : ''"
         :clearable="clearable && firstValueValid"
-        :clear-button="clearButton"
         :date-view-count="dateViewCount"
         :disabled="disabled"
         @clear="handleClear"
@@ -116,8 +115,8 @@ const slots = useSlots()
         </template>
         <RangeCalendar
             :locale="finalLocale"
-            :default-month="valueValid ? value[0] : defaultMonth"
-            :value="modelValue"
+            :default-month="valueValid ? _value[0] : defaultMonth"
+            :value="_value"
             :label-format="labelFormat"
             :day-class-name="dayClassName"
             :day-style="dayStyle"

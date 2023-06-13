@@ -4,7 +4,7 @@
     <Input :value="inputeVal" placeholder="Basic usage" />
     <Switcher v-model="swit" />
     <DatePickerRange v-model="date" placeholder="Select dates range" />
-    <!--    <TimeInput />-->
+    <!-- <TimeInput v-model="date" /> -->
 </template>
 <script setup>
 import HelloWorld from './components/HelloWorld.vue'
@@ -14,6 +14,7 @@ import { createToaster } from '@/components/ui/Toast'
 import Input from '@/components/ui/Input/Input.vue'
 import Switcher from '@/components/ui/Switcher/Switcher.vue'
 import DatePickerRange from './components/ui/DatePicker/DatePickerRange.vue'
+import { TimeInput } from './components/ui/TimeInput'
 
 const inputeVal = ref('karthic')
 const swit = ref(false)

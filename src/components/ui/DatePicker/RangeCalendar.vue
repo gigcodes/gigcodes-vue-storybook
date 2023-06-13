@@ -1,7 +1,6 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, provide } from 'vue'
 import { isSameDate } from './utils/index.js'
-import dayjs from 'dayjs'
 import CalendarBase from './CalendarBase.vue'
 
 const props = defineProps({
@@ -24,7 +23,7 @@ const setRangeDate = (date) => {
             return null
         }
 
-        const result = [date, pickedDate]
+        const result = [date, pickedDate.value]
         result.sort((a, b) => a.getTime() - b.getTime())
         emit('change', result)
         pickedDate.value = null
@@ -48,39 +47,8 @@ const handleMouseLeave = (e) => {
     hoveredDay.value = null
 }
 
-const shouldHighlightDate = (date, modifiers) => {
-    if (pickedDate.value instanceof Date && hoveredDay.value instanceof Date) {
-        const result = [hoveredDay, pickedDate]
-        result.sort((a, b) => a.getTime() - b.getTime())
-        return (
-            !modifiers.selected &&
-            dayjs(date).subtract(1, 'day').isBefore(result[1]) &&
-            dayjs(date).add(1, 'day').isAfter(result[0])
-        )
-    }
-
-    return false
-}
-
-const isPickedDateFirstInRange = (date, modifiers) => {
-    if (pickedDate.value instanceof Date && hoveredDay.value instanceof Date) {
-        const result = [hoveredDay, pickedDate]
-        result.sort((a, b) => a.getTime() - b.getTime())
-        return modifiers.selected && dayjs(date).isBefore(result[1])
-    }
-
-    return false
-}
-
-const isPickedDateLastInRange = (date, modifiers) => {
-    if (pickedDate.value instanceof Date && hoveredDay.value instanceof Date) {
-        const result = [hoveredDay, pickedDate]
-        result.sort((a, b) => a.getTime() - b.getTime())
-        return modifiers.selected && dayjs(date).isAfter(result[0])
-    }
-
-    return false
-}
+provide('hoveredDay', hoveredDay)
+provide('pickedDate', pickedDate)
 </script>
 <template>
     <CalendarBase
@@ -90,11 +58,8 @@ const isPickedDateLastInRange = (date, modifiers) => {
         :date-view-count="dateViewCount"
         :paginate-by="paginateBy || dateViewCount"
         :hide-out-of-month-dates="dateViewCount > 1"
-        :is-date-in-range="shouldHighlightDate"
-        :is-date-first-in-range="isPickedDateFirstInRange"
-        :is-date-last-in-range="isPickedDateLastInRange"
         @mouseleave="handleMouseLeave"
-        @day-mouse-enter="(date) => (hoveredDay = date)"
+        @day-mouse-enter="({ value }) => (hoveredDay = value)"
         @change="setRangeDate"
     />
 </template>

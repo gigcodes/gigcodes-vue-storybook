@@ -47,20 +47,19 @@ const props = defineProps({
     preventFocus: Boolean,
     hideWeekdays: Boolean,
     hideOutOfMonthDates: Boolean,
-    isDateInRange: Boolean,
-    isDateFirstInRange: Boolean,
-    isDateLastInRange: Boolean,
+    isDateInRange: Function,
+    isDateFirstInRange: Function,
+    isDateLastInRange: Function,
     renderDay: Function,
     minDate: Date,
     maxDate: Date,
     value: Date,
-    daysRefs: Object,
-    dayStyle: Object,
+    dayStyle: Function,
     paginateBy: {
         type: Number,
         default: 1,
     },
-    range: [Array, String, Date],
+    range: Array,
     weekendDays: [Array, String, Date],
 })
 const selectionState = ref(props.defaultView)
@@ -90,7 +89,7 @@ const minYear = props.minDate instanceof Date ? props.minDate.getFullYear() : 10
 const maxYear = props.maxDate instanceof Date ? props.maxDate.getFullYear() : 10000
 
 const daysPerRow = 6
-
+const dateTable = ref(null)
 const focusOnNextFocusableDay = (direction, monthIndex, payload, n = 1) => {
     const changeRow = ['down', 'up'].includes(direction)
 
@@ -98,7 +97,7 @@ const focusOnNextFocusableDay = (direction, monthIndex, payload, n = 1) => {
 
     const cellIndex = changeRow ? payload.cellIndex : payload.cellIndex + (direction === 'right' ? n : -n)
 
-    const dayToFocus = props.daysRefs.value[monthIndex][rowIndex][cellIndex]
+    const dayToFocus = dateTable.value.daysRefs.value[monthIndex][rowIndex][cellIndex]
 
     if (!dayToFocus) {
         return
@@ -111,7 +110,8 @@ const focusOnNextFocusableDay = (direction, monthIndex, payload, n = 1) => {
     }
 }
 
-const handleDayKeyDown = (monthIndex, payload, event) => {
+const handleDayKeyDown = ({ monthIndex, args }) => {
+    const { event, ...payload } = args
     switch (event.key) {
         case 'ArrowDown': {
             event.preventDefault()
@@ -138,8 +138,8 @@ const handleDayKeyDown = (monthIndex, payload, event) => {
             if (isNotLastCell) {
                 focusOnNextFocusableDay('right', monthIndex, payload)
             } else if (monthIndex + 1 < props.dateViewCount) {
-                if (props.daysRefs.value[monthIndex + 1][payload.rowIndex]) {
-                    props.daysRefs.value[monthIndex + 1][payload.rowIndex][0]?.focus()
+                if (dateTable.value.daysRefs.value[monthIndex + 1][payload.rowIndex]) {
+                    dateTable.value.daysRefs.value[monthIndex + 1][payload.rowIndex][0]?.focus()
                 }
             }
             break
@@ -150,8 +150,8 @@ const handleDayKeyDown = (monthIndex, payload, event) => {
             if (payload.cellIndex !== 0) {
                 focusOnNextFocusableDay('left', monthIndex, payload)
             } else if (monthIndex > 0) {
-                if (props.daysRefs.value[monthIndex - 1][payload.rowIndex]) {
-                    props.daysRefs.value[monthIndex - 1][payload.rowIndex][daysPerRow].focus()
+                if (dateTable.value.daysRefs.value[monthIndex - 1][payload.rowIndex]) {
+                    dateTable.value.daysRefs.value[monthIndex - 1][payload.rowIndex][daysPerRow].focus()
                 }
             }
             break
@@ -208,6 +208,7 @@ const { class: className, style, ...rest } = useAttrs()
         />
         <DateTable
             v-if="selectionState === 'date'"
+            ref="dateTable"
             :date-view-count="dateViewCount"
             :paginate-by="paginate"
             :month="_month"
@@ -215,7 +216,6 @@ const { class: className, style, ...rest } = useAttrs()
             :min-date="minDate"
             :max-date="maxDate"
             :enable-header-label="enableHeaderLabel"
-            :days-refs="daysRefs"
             :style="style"
             :day-class-name="dayClassName"
             :day-style="dayStyle"
