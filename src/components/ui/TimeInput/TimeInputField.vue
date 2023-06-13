@@ -1,5 +1,5 @@
 <script setup>
-import { ref, useAttrs, computed } from 'vue'
+import { ref, useAttrs, watch, computed } from 'vue'
 import classNames from 'classnames'
 import { clamp, padTime } from './utils'
 
@@ -12,7 +12,7 @@ const { class: className, ...restAttrs } = useAttrs()
 delete restAttrs.size
 
 const props = defineProps({
-    modelValue: [String, Number],
+    modelValue: String,
     withSeparator: Boolean,
     disabled: Boolean,
     max: Number,
@@ -22,20 +22,28 @@ const emits = defineEmits(['focus', 'blur', 'update:modelValue', 'change', 'keyd
 const inputRef = ref(null)
 const digitsEntered = ref(0)
 
-const modifiedValue = ref(props.modelValue)
-const computedValue = computed({
-    get() {
-        return props.modelValue
-    },
-    set() {
-        modifiedValue.value = props.modelValue
-    },
-})
-
 const handleFocus = (event) => {
     emits('focus', event)
     digitsEntered.value = 0
 }
+
+const dynamicValue = ref(props.modelValue)
+
+const computedValue = computed({
+    get() {
+        return dynamicValue.value
+    },
+    set(value) {
+        if (value !== dynamicValue.value) {
+            dynamicValue.value = value
+        }
+    },
+})
+
+watch(
+    () => props.modelValue,
+    (value) => (dynamicValue.value = value)
+)
 
 const handleKeyDown = (event) => {
     if (event.key === 'ArrowUp') {
@@ -87,6 +95,14 @@ const handleUpdate = (event) => {
         triggerShift: true,
         forceTriggerShift: digitsEntered.value > 1,
     })
+    if (parseInt(_val) > props.max) {
+        dynamicValue.value = props.modelValue
+    }
+}
+
+const handleClick = (event) => {
+    event.stopPropagation()
+    inputRef.value?.select()
 }
 
 defineExpose({ focus: () => inputRef.value?.focus(), select: () => inputRef.value?.select() })
