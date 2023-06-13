@@ -42,14 +42,11 @@ const props = defineProps({
         type: Boolean,
         default: true,
     },
-    disableDate: Boolean,
+    disableDate: Function,
     disableOutOfMonth: Boolean,
     preventFocus: Boolean,
     hideWeekdays: Boolean,
     hideOutOfMonthDates: Boolean,
-    isDateInRange: Function,
-    isDateFirstInRange: Function,
-    isDateLastInRange: Function,
     renderDay: Function,
     minDate: Date,
     maxDate: Date,
@@ -230,9 +227,6 @@ const { class: className, style, ...rest } = useAttrs()
             :weekday-label-format="weekdayLabelFormat"
             :render-day="renderDay"
             :hide-out-of-month-dates="hideOutOfMonthDates"
-            :is-date-in-range="isDateInRange"
-            :is-date-last-in-range="isDateLastInRange"
-            :is-date-first-in-range="isDateFirstInRange"
             :weekend-days="weekendDays"
             @month-change="setMonth"
             @next-level="(v) => (selectionState = v)"

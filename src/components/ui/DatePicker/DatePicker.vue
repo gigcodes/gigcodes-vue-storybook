@@ -40,7 +40,7 @@ const props = defineProps({
     enableHeaderLabel: Boolean,
     hideOutOfMonthDates: Boolean,
     hideWeekdays: Boolean,
-    disableDate: Boolean,
+    disableDate: Function,
     defaultMonth: Date,
     weekendDays: [Date, Array, String],
     renderDay: Function,

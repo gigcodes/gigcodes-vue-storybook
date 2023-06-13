@@ -17,8 +17,8 @@ const props = defineProps({
     month: Date,
     firstDayOfWeek: { type: String, default: 'monday' },
     weekdayLabelFormat: String,
-    maxDate: Number,
-    minDate: Number,
+    maxDate: [Date],
+    minDate: [Date],
     value: [Array, String, Number, Date],
     disableDate: Function,
     disableOutOfMonth: Boolean,
@@ -49,11 +49,11 @@ const hasValue = computed(() =>
     Array.isArray(props.value) ? props.value.every((item) => item instanceof Date) : props.value instanceof Date
 )
 
-const hoveredDay = inject('hoveredDay')
-const pickedDate = inject('pickedDate')
+const hoveredDay = inject('hoveredDay', null)
+const pickedDate = inject('pickedDate', null)
 
 const shouldHighlightDate = (date, modifiers) => {
-    if (pickedDate.value instanceof Date && hoveredDay.value instanceof Date) {
+    if (pickedDate?.value instanceof Date && hoveredDay?.value instanceof Date) {
         const result = [hoveredDay.value, pickedDate.value]
         result.sort((a, b) => a.getTime() - b.getTime())
         return (
@@ -67,7 +67,7 @@ const shouldHighlightDate = (date, modifiers) => {
 }
 
 const isPickedDateFirstInRange = (date, modifiers) => {
-    if (pickedDate.value instanceof Date && hoveredDay.value instanceof Date) {
+    if (pickedDate?.value instanceof Date && hoveredDay?.value instanceof Date) {
         const result = [hoveredDay.value, pickedDate.value]
         result.sort((a, b) => a.getTime() - b.getTime())
         return modifiers.selected && dayjs(date).isBefore(result[1])
@@ -77,7 +77,7 @@ const isPickedDateFirstInRange = (date, modifiers) => {
 }
 
 const isPickedDateLastInRange = (date, modifiers) => {
-    if (pickedDate.value instanceof Date && hoveredDay.value instanceof Date) {
+    if (pickedDate?.value instanceof Date && hoveredDay?.value instanceof Date) {
         const result = [hoveredDay.value, pickedDate.value]
         result.sort((a, b) => a.getTime() - b.getTime())
         return modifiers.selected && dayjs(date).isAfter(result[0])
