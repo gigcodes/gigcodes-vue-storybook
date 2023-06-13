@@ -3,7 +3,7 @@
     <Alert show-icon closable type="success">Additional description and information about copywriting</Alert>
     <Input :value="inputeVal" placeholder="Basic usage" />
     <Switcher v-model="swit" />
-    <DateTimepicker v-model="date" placeholder="Pick a date & time" />
+    <DatePickerRange v-model="date" placeholder="Select dates range" />
     <!--    <TimeInput />-->
 </template>
 <script setup>
@@ -13,7 +13,7 @@ import { ref } from 'vue'
 import { createToaster } from '@/components/ui/Toast'
 import Input from '@/components/ui/Input/Input.vue'
 import Switcher from '@/components/ui/Switcher/Switcher.vue'
-import DateTimepicker from '@/components/ui/DatePicker/DateTimepicker.vue'
+import DatePickerRange from './components/ui/DatePicker/DatePickerRange.vue'
 
 const inputeVal = ref('karthic')
 const swit = ref(false)
