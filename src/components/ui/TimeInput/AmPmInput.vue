@@ -1,5 +1,5 @@
 <script setup>
-import { ref, useAttrs, watch } from 'vue'
+import { ref, useAttrs, computed } from 'vue'
 import classNames from 'classnames'
 
 const props = defineProps({
@@ -39,31 +39,41 @@ const handleChange = (event) => {
 
     if (lastInputVal === 'p') {
         event.preventDefault()
+        modifiedValue.value = props.pmLabel
         emit('change', { value: props.pmLabel, triggerShift: true })
         return
     }
 
     if (lastInputVal === 'a') {
         event.preventDefault()
+        modifiedValue.value = props.amLabel
         emit('change', { value: props.amLabel, triggerShift: true })
         return
     }
-    emit('change', { value: props.modelValue?.toString(), triggerShift: true })
-}
-const meridian = ref(props.modelValue)
+    modifiedValue.value = props.amLabel
 
-watch(
-    () => props.modelValue,
-    (val) => (meridian.value = val)
-)
+    emit('change', { value: props.amLabel, triggerShift: true })
+}
 const { class: className, ...restAttrs } = useAttrs()
+const modifiedValue = ref(props.modelValue)
+const computedValue = computed({
+    get() {
+        return modifiedValue.value
+    },
+    set(value) {
+        if (value !== modifiedValue.value) {
+            modifiedValue.value = value
+        }
+    },
+})
+
 defineExpose({ focus: () => inputRef.value?.focus(), select: () => inputRef.value?.select() })
 </script>
 
 <template>
     <input
         ref="inputRef"
-        v-model="meridian"
+        v-model="computedValue"
         type="text"
         :class="classNames('time-input-field', 'am-pm-input', className)"
         :disabled="disabled"

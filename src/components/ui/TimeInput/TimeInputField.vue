@@ -1,7 +1,7 @@
 <script setup>
-import { ref, useAttrs } from 'vue'
-import { clamp, padTime } from './utils/index.js'
+import { ref, useAttrs, computed } from 'vue'
 import classNames from 'classnames'
+import { clamp, padTime } from './utils'
 
 defineOptions({
     inheritAttrs: false,
@@ -16,41 +16,33 @@ const props = defineProps({
     withSeparator: Boolean,
     disabled: Boolean,
     max: Number,
-    min: {
-        type: Number,
-        default: 0,
+    min: Number,
+})
+const emits = defineEmits(['focus', 'blur', 'update:modelValue', 'change', 'keydown', 'keyup'])
+const inputRef = ref(null)
+const digitsEntered = ref(0)
+
+const modifiedValue = ref(props.modelValue)
+const computedValue = computed({
+    get() {
+        return props.modelValue
+    },
+    set() {
+        modifiedValue.value = props.modelValue
     },
 })
-const emits = defineEmits(['focus', 'blur', 'update:modelValue', 'change'])
-const digitsEntered = ref(0)
-const inputRef = ref(null)
 
-const handleFocus = (e) => {
-    emits('focus', e)
-    inputRef.value?.select()
+const handleFocus = (event) => {
+    emits('focus', event)
     digitsEntered.value = 0
 }
 
-const handleBlur = (e) => {
-    emits('blur', e)
-    if (digitsEntered.value === 1) {
-        emits('change', {
-            value: e.currentTarget.value,
-            triggerShift: false,
-        })
-    }
-}
+const handleKeyDown = (event) => {
+    if (event.key === 'ArrowUp') {
+        event.preventDefault()
+        const padded = padTime(clamp(parseInt(event.currentTarget.value, 10) + 1, props.min, props.max).toString())
 
-const handleClick = (e) => {
-    e.stopPropagation()
-    inputRef.value?.select()
-}
-
-const handleKeyDown = (e) => {
-    if (e.key === 'ArrowUp') {
-        e.preventDefault()
-        const padded = padTime(clamp(parseInt(e.currentTarget.value, 10) + 1, props.min, props.max).toString())
-        if (props.value !== padded) {
+        if (props.modelValue !== padded) {
             emits('change', {
                 value: padded,
                 triggerShift: false,
@@ -58,20 +50,30 @@ const handleKeyDown = (e) => {
         }
     }
 
-    if (e.key === 'ArrowDown') {
-        e.preventDefault()
-        const padded = padTime(clamp(parseInt(e.currentTarget.value, 10) - 1, props.min, props.max).toString())
+    if (event.key === 'ArrowDown') {
+        event.preventDefault()
+        const padded = padTime(clamp(parseInt(event.currentTarget.value, 10) - 1, props.min, props.max).toString())
 
         if (props.value !== padded) {
             emits('change', {
                 value: padded,
-                triggerShift: true,
+                triggerShift: false,
             })
         }
     }
 }
 
-const handleChange = (event) => {
+const handleBlur = (event) => {
+    emits('blur', event)
+    if (digitsEntered.value === 1) {
+        emits('change', {
+            value: event.currentTarget.value,
+            triggerShift: false,
+        })
+    }
+}
+
+const handleUpdate = (event) => {
     digitsEntered.value = digitsEntered.value + 1
 
     const _val = parseInt(event.currentTarget.value, 10).toString()
@@ -92,13 +94,13 @@ defineExpose({ focus: () => inputRef.value?.focus(), select: () => inputRef.valu
 <template>
     <input
         ref="inputRef"
+        v-model="computedValue"
         type="text"
         inputmode="numeric"
-        :value="modelValue"
         :class="classNames('time-input-field', className)"
         v-bind="restAttrs"
         :disabled="disabled"
-        @input="handleChange"
+        @input="handleUpdate"
         @click="handleClick"
         @focus="handleFocus"
         @blur="handleBlur"

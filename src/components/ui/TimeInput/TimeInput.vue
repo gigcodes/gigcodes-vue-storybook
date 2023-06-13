@@ -145,7 +145,6 @@ const minutesRef = ref(null)
 const secondsRef = ref(null)
 const amPmRef = ref(null)
 const time = ref(getTimeValues(props.modelValue, props.format, props.amLabel, props.pmLabel))
-
 const setDate = (change) => {
     const timeWithChange = { ...time.value, ...change }
     const newDate = getDate(
