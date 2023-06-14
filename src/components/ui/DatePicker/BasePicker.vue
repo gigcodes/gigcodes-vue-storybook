@@ -100,9 +100,10 @@ defineExpose({ focus: () => reference.value?.focus() })
         :placeholder="placeholder"
         autocomplete="off"
         :type="type"
+        :readonly="!inputtable"
         @click="handleInputClick"
         @blur="handleInputBlur"
-        @change="(e) => emit('change', e)"
+        @input="(e) => emit('change', e)"
         @focus="handleInputFocus"
         @keydown="handleKeyDown"
     >

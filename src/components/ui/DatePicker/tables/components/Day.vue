@@ -18,7 +18,7 @@ const { themeColor, primaryColorLevel } = inject('config', DEFAULT_CONFIG)
 defineOptions({
     inheritAttrs: false,
 })
-const emit = defineEmits(['mouseenter'])
+const emit = defineEmits(['mouseenter', 'mousedown'])
 const { class: className, ...rest } = useAttrs()
 const props = defineProps({
     focusable: Boolean,
@@ -34,12 +34,16 @@ const props = defineProps({
     firstInRange: Boolean,
     lastInRange: Boolean,
     renderDay: Function,
+    mousedown: Function,
     value: [String, Date, Number],
 })
 
 const button = ref(null)
 
-defineExpose({ focus: () => button.value?.focus(), disabled: props.disabled })
+defineExpose({
+    focus: () => button.value?.focus(),
+    disabled: props.disabled,
+})
 </script>
 <template>
     <button
@@ -83,6 +87,7 @@ defineExpose({ focus: () => button.value?.focus(), disabled: props.disabled })
             )
         "
         @mouseenter="(event) => emit('mouseenter', { event, value })"
+        @mousedown="mousedown"
     >
         {{ typeof renderDay === 'function' ? renderDay(value) : value?.getDate() }}
     </button>

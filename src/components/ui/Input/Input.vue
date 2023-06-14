@@ -77,7 +77,7 @@ defineOptions({
 
 const { class: className, style, ...restAttrs } = useAttrs()
 
-const emits = defineEmits(['update:modelValue', 'focus', 'blur', 'change', 'keydown', 'click', 'keyup'])
+const emits = defineEmits(['update:modelValue', 'focus', 'blur', 'change', 'keydown', 'click', 'keyup', 'input'])
 
 const events = {
     click: (e) => emits('click', e),
@@ -85,8 +85,11 @@ const events = {
     keyup: (e) => emits('keyup', e),
     focus: (e) => emits('focus', e),
     blur: (e) => emits('blur', e),
-    input: (event) => emits('update:modelValue', event.target.value),
-    change: (e) => emits('update:modelValue', e.target.value),
+    input: (event) => {
+        emits('update:modelValue', event.target.value)
+        emits('input', event)
+    },
+    change: (e) => emits('change', e),
 }
 
 const prefixGutter = ref(0)

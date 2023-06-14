@@ -181,9 +181,9 @@ const emit = defineEmits(['change', 'keydown', 'dayMouseEnter'])
                         :render-day="renderDay"
                         :is-today="isSameDate(date, new Date())"
                         :value="date"
+                        :mousedown="(e) => preventFocus && e.preventDefault()"
                         @click="() => emit('change', date)"
                         @keydown="(event) => emit('keydown', { rI, cI, date, event })"
-                        @mousedown="(e) => preventFocus && e.preventFocus()"
                         @mouseenter="(e) => emit('dayMouseEnter', e)"
                     ></Day>
                 </td>
