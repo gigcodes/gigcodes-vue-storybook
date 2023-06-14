@@ -23,7 +23,7 @@ const props = defineProps({
     defaultView: String,
     disabled: Boolean,
     disableDate: Function,
-    enableHeaderLabel: Boolean,
+    enableHeaderLabel: { type: Boolean, default: true },
     disableOutOfMonth: Boolean,
     firstDayOfWeek: { type: String, default: 'monday' },
     hideOutOfMonthDates: Boolean,

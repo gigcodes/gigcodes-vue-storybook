@@ -25,7 +25,7 @@
                         !disabled(year) &&
                         `bg-${themeColor}-${primaryColorLevel} text-white year-picker-cell-active`,
                     !year === value && !disabled(year) && 'hover:bg-gray-100',
-                    disabled && 'year-picker-cell-disabled',
+                    disabled(year) && 'year-picker-cell-disabled',
                 ]"
                 @click="() => emit('change', year)"
                 @mousedown="(event) => preventFocus && event.preventDefault()"
@@ -45,7 +45,6 @@ import { DEFAULT_CONFIG } from '@/components/ui/utils/constant.js'
 const emit = defineEmits(['change'])
 const props = defineProps({
     value: Number,
-    onChange: Function,
     minYear: Number,
     maxYear: Number,
     preventFocus: Boolean,

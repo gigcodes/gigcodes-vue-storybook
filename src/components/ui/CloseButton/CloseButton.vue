@@ -11,7 +11,7 @@ export default {
 <script setup>
 import { XMarkIcon } from '@heroicons/vue/24/solid'
 import classNames from 'classnames'
-import { ref as reference, useAttrs } from 'vue'
+import { useAttrs } from 'vue'
 
 const { class: className, ...restAttrs } = useAttrs()
 
@@ -26,8 +26,6 @@ const props = defineProps({
     },
 })
 
-const ref = reference(null)
-
 const closeButtonAbsoluteClass = 'absolute z-10'
 
 const closeButtonClass = classNames(
@@ -36,6 +34,4 @@ const closeButtonClass = classNames(
     props.absolute && closeButtonAbsoluteClass,
     className
 )
-
-defineExpose({ ref })
 </script>
