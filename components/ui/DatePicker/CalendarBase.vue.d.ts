@@ -41,7 +41,7 @@ declare const _sfc_main: import('./vue/dist/vue.esm-bundler.js').DefineComponent
     renderDay: FunctionConstructor;
     minDate: DateConstructor;
     maxDate: DateConstructor;
-    value: DateConstructor;
+    value: (DateConstructor | ArrayConstructor)[];
     dayStyle: FunctionConstructor;
     paginateBy: {
         type: NumberConstructor;
@@ -91,7 +91,7 @@ declare const _sfc_main: import('./vue/dist/vue.esm-bundler.js').DefineComponent
     renderDay: FunctionConstructor;
     minDate: DateConstructor;
     maxDate: DateConstructor;
-    value: DateConstructor;
+    value: (DateConstructor | ArrayConstructor)[];
     dayStyle: FunctionConstructor;
     paginateBy: {
         type: NumberConstructor;

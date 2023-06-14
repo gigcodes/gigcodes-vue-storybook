@@ -12,7 +12,7 @@ declare const _sfc_main: import('./vue/dist/vue.esm-bundler.js').DefineComponent
     labelFormat: ObjectConstructor;
     weekdayLabelFormat: StringConstructor;
     preventFocus: BooleanConstructor;
-    value: DateConstructor;
+    value: (DateConstructor | ArrayConstructor)[];
     range: ArrayConstructor;
     isDateInRange: FunctionConstructor;
     isDateFirstInRange: FunctionConstructor;
@@ -30,7 +30,7 @@ declare const _sfc_main: import('./vue/dist/vue.esm-bundler.js').DefineComponent
     labelFormat: ObjectConstructor;
     weekdayLabelFormat: StringConstructor;
     preventFocus: BooleanConstructor;
-    value: DateConstructor;
+    value: (DateConstructor | ArrayConstructor)[];
     range: ArrayConstructor;
     isDateInRange: FunctionConstructor;
     isDateFirstInRange: FunctionConstructor;
