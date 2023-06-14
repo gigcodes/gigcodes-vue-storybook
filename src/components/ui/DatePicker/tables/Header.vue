@@ -18,7 +18,7 @@
             <Button
                 type="button"
                 variant="plain"
-                :class="classNames(!hasPrevious && renderCenter && 'opacity-0 cursor-default')"
+                :class="classNames(!hasPrevious && renderCenter && '!opacity-0 cursor-default')"
                 size="sm"
                 :disabled="!hasPrevious"
                 :aria-label="previousLabel"
@@ -59,7 +59,7 @@
             <Button
                 type="button"
                 variant="plain"
-                :class="classNames(!hasNext && renderCenter && 'opacity-0 cursor-default')"
+                :class="classNames(!hasNext && renderCenter && '!opacity-0 cursor-default')"
                 size="sm"
                 :disabled="!hasNext"
                 :aria-label="nextLabel"

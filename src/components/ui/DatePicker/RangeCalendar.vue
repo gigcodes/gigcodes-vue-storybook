@@ -9,7 +9,6 @@ const props = defineProps({
     singleDate: Boolean,
     dateViewCount: { type: Number, default: 1 },
     paginateBy: Boolean,
-    enableHeaderLabel: { type: Boolean, default: true },
 })
 
 const hoveredDay = ref(null)
@@ -59,7 +58,6 @@ provide('pickedDate', pickedDate)
         :date-view-count="dateViewCount"
         :paginate-by="paginateBy || dateViewCount"
         :hide-out-of-month-dates="dateViewCount > 1"
-        :enable-header-label="enableHeaderLabel"
         @mouseleave="handleMouseLeave"
         @day-mouse-enter="({ value }) => (hoveredDay = value)"
         @change="setRangeDate"

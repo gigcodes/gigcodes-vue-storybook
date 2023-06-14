@@ -158,7 +158,7 @@ const emit = defineEmits(['change', 'keydown', 'dayMouseEnter'])
         </thead>
         <tbody>
             <tr v-for="(row, rI) in days" :key="rI" class="date-picker-week-cell">
-                <td v-for="(date, cI) in row" :key="cI">
+                <td v-for="(date, cI) in row" :key="cI" class="date-picker-cell">
                     <Day
                         :ref="setDayRef(rI, cI)"
                         :out-of-month="dayProps[rI][cI].outOfMonth"
