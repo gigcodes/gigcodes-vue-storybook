@@ -25,6 +25,7 @@ declare const _sfc_main: import('./vue/dist/vue.esm-bundler.js').DefineComponent
         default: string;
     };
     placeholder: StringConstructor;
+    size: StringConstructor;
 }, {}, any, {}, {}, import('./vue/dist/vue.esm-bundler.js').ComponentOptionsMixin, import('./vue/dist/vue.esm-bundler.js').ComponentOptionsMixin, ("clear" | "update:dropdown" | "keyDown" | "blur" | "focus" | "change")[], "clear" | "update:dropdown" | "keyDown" | "blur" | "focus" | "change", import('./vue/dist/vue.esm-bundler.js').VNodeProps & import('./vue/dist/vue.esm-bundler.js').AllowedComponentProps & import('./vue/dist/vue.esm-bundler.js').ComponentCustomProps, Readonly<import('./vue/dist/vue.esm-bundler.js').ExtractPropTypes<{
     form: {
         type: ObjectConstructor;
@@ -51,6 +52,7 @@ declare const _sfc_main: import('./vue/dist/vue.esm-bundler.js').DefineComponent
         default: string;
     };
     placeholder: StringConstructor;
+    size: StringConstructor;
 }>> & {
     onFocus?: ((...args: any[]) => any) | undefined;
     onBlur?: ((...args: any[]) => any) | undefined;

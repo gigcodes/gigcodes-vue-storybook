@@ -10,7 +10,7 @@ declare const _sfc_main: import('./vue/dist/vue.esm-bundler.js').DefineComponent
     maxDate: DateConstructor[];
     minDate: DateConstructor[];
     value: (StringConstructor | NumberConstructor | DateConstructor | ArrayConstructor)[];
-    disableDate: FunctionConstructor;
+    disableDate: BooleanConstructor;
     disableOutOfMonth: BooleanConstructor;
     dayClassName: FunctionConstructor;
     dayStyle: FunctionConstructor;
@@ -50,7 +50,7 @@ declare const _sfc_main: import('./vue/dist/vue.esm-bundler.js').DefineComponent
     maxDate: DateConstructor[];
     minDate: DateConstructor[];
     value: (StringConstructor | NumberConstructor | DateConstructor | ArrayConstructor)[];
-    disableDate: FunctionConstructor;
+    disableDate: BooleanConstructor;
     disableOutOfMonth: BooleanConstructor;
     dayClassName: FunctionConstructor;
     dayStyle: FunctionConstructor;
@@ -86,6 +86,7 @@ declare const _sfc_main: import('./vue/dist/vue.esm-bundler.js').DefineComponent
 }, {
     size: string;
     firstDayOfWeek: string;
+    disableDate: boolean;
     disableOutOfMonth: boolean;
     preventFocus: boolean;
     hideWeekdays: boolean;

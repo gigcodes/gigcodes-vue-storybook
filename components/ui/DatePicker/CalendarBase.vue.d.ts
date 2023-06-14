@@ -33,7 +33,7 @@ declare const _sfc_main: import('./vue/dist/vue.esm-bundler.js').DefineComponent
         type: BooleanConstructor;
         default: boolean;
     };
-    disableDate: FunctionConstructor;
+    disableDate: BooleanConstructor;
     disableOutOfMonth: BooleanConstructor;
     preventFocus: BooleanConstructor;
     hideWeekdays: BooleanConstructor;
@@ -83,7 +83,7 @@ declare const _sfc_main: import('./vue/dist/vue.esm-bundler.js').DefineComponent
         type: BooleanConstructor;
         default: boolean;
     };
-    disableDate: FunctionConstructor;
+    disableDate: BooleanConstructor;
     disableOutOfMonth: BooleanConstructor;
     preventFocus: BooleanConstructor;
     hideWeekdays: BooleanConstructor;
@@ -111,6 +111,7 @@ declare const _sfc_main: import('./vue/dist/vue.esm-bundler.js').DefineComponent
     firstDayOfWeek: string;
     dateViewCount: number;
     enableHeaderLabel: boolean;
+    disableDate: boolean;
     disableOutOfMonth: boolean;
     preventFocus: boolean;
     hideWeekdays: boolean;
