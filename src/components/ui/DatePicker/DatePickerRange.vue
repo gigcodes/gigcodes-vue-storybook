@@ -1,13 +1,12 @@
 <script setup>
 import dayjs from 'dayjs'
-import { capitalize, computed, inject, ref, watch, useSlots } from 'vue'
+import { capitalize, computed, inject, ref, useSlots, watch } from 'vue'
 import { DEFAULT_CONFIG } from '@/components/ui/utils/constant.js'
 import RangeCalendar from '@/components/ui/DatePicker/RangeCalendar.vue'
 import BasePicker from '@/components/ui/DatePicker/BasePicker.vue'
 import useControllableState from '@/components/ui/utils/useControllableState.js'
 
-const validationRule = (val) =>
-    Array.isArray(val.value) && val.value.length === 2 && val.value.every((v) => v instanceof Date)
+const validationRule = (val) => Array.isArray(val) && val.length === 2 && val.every((v) => v instanceof Date)
 
 const isFirstDateSet = (val) => Array.isArray(val.value) && val.value.length === 2 && val.value[0] instanceof Date
 
@@ -63,12 +62,12 @@ const dateFormat = computed(() => props.inputFormat || 'YYYY-MM-DD')
 const handleValueChange = (range) => {
     setValue(range)
     if (props.closePickerOnChange && validationRule(range)) {
-        // dropdownOpened.value = false
+        dropdownOpened.value = false
         window.setTimeout(() => inputRef.value?.focus(), 0)
     }
 }
 
-const valueValid = computed(() => validationRule(_value))
+const valueValid = computed(() => validationRule(_value.value))
 const firstValueValid = computed(() => isFirstDateSet(_value))
 
 const firstDateLabel = computed(() =>
@@ -114,9 +113,9 @@ const slots = useSlots()
             <slot name="clearButton" />
         </template>
         <RangeCalendar
+            :model-value="_value"
             :locale="finalLocale"
             :default-month="valueValid ? _value[0] : defaultMonth"
-            :value="_value"
             :label-format="labelFormat"
             :day-class-name="dayClassName"
             :day-style="dayStyle"

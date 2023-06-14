@@ -3,9 +3,9 @@ import capitalize from '@/components/ui/utils/capitalize.js'
 import dayjs from 'dayjs'
 import { computed, inject, ref, useAttrs } from 'vue'
 import { DEFAULT_CONFIG } from '@/components/ui/utils/constant.js'
-import { isMonthInRange } from '@/components/ui/DatePicker/utils/index.js'
-import Header from '@/components/ui/DatePicker/tables/Header.vue'
-import Month from '@/components/ui/DatePicker/tables/components/Month.vue'
+import { isMonthInRange } from '../utils/index.js'
+import Header from '../tables/Header.vue'
+import Month from '../tables/components/Month.vue'
 
 const formatMonthLabel = ({ month, locale, format }) => {
     return capitalize(dayjs(month).locale(locale).format(format))
@@ -24,7 +24,7 @@ const props = defineProps({
     labelFormat: Object,
     weekdayLabelFormat: String,
     preventFocus: Boolean,
-    value: Date,
+    value: [Date, Array],
     range: Array,
     isDateInRange: Function,
     isDateFirstInRange: Function,

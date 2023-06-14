@@ -4,7 +4,7 @@ import { DEFAULT_CONFIG } from '../utils/constant.js'
 import classNames from 'classnames'
 import YearTable from './tables/YearTable.vue'
 import MonthTable from './tables/MonthTable.vue'
-import DateTable from './tables/DateTable.vue'
+import DT from './tables/DateTable.vue'
 
 const { locale: themeLocale } = inject('config', DEFAULT_CONFIG)
 
@@ -50,7 +50,7 @@ const props = defineProps({
     renderDay: Function,
     minDate: Date,
     maxDate: Date,
-    value: Date,
+    value: [Date, Array],
     dayStyle: Function,
     paginateBy: {
         type: Number,
@@ -203,7 +203,7 @@ const { class: className, style, ...rest } = useAttrs()
                 }
             "
         />
-        <DateTable
+        <DT
             v-if="selectionState === 'date'"
             ref="dateTable"
             :date-view-count="dateViewCount"

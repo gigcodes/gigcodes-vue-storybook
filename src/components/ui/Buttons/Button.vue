@@ -1,5 +1,5 @@
 <template>
-    <button v-bind="restAttrs" :disabled="disabled || loading" :class="classes" @click="(e) => emit('emit', e)">
+    <button v-bind="restAttrs" :disabled="disabled || loading" :class="classes" @click="(e) => emit('click', e)">
         <span v-if="loading && slots.default" class="flex items-center justify-center">
             <Spinner :enable-theme="false" class="mr-1" />
             <slot />
