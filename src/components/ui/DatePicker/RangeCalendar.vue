@@ -59,8 +59,8 @@ provide('pickedDate', pickedDate)
 <template>
     <CalendarBase
         :day-style="dayStyle"
-        :value="_modelValue"
-        :range="modelValue"
+        :value="pickedDate"
+        :range="_modelValue"
         :date-view-count="dateViewCount"
         :paginate-by="paginateBy || dateViewCount"
         :hide-out-of-month-dates="dateViewCount > 1"
