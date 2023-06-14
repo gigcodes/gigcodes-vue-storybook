@@ -34,7 +34,7 @@ declare const _sfc_main: import('./vue/dist/vue.esm-bundler.js').DefineComponent
         type: StringConstructor;
         default: string;
     };
-}, {}, any, {}, {}, import('./vue/dist/vue.esm-bundler.js').ComponentOptionsMixin, import('./vue/dist/vue.esm-bundler.js').ComponentOptionsMixin, {}, string, import('./vue/dist/vue.esm-bundler.js').VNodeProps & import('./vue/dist/vue.esm-bundler.js').AllowedComponentProps & import('./vue/dist/vue.esm-bundler.js').ComponentCustomProps, Readonly<import('./vue/dist/vue.esm-bundler.js').ExtractPropTypes<{
+}, {}, any, {}, {}, import('./vue/dist/vue.esm-bundler.js').ComponentOptionsMixin, import('./vue/dist/vue.esm-bundler.js').ComponentOptionsMixin, "click"[], "click", import('./vue/dist/vue.esm-bundler.js').VNodeProps & import('./vue/dist/vue.esm-bundler.js').AllowedComponentProps & import('./vue/dist/vue.esm-bundler.js').ComponentCustomProps, Readonly<import('./vue/dist/vue.esm-bundler.js').ExtractPropTypes<{
     disabled: {
         type: BooleanConstructor;
         default: boolean;
@@ -69,7 +69,9 @@ declare const _sfc_main: import('./vue/dist/vue.esm-bundler.js').DefineComponent
         type: StringConstructor;
         default: string;
     };
-}>>, {
+}>> & {
+    onClick?: ((...args: any[]) => any) | undefined;
+}, {
     color: string;
     disabled: boolean;
     loading: boolean;
