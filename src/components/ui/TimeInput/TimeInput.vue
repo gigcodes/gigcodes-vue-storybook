@@ -76,7 +76,7 @@
 </template>
 
 <script setup>
-import { ref, useAttrs, useSlots } from 'vue'
+import { ref, useAttrs, useSlots, computed } from 'vue'
 import { createAmPmHandler, createTimeHandler, getDate, getTimeValues } from './utils'
 import useUniqueId from '@/components/hooks/useUniqueId'
 import Input from '../Input'
@@ -145,6 +145,7 @@ const minutesRef = ref(null)
 const secondsRef = ref(null)
 const amPmRef = ref(null)
 const time = ref(getTimeValues(props.modelValue, props.format, props.amLabel, props.pmLabel))
+const computedNextRef = computed(() => props.nextRef)
 const setDate = (change) => {
     const timeWithChange = { ...time.value, ...change }
     const newDate = getDate(
@@ -182,7 +183,7 @@ const handleMinutesChange = createTimeHandler({
     },
     min: 0,
     max: 59,
-    nextRef: props.showSeconds ? secondsRef : props.format === '12' ? amPmRef : props.nextRef,
+    nextRef: props.showSeconds ? secondsRef : props.format === '12' ? amPmRef : computedNextRef,
     nextMax: props.showSeconds ? 59 : undefined,
 })
 
@@ -192,7 +193,7 @@ const handleSecondsChange = createTimeHandler({
     },
     min: 0,
     max: 59,
-    nextRef: props.format === '12' ? amPmRef : props.nextRef,
+    nextRef: props.format === '12' ? amPmRef : computedNextRef,
 })
 
 const handleAmPmChange = createAmPmHandler({
@@ -201,7 +202,7 @@ const handleAmPmChange = createAmPmHandler({
     onChange: (val) => {
         setDate({ amPm: val })
     },
-    nextRef: props.nextRef,
+    nextRef: computedNextRef,
 })
 
 const handleClear = () => {
@@ -212,5 +213,5 @@ const handleClear = () => {
     hoursRef.value?.focus()
 }
 
-defineExpose({ focus: () => hoursRef.value.focus() })
+defineExpose({ focus: () => hoursRef.value.focus(), select: () => hoursRef.value.select() })
 </script>

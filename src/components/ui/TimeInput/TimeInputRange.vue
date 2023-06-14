@@ -54,7 +54,9 @@ const toTimeRef = ref()
 
 const value = ref(props.modelValue)
 
-watch(value, (val) => emit('update:modelValue', val))
+watch(value, (val) => emit('update:modelValue', val), {
+    deep: true,
+})
 
 const handleClear = () => {
     value.value = [null, null]

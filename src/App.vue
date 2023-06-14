@@ -3,8 +3,8 @@
     <Alert show-icon closable type="success">Additional description and information about copywriting</Alert>
     <Input :value="inputeVal" placeholder="Basic usage" />
     <Switcher v-model="swit" />
-    <DatePickerRange v-model="date" placeholder="Select dates range" />
-    <!-- <TimeInput v-model="date" /> -->
+    <TimeInputRange v-model="date" show-seconds />
+    {{ date }}
 </template>
 <script setup>
 import HelloWorld from './components/HelloWorld.vue'
@@ -13,8 +13,7 @@ import { ref } from 'vue'
 import { createToaster } from '@/components/ui/Toast'
 import Input from '@/components/ui/Input/Input.vue'
 import Switcher from '@/components/ui/Switcher/Switcher.vue'
-import DatePickerRange from './components/ui/DatePicker/DatePickerRange.vue'
-import { TimeInput } from './components/ui/TimeInput'
+import { TimeInputRange } from './components/ui/TimeInput'
 
 const inputeVal = ref('karthic')
 const swit = ref(false)

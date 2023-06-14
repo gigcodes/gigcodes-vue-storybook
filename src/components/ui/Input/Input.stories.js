@@ -24,7 +24,7 @@ export default {
             },
         },
         invalid: { control: 'boolean', defaultValue: false, description: 'To set the field invalid or not' },
-        disabled: { control: 'boolean', defaultValue: false, description: 'To set the field is diabled ot not' },
+        disabled: { control: 'boolean', defaultValue: false, description: 'To set the field is diabled or not' },
         unstyle: { control: 'boolean', defaultValue: false },
         type: {
             control: {
