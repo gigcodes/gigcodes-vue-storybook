@@ -22,6 +22,6 @@ declare const _sfc_main: import('./vue/dist/vue.esm-bundler.js').DefineComponent
         validator(value: unknown): boolean;
     };
 }>>, {
-    isOpen: boolean;
     placement: string;
+    isOpen: boolean;
 }, {}>;

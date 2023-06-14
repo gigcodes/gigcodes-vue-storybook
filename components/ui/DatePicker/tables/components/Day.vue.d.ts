@@ -1,0 +1,50 @@
+export default _sfc_main;
+declare const _sfc_main: import('./vue/dist/vue.esm-bundler.js').DefineComponent<{
+    focusable: BooleanConstructor;
+    hasValue: BooleanConstructor;
+    selected: BooleanConstructor;
+    firstInMonth: BooleanConstructor;
+    disabled: BooleanConstructor;
+    isToday: BooleanConstructor;
+    inRange: BooleanConstructor;
+    weekend: BooleanConstructor;
+    outOfMonth: BooleanConstructor;
+    hideOutOfMonthDates: BooleanConstructor;
+    firstInRange: BooleanConstructor;
+    lastInRange: BooleanConstructor;
+    renderDay: FunctionConstructor;
+    mousedown: FunctionConstructor;
+    value: (StringConstructor | NumberConstructor | DateConstructor)[];
+}, {}, any, {}, {}, import('./vue/dist/vue.esm-bundler.js').ComponentOptionsMixin, import('./vue/dist/vue.esm-bundler.js').ComponentOptionsMixin, ("mouseenter" | "mousedown")[], "mouseenter" | "mousedown", import('./vue/dist/vue.esm-bundler.js').VNodeProps & import('./vue/dist/vue.esm-bundler.js').AllowedComponentProps & import('./vue/dist/vue.esm-bundler.js').ComponentCustomProps, Readonly<import('./vue/dist/vue.esm-bundler.js').ExtractPropTypes<{
+    focusable: BooleanConstructor;
+    hasValue: BooleanConstructor;
+    selected: BooleanConstructor;
+    firstInMonth: BooleanConstructor;
+    disabled: BooleanConstructor;
+    isToday: BooleanConstructor;
+    inRange: BooleanConstructor;
+    weekend: BooleanConstructor;
+    outOfMonth: BooleanConstructor;
+    hideOutOfMonthDates: BooleanConstructor;
+    firstInRange: BooleanConstructor;
+    lastInRange: BooleanConstructor;
+    renderDay: FunctionConstructor;
+    mousedown: FunctionConstructor;
+    value: (StringConstructor | NumberConstructor | DateConstructor)[];
+}>> & {
+    onMousedown?: ((...args: any[]) => any) | undefined;
+    onMouseenter?: ((...args: any[]) => any) | undefined;
+}, {
+    disabled: boolean;
+    hideOutOfMonthDates: boolean;
+    focusable: boolean;
+    hasValue: boolean;
+    selected: boolean;
+    firstInMonth: boolean;
+    isToday: boolean;
+    inRange: boolean;
+    weekend: boolean;
+    outOfMonth: boolean;
+    firstInRange: boolean;
+    lastInRange: boolean;
+}, {}>;

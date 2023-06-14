@@ -23,8 +23,8 @@ declare const _sfc_main: import('./vue/dist/vue.esm-bundler.js').DefineComponent
     "onUpdate:modelValue"?: ((...args: any[]) => any) | undefined;
 }, {
     disabled: boolean;
-    modelValue: boolean;
-    defaultChecked: boolean;
-    isLoading: boolean;
     readOnly: boolean;
+    defaultChecked: boolean;
+    modelValue: boolean;
+    isLoading: boolean;
 }, {}>;
