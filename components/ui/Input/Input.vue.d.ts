@@ -20,7 +20,7 @@ declare const _sfc_main: import('./vue/dist/vue.esm-bundler.js').DefineComponent
     disabled: BooleanConstructor;
     form: ObjectConstructor;
     field: ObjectConstructor;
-}, {}, any, {}, {}, import('./vue/dist/vue.esm-bundler.js').ComponentOptionsMixin, import('./vue/dist/vue.esm-bundler.js').ComponentOptionsMixin, ("update:modelValue" | "focus" | "blur" | "change" | "keydown" | "click" | "keyup")[], "update:modelValue" | "focus" | "blur" | "change" | "keydown" | "click" | "keyup", import('./vue/dist/vue.esm-bundler.js').VNodeProps & import('./vue/dist/vue.esm-bundler.js').AllowedComponentProps & import('./vue/dist/vue.esm-bundler.js').ComponentCustomProps, Readonly<import('./vue/dist/vue.esm-bundler.js').ExtractPropTypes<{
+}, {}, any, {}, {}, import('./vue/dist/vue.esm-bundler.js').ComponentOptionsMixin, import('./vue/dist/vue.esm-bundler.js').ComponentOptionsMixin, ("input" | "update:modelValue" | "focus" | "blur" | "change" | "keydown" | "click" | "keyup")[], "input" | "update:modelValue" | "focus" | "blur" | "change" | "keydown" | "click" | "keyup", import('./vue/dist/vue.esm-bundler.js').VNodeProps & import('./vue/dist/vue.esm-bundler.js').AllowedComponentProps & import('./vue/dist/vue.esm-bundler.js').ComponentCustomProps, Readonly<import('./vue/dist/vue.esm-bundler.js').ExtractPropTypes<{
     asElement: {
         type: StringConstructor;
         default: string;
@@ -45,6 +45,7 @@ declare const _sfc_main: import('./vue/dist/vue.esm-bundler.js').DefineComponent
     onFocus?: ((...args: any[]) => any) | undefined;
     onBlur?: ((...args: any[]) => any) | undefined;
     onChange?: ((...args: any[]) => any) | undefined;
+    onInput?: ((...args: any[]) => any) | undefined;
     onKeydown?: ((...args: any[]) => any) | undefined;
     onKeyup?: ((...args: any[]) => any) | undefined;
     onClick?: ((...args: any[]) => any) | undefined;
