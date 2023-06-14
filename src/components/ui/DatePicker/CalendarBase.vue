@@ -42,7 +42,7 @@ const props = defineProps({
         type: Boolean,
         default: true,
     },
-    disableDate: Function,
+    disableDate: Boolean,
     disableOutOfMonth: Boolean,
     preventFocus: Boolean,
     hideWeekdays: Boolean,

@@ -7,11 +7,15 @@
     {{ date }}
     <Upload disabled />
 
-    <div class="md:w-[260px] max-w-[260px] mx-auto">
-        <RangeCalendar />
-    </div>
-
-    <DatePickerRange />
+    <DatePicker
+        v-model="date1"
+        :label-format="{
+            month: 'MM',
+            year: 'YY',
+        }"
+        :clearable="false"
+        placeholder="Pick a date"
+    />
 </template>
 <script setup>
 import HelloWorld from './components/HelloWorld.vue'
@@ -22,11 +26,12 @@ import Input from '@/components/ui/Input/Input.vue'
 import Switcher from '@/components/ui/Switcher/Switcher.vue'
 import { TimeInputRange } from './components/ui/TimeInput'
 import Upload from '@/components/ui/Upload/Upload.vue'
-import RangeCalendar from '@/components/ui/DatePicker/RangeCalendar.vue'
-import DatePickerRange from '@/components/ui/DatePicker/DatePickerRange.vue'
+import DatePicker from '@/components/ui/DatePicker/DatePicker.vue'
 
 const inputeVal = ref('karthic')
 const swit = ref(false)
 const date = ref()
+const date1 = ref()
+const date12 = ref()
 const createToast = () => createToaster.info('hello word')
 </script>

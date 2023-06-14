@@ -38,6 +38,7 @@ const props = defineProps({
         default: 'bottom-start',
     },
     placeholder: String,
+    size: String,
 })
 
 const emit = defineEmits(['update:dropdown', 'keyDown', 'blur', 'focus', 'clear', 'change'])
@@ -101,6 +102,7 @@ defineExpose({ focus: () => reference.value?.focus() })
         autocomplete="off"
         :type="type"
         :readonly="!inputtable"
+        :size="size"
         @click="handleInputClick"
         @blur="handleInputBlur"
         @input="(e) => emit('change', e)"

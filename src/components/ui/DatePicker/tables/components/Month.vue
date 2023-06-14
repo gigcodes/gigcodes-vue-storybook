@@ -20,7 +20,7 @@ const props = defineProps({
     maxDate: [Date],
     minDate: [Date],
     value: [Array, String, Number, Date],
-    disableDate: Function,
+    disableDate: Boolean,
     disableOutOfMonth: Boolean,
     dayClassName: Function,
     dayStyle: Function,
