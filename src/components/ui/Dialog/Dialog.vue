@@ -2,9 +2,8 @@
 import useWindowSize from '../utils/useWindowSize.js'
 import { onUnmounted, ref, toRefs, useAttrs, watch } from 'vue'
 import classNames from 'classnames'
-import { Dialog, DialogPanel } from '@headlessui/vue'
+import { Dialog, DialogPanel, TransitionChild, TransitionRoot } from '@headlessui/vue'
 import CloseButton from '@/components/ui/CloseButton/CloseButton.vue'
-import { Motion, Presence } from 'motion/vue'
 
 defineOptions({
     inheritAttrs: false,
@@ -78,38 +77,47 @@ onUnmounted(() => {
 })
 </script>
 <template>
-    <Dialog
-        as="div"
-        :open="isOpen"
-        class="dialog-portal"
-        v-bind="restAttrs"
-        :class="portalClassName"
-        @close="() => emit('close')"
-    >
-        <Presence class="dialog-overlay" :class="overlayClassName">
-            <Motion
-                :initial="initialStyle"
-                :animate="enterStyle"
-                :exit="exitStyle"
-                :transition="{ duration: 0.15, easing: 'ease-in-out' }"
+    <TransitionRoot as="template" :show="isOpen">
+        <Dialog as="div" class="dialog-portal" v-bind="restAttrs" :class="portalClassName" @close="() => emit('close')">
+            <TransitionChild
+                as="template"
+                enter="ease-out duration-300"
+                enter-from="opacity-0"
+                enter-to="opacity-100"
+                leave="ease-in duration-200"
+                leave-from="opacity-100"
+                leave-to="opacity-0"
             >
-                <DialogPanel
-                    class="dialog dialog-after-open"
-                    tabindex="-1"
-                    :style="contentStyle.content"
-                    :class="className"
+                <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
+            </TransitionChild>
+            <div class="dialog-overlay" :class="overlayClassName">
+                <TransitionChild
+                    as="template"
+                    enter="ease-out duration-300"
+                    enter-from="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+                    enter-to="opacity-100 translate-y-0 sm:scale-100"
+                    leave="ease-in duration-200"
+                    leave-from="opacity-100 translate-y-0 sm:scale-100"
+                    leave-to="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
                 >
-                    <div :class="dialogClass">
-                        <CloseButton
-                            v-if="closable"
-                            class="ltr:right-6 rtl:left-6"
-                            absolute
-                            @click="() => emit('close')"
-                        />
-                        <slot />
-                    </div>
-                </DialogPanel>
-            </Motion>
-        </Presence>
-    </Dialog>
+                    <DialogPanel
+                        class="dialog dialog-after-open"
+                        tabindex="-1"
+                        :style="contentStyle.content"
+                        :class="className"
+                    >
+                        <div :class="dialogClass">
+                            <CloseButton
+                                v-if="closable"
+                                class="ltr:right-6 rtl:left-6"
+                                absolute
+                                @click="() => emit('close')"
+                            />
+                            <slot />
+                        </div>
+                    </DialogPanel>
+                </TransitionChild>
+            </div>
+        </Dialog>
+    </TransitionRoot>
 </template>
