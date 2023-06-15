@@ -16,6 +16,7 @@
         :clearable="false"
         placeholder="Pick a date"
     />
+    <Select />
 </template>
 <script setup>
 import HelloWorld from './components/HelloWorld.vue'
@@ -27,6 +28,7 @@ import Switcher from '@/components/ui/Switcher/Switcher.vue'
 import { TimeInputRange } from './components/ui/TimeInput'
 import Upload from '@/components/ui/Upload/Upload.vue'
 import DatePicker from '@/components/ui/DatePicker/DatePicker.vue'
+import Select from '@/components/ui/Select/Select.vue'
 
 const inputeVal = ref('karthic')
 const swit = ref(false)

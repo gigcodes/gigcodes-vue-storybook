@@ -29,6 +29,7 @@
   ],
   "dependencies": {
     "@floating-ui/vue": "^1.0.1",
+    "@headlessui/vue": "^1.7.14",
     "@heroicons/vue": "^2.0.17",
     "@storybook/addon-actions": "^7.0.20",
     "@storybook/addon-knobs": "^7.0.2",

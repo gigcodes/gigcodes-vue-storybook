@@ -5,10 +5,15 @@ import dts from 'vite-plugin-dts'
 import VueMacros from 'unplugin-vue-macros/vite'
 import vue from '@vitejs/plugin-vue'
 import DefineOptions from 'unplugin-vue-define-options/vite'
+import macrosPlugin from 'vite-plugin-babel-macros'
 
 // https://vitejs.dev/config/
 export default defineConfig({
+    define: {
+        'process.env': {},
+    },
     plugins: [
+        macrosPlugin(),
         DefineOptions(),
         VueMacros({
             plugins: {
