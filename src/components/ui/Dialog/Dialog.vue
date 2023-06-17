@@ -56,9 +56,6 @@ if (height.value !== undefined) {
 }
 
 const defaultDialogContentClass = 'dialog-content'
-const enterStyle = { opacity: 1 }
-const exitStyle = { opacity: 0, transition: { duration: 0.15, easing: 'ease-in-out' } }
-const initialStyle = exitStyle
 
 const dialogClass = classNames(defaultDialogContentClass, props.contentClassName)
 watch(

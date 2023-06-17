@@ -14,7 +14,7 @@ export default {
 }
 </script>
 <script setup>
-import { inject, useAttrs, useSlots } from 'vue'
+import { computed, inject, useAttrs, useSlots } from 'vue'
 import { DEFAULT_CONFIG } from '../utils/constant'
 import classNames from 'classnames'
 
@@ -42,18 +42,24 @@ const onClick = (e) => {
     emits('onCardClick', e)
 }
 
-const cardClass = classNames(
-    'card',
-    className,
-    props.bordered ?? cardBordered ? `card-border` : `card-shadow`,
-    props.clickable && 'cursor-pointer user-select-none'
+const cardClass = computed(() =>
+    classNames(
+        'card',
+        className,
+        props.bordered ?? cardBordered ? `card-border` : `card-shadow`,
+        props.clickable && 'cursor-pointer user-select-none'
+    )
 )
-const cardBodyClass = classNames('card-body', props.bodyClass)
-const cardHeaderClass = classNames(
-    'card-header',
-    props.headerBorder && 'card-header-border',
-    slots.headerExtra && 'card-header-extra',
-    props.headerClass
+const cardBodyClass = computed(() => classNames('card-body', props.bodyClass))
+const cardHeaderClass = computed(() =>
+    classNames(
+        'card-header',
+        props.headerBorder && 'card-header-border',
+        slots.headerExtra && 'card-header-extra',
+        props.headerClass
+    )
 )
-const cardFooterClass = classNames('card-footer', props.footerBorder && `card-footer-border`, props.footerClass)
+const cardFooterClass = computed(() =>
+    classNames('card-footer', props.footerBorder && `card-footer-border`, props.footerClass)
+)
 </script>

@@ -69,6 +69,7 @@ const props = defineProps({
     disabled: Boolean,
     form: Object,
     field: Object,
+    focus: Boolean,
 })
 
 defineOptions({
@@ -151,7 +152,12 @@ const getAffixSize = () => {
     if (suffixNodeWidth) suffixGutter.value = suffixNodeWidth
 }
 
-onMounted(() => getAffixSize())
+onMounted(() => {
+    getAffixSize()
+    if (props.focus) {
+        inputRef.value.focus()
+    }
+})
 
 const remToPxConvertion = (pixel) => 0.0625 * pixel
 

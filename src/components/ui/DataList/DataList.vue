@@ -48,12 +48,6 @@ const sharedState = ref({
 
 provide('sharedState', sharedState.value)
 
-const filteredRows = computed(() => {
-    let rows = props.rows
-    rows = filterBySearch(rows)
-    return sortRows(rows)
-})
-
 const visibleColumns = computed(() => {
     return sharedState.value.columns.filter((column) => column.visible)
 })
@@ -61,6 +55,40 @@ const visibleColumns = computed(() => {
 const searchableColumns = computed(() => {
     const rows = sharedState.value.rows
     return visibleColumns.value.length ? visibleColumns.value.map((column) => column.field) : Object.keys(rows[0])
+})
+
+const filterBySearch = (rows) => {
+    if (!sharedState.value.searchQuery) return rows
+
+    const fuse = new Fuse(rows, {
+        findAllMatches: true,
+        threshold: 0.1,
+        minMatchCharLength: 2,
+        keys: searchableColumns.value,
+    })
+
+    return fuse.search(sharedState.value.searchQuery)
+}
+
+const sortRows = (rows) => {
+    if (!props.sort) return rows
+
+    // If no column is selected, don't sort.
+    if (!sharedState.value.sortColumn) return rows
+
+    rows = _.sortBy(rows, sharedState.value.sortColumn)
+
+    if (sharedState.value.sortDirection === 'desc') {
+        rows = rows.reverse()
+    }
+
+    return rows
+}
+
+const filteredRows = computed(() => {
+    let rows = props.rows
+    rows = filterBySearch(rows)
+    return sortRows(rows)
 })
 
 watch(
@@ -117,34 +145,6 @@ const setInitialSortColumn = () => {
     sharedState.value.sortColumn = props.sortColumn || (props.sort ? firstVisibleColumn : null)
 }
 
-const filterBySearch = (rows) => {
-    if (!sharedState.value.searchQuery) return rows
-
-    const fuse = new Fuse(rows, {
-        findAllMatches: true,
-        threshold: 0.1,
-        minMatchCharLength: 2,
-        keys: searchableColumns.value,
-    })
-
-    return fuse.search(sharedState.value.searchQuery)
-}
-
-const sortRows = (rows) => {
-    if (!props.sort) return rows
-
-    // If no column is selected, don't sort.
-    if (!sharedState.value.sortColumn) return rows
-
-    rows = _.sortBy(rows, sharedState.value.sortColumn)
-
-    if (sharedState.value.sortDirection === 'desc') {
-        rows = rows.reverse()
-    }
-
-    return rows
-}
-
 const clearSelections = () => {
     sharedState.value.selections = []
 }
@@ -155,5 +155,5 @@ defineExpose({
 </script>
 
 <template>
-    <slot :rows="filteredRows" :has-selections="sharedState.selections.length > 0"></slot>
+    <slot :rows="filteredRows" :has-selections="sharedState.selections.length > 0" />
 </template>

@@ -1,6 +1,7 @@
 <script setup>
 import { debounce } from 'lodash'
 import { ref } from 'vue'
+import Input from '../Input'
 
 defineProps({
     placeholder: {
@@ -29,13 +30,14 @@ defineExpose({ reset, focus })
 </script>
 
 <template>
-    <input
+    <Input
         ref="input"
+        size="sm"
         type="text"
         :placeholder="placeholder"
         :value="value"
-        autofocus
-        class="input-text flex-1 bg-white text-sm focus:border-blue-300 outline-0"
+        focus
+        class="input-text flex-1 bg-white text-sm focus:border-blue-300 outline-0 mt-2"
         @input="emitEvent"
         @keyup.esc="reset"
     />
