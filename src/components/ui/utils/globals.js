@@ -7,3 +7,9 @@ export function utf8btoa(stringToEncode) {
     // return base64 encoded string
     return btoa(utf8String)
 }
+
+export function clone(value) {
+    if (value === undefined) return undefined
+
+    return JSON.parse(JSON.stringify(value))
+}

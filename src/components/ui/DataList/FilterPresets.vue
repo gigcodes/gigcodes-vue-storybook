@@ -106,7 +106,7 @@ defineExpose({ savePreset, refreshPresets, refreshPreset })
 </script>
 
 <template>
-    <div class="pt-2 pr-2">
+    <div class="pt-2 pr-2 filters">
         <div class="flex flex-wrap items-center">
             <Button :class="{ active: !activePreset }" size="sm" @click="viewAll">All</Button>
             <template v-for="(preset, handle) in presets" :key="handle">
@@ -162,4 +162,11 @@ defineExpose({ savePreset, refreshPresets, refreshPreset })
     </ConfirmationModal>
 </template>
 
-<style scoped></style>
+<style>
+.filters .active {
+    --tw-bg-opacity: 1;
+    background-color: rgb(234 245 255 / var(--tw-bg-opacity));
+    --tw-text-opacity: 1;
+    color: rgb(23 80 128 / var(--tw-text-opacity));
+}
+</style>

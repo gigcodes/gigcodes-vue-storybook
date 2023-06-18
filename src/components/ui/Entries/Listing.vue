@@ -15,6 +15,9 @@ import FilterPresets from '../DataList/FilterPresets.vue'
 import Search from '../DataList/Search.vue'
 import Button from '../Buttons'
 import ColumnPicker from '../DataList/ColumnPicker.vue'
+import DataListPagination from '../DataList/Pagination.vue'
+import ListFilters from '../DataList/ListFilters.vue'
+import Table from '../DataList/Table.vue'
 
 const props = defineProps({
     initialSortColumn: String,
@@ -65,6 +68,8 @@ const {
     hasActiveFilters,
     selectPreset,
     filtersReset,
+    activeFilterCount,
+    filterChanged,
 } = hasFilters({
     dataList,
     preferencesPrefix,
@@ -152,6 +157,10 @@ const removeRow = (row) => {
     }
 }
 
+const reordered = (i) => {
+    items.value = i
+}
+
 autoApplyFilters()
 request()
 
@@ -220,7 +229,45 @@ watch(
                             <ColumnPicker :preferences-key="preferencesKey('columns')" />
                         </div>
                     </div>
+                    <div v-show="!reordering">
+                        <ListFilters
+                            ref="filters"
+                            :filters="filters"
+                            :active-preset="activePreset"
+                            :active-preset-payload="activePresetPayload"
+                            :active-filters="activeFilters"
+                            :active-filter-badges="activeFilterBadges"
+                            :active-count="activeFilterCount"
+                            :search-query="searchQuery"
+                            :is-searching="true"
+                            :saves-presets="true"
+                            :preferences-prefix="preferencesPrefix"
+                            @changed="filterChanged"
+                            @saved="$refs.presets.setPreset($event)"
+                            @deleted="$refs.presets.refreshPresets()"
+                        />
+                    </div>
+                    <div v-show="items.length === 0" class="p-6 text-center text-gray-500" v-text="'No results'" />
+                    <div class="overflow-x-auto overflow-y-hidden">
+                        <Table
+                            v-show="items.length"
+                            :allow-bulk-actions="!reordering"
+                            :loading="loading"
+                            :reorderable="reordering"
+                            :sortable="!reordering"
+                            :toggle-selection-on-row-click="true"
+                            @sorted="sorted"
+                            @reordered="reordered"
+                        ></Table>
+                    </div>
                 </div>
+                <DataListPagination
+                    class="mt-6"
+                    :resource-meta="meta"
+                    :per-page="perPage"
+                    show-totals
+                    @page-selected="selectPage"
+                />
             </template>
         </DataList>
     </div>

@@ -46,7 +46,7 @@ const sharedState = ref({
     maxSelections: props.maxSelections,
 })
 
-provide('sharedState', sharedState.value)
+provide('sharedState', sharedState)
 
 const visibleColumns = computed(() => {
     return sharedState.value.columns.filter((column) => column.visible)

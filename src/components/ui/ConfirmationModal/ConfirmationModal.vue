@@ -1,8 +1,11 @@
 <script setup>
 import { computed, onBeforeUnmount, ref } from 'vue'
-import keys from '../../keys'
+import Keys from '../../keys'
 import Dialog from '../Dialog'
 import Button from '../Buttons'
+
+const keys = new Keys()
+
 const props = defineProps({
     title: {
         type: String,
@@ -38,8 +41,8 @@ const color = computed(() => (props.danger ? 'red-600' : 'blue-600'))
 const dismiss = () => emit('cancel')
 const submit = () => emit('confirm')
 
-escBinding.value = keys.bind('esc', dismiss())
-enterBinding.value = keys.bind('enter', submit())
+escBinding.value = keys.bind('esc', dismiss)
+enterBinding.value = keys.bind('enter', submit)
 
 onBeforeUnmount(() => {
     escBinding.value.destroy()

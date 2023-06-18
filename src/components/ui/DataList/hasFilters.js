@@ -1,6 +1,7 @@
 import { isEmpty, isEqual } from 'lodash'
 import { ref, computed } from 'vue'
-import keys from '../../keys'
+import Keys from '../../keys'
+const keys = new Keys()
 const hasFilters = ({ preferencesPrefix, handleShowFilters, dataList }) => {
     const activeFilterBadges = ref({})
     const activeFilters = ref({})

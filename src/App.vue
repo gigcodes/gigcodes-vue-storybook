@@ -28,7 +28,7 @@
         </div>
     </Dialog>
 
-    <Listing request-url="http://127.0.0.1:8001/api/test" collection="users" />
+    <Listing request-url="http://127.0.0.1:8000/api/test" collection="users" />
 </template>
 <script setup>
 import HelloWorld from './components/HelloWorld.vue'

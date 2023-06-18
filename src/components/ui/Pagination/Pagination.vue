@@ -21,6 +21,7 @@ const props = defineProps({
         default: 5,
     },
     displayTotal: Boolean,
+    scrollToTop: Boolean,
 })
 
 const emits = defineEmits(['change'])
@@ -82,18 +83,21 @@ watch(
 
 const onPaginationChange = (val) => {
     internalCurrentPage.value = getValidCurrentPage(val)
+    if (props.scrollToTop) window.scrollTo(0, 0)
     emits('change', getValidCurrentPage(val))
 }
 
 const onPrev = () => {
     const newPage = internalCurrentPage.value - 1
     internalCurrentPage.value = getValidCurrentPage(newPage)
+    if (props.scrollToTop) window.scrollTo(0, 0)
     emits('change', getValidCurrentPage(newPage))
 }
 
 const onNext = () => {
     const newPage = internalCurrentPage.value + 1
     internalCurrentPage.value = getValidCurrentPage(newPage)
+    if (props.scrollToTop) window.scrollTo(0, 0)
     emits('change', getValidCurrentPage(newPage))
 }
 
