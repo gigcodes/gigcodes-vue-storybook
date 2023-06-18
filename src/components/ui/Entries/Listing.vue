@@ -18,6 +18,11 @@ import ColumnPicker from '../DataList/ColumnPicker.vue'
 import DataListPagination from '../DataList/Pagination.vue'
 import ListFilters from '../DataList/ListFilters.vue'
 import Table from '../DataList/Table.vue'
+import BulkActions from '../DataList/BulkActions.vue'
+import InlineActions from '../DataList/InlineActions.vue'
+import { Dropdown } from '../Dropdown'
+import DropdownItem from '../Dropdown/DropdownItem.vue'
+import { EllipsisHorizontalIcon } from '@heroicons/vue/24/solid'
 
 const props = defineProps({
     initialSortColumn: String,
@@ -79,6 +84,10 @@ const { hasPreferences, preferencesKey, setPreference } = usePreferences(undefin
 const { page, perPage, resetPage, selectPage } = hasPagination({ hasPreferences, setPreference, intialPerPage })
 const activeFilterParameters = computed(() => utf8btoa(JSON.stringify(activeFilters.value)))
 
+const actionContext = computed(() => {
+    return props.collection
+})
+
 const parameters = computed(() =>
     Object.assign(
         {
@@ -137,7 +146,7 @@ const request = () => {
         })
 }
 
-const actions = hasActions({ loading, request })
+const { actionStarted, actionCompleted } = hasActions({ loading, request })
 
 // eslint-disable-next-line no-unused-vars
 const afterRequestCompleted = (_response) => {}
@@ -188,6 +197,8 @@ watch(
     },
     { immediate: true }
 )
+
+defineExpose({ removeRow })
 </script>
 <template>
     <div>
@@ -204,7 +215,7 @@ watch(
             :sort-direction="sortDirection"
             @visible-columns-updated="visibleColumns = $event"
         >
-            <template #default="{ hasSelections }">
+            <template #default>
                 <div class="card p-0 relative">
                     <div class="flex flex-wrap items-center justify-between px-2 pb-2 text-sm border-b">
                         <FilterPresets
@@ -248,6 +259,12 @@ watch(
                         />
                     </div>
                     <div v-show="items.length === 0" class="p-6 text-center text-gray-500" v-text="'No results'" />
+                    <BulkActions
+                        :url="actionUrl"
+                        :context="actionContext"
+                        @started="actionStarted"
+                        @completed="actionCompleted"
+                    />
                     <div class="overflow-x-auto overflow-y-hidden">
                         <Table
                             v-show="items.length"
@@ -258,7 +275,36 @@ watch(
                             :toggle-selection-on-row-click="true"
                             @sorted="sorted"
                             @reordered="reordered"
-                        ></Table>
+                        >
+                            <template #actions="{ row: entry }">
+                                <Dropdown placement="bottom-end">
+                                    <template #renderTitle>
+                                        <Button size="sm" variant="plain">
+                                            <EllipsisHorizontalIcon class="h-4" />
+                                        </Button>
+                                    </template>
+                                    <DropdownItem
+                                        v-if="entry.viewable && entry.permalink"
+                                        event-key="View"
+                                        :external-link="entry.permalink"
+                                    />
+                                    <DropdownItem
+                                        v-if="entry.editable"
+                                        event-key="Edit"
+                                        as-element="a"
+                                        :href="entry.edit_url"
+                                    />
+                                    <DropdownItem v-if="entry.actions.length" variant="divider" />
+                                    <InlineActions
+                                        :item="entry.id"
+                                        :url="actionUrl"
+                                        :actions="entry.actions"
+                                        @started="actionStarted"
+                                        @completed="actionCompleted"
+                                    />
+                                </Dropdown>
+                            </template>
+                        </Table>
                     </div>
                 </div>
                 <DataListPagination

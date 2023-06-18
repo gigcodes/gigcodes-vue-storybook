@@ -27,6 +27,9 @@ const checkMaximumAmountOfItems = () => {
     sharedState.value.selections = chain(sharedState.value.rows)
         .map((item) => item.id)
         .first(sharedState.value.maxSelections ?? Infinity)
+        .thru(function (value) {
+            return [value]
+        })
         .value()
 }
 

@@ -1,0 +1,1 @@
+<template>Inline actions</template>

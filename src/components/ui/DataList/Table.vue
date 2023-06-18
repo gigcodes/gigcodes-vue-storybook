@@ -43,7 +43,7 @@ const rows = computed({
     },
 })
 const reachedSelectionLimit = computed(() => sharedState.value.selections.length === sharedState.value.maxSelections)
-const singleSelect = computed(() => sharedState.maxSelections === 1)
+const singleSelect = computed(() => sharedState.value.maxSelections === 1)
 
 const visibleColumns = computed(() => {
     const columns = sharedState.value.columns.filter((column) => column.visible)
@@ -103,15 +103,15 @@ const checkboxClicked = (row, index, $event) => {
     const id = checkbox.value
 
     if (singleSelect.value && checked) {
-        sharedState.selections = [id]
+        sharedState.value.selections = [id]
         emit('selected', [id])
-    } else if (checked && !sharedState.selections.includes(id)) {
-        sharedState.selections.push(id)
+    } else if (checked && !sharedState.value.selections.includes(id)) {
+        sharedState.value.selections.push(id)
         emit('selected', [id])
     } else if (!checked) {
-        const index = sharedState.selections.indexOf(id)
+        const index = sharedState.value.selections.indexOf(id)
         if (index > -1) {
-            sharedState.selections.splice(index, 1)
+            sharedState.value.selections.splice(index, 1)
             emit('deselected', [id])
         }
     }
@@ -144,7 +144,7 @@ const selectRange = (event) => {
 
     for (let i = start; i <= end; i++) {
         checkboxes[i].checked = true
-        checkboxClicked(sharedState.rows[i], i, { target: checkboxes[i] })
+        checkboxClicked(sharedState.value.rows[i], i, { target: checkboxes[i] })
     }
 }
 

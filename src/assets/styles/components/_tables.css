@@ -89,7 +89,8 @@
             @apply border-b border-gray-400 text-sm;
 
             &.row-selected {
-                @apply bg-gray-200;
+                --tw-bg-opacity: 1;
+                background-color: rgb(245 248 252 / var(--tw-bg-opacity));
             }
 
             &:first-child {
@@ -216,11 +217,11 @@
     }
 
     tbody tr.row-selected .checkbox-column:after {
-        background-image: linear-gradient(to right, #fafcff 70%, rgb(250 252 255 / 0%) 100%);
+        background-image: linear-gradient(to right, #f5f8fc 70%, rgb(245 248 252 / 0%) 100%);
     }
 
     tbody tr.row-selected .actions-column:after {
-        background-image: linear-gradient(to right, #fafcff 70%, rgb(250 252 255 / 0%) 100%);
+        background-image: linear-gradient(to left, #f5f8fc 70%, rgb(245 248 252 / 0%) 100%);
     }
 
     tbody tr:hover .checkbox-column:after {
